@@ -21,28 +21,13 @@ body {
   line-height: normal;
 }
 
-/* 
- * Color variables - keep in sync with src/colors.config.js
- * Edit colors in colors.config.js, then update these variables to match
- */
 :root {
   --background-primary: #000000;
-  --background-secondary: #b52020;
-  --background-dark: #1a1a1a;
-  --background-navbar: #264653;
+  --background-secondary: #b52020; /* so far not used? */
   --background-footer: #264653;
   --text-primary: #ffffff;
   --text-secondary: #e5e5e5;
-  --text-black: #000000;
-  --border-primary: #ff2bf4;
-  --border-white: #ffffff;
-  --border-white-opacity: rgba(255, 255, 255, 0.2);
-  --border-white-opacity-30: rgba(255, 255, 255, 0.3);
-  --accent-primary: #0A6F8F;
-  --accent-primary-hover: rgba(10, 111, 143, 0.9);
-  --accent-primary-glow: rgba(10, 111, 143, 0.15);
-  --accent-primary-glow-light: rgba(10, 111, 143, 0.08);
-  --tag-gray: #6B7280;
+  --border-primary: #000000; /* so far not used? */
 }
 
 body {
@@ -69,5 +54,11 @@ textarea {
 /* Rounded corners for all images */
 img {
   border-radius: 0.9rem;
+}
+
+/* Footer background color */
+footer.bg-background-footer,
+footer[id="relume"] {
+  background-color: var(--background-footer) !important;
 }
 
