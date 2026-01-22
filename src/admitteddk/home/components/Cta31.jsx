@@ -24,11 +24,6 @@ export function Cta31() {
             </Button>
           </div>
         </div>
-        <img
-          src="/stock/accuray-MFSEP2g4YS0-unsplash.avif"
-          className="size-full object-cover"
-          alt="Medical AI deployment"
-        />
       </div>
     </section>
   );

@@ -52,7 +52,7 @@ export function Testimonial22() {
                 />
               </div>
               <blockquote className="md:text-md">
-                "Helped us implement price optimization on marked vilkår, delivering significant improvements to our pricing strategy and market positioning."
+                "Helped us implement price optimization on market terms, delivering significant improvements to our pricing strategy and market positioning."
               </blockquote>
               <div className="mt-5 flex w-full flex-col items-start gap-4 md:mt-6 md:w-auto md:flex-row md:items-center">
                 <div>

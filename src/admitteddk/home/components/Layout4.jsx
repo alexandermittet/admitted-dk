@@ -15,7 +15,7 @@ export function Layout4() {
               Technical expertise meets social engagement
             </h1>
             <p className="mb-6 md:mb-8 md:text-md">
-              I bring together deep technical knowledge with a passion for community and social impact. With a BSc in Machine Learning & Data Science and an MSc in Computer Science from Copenhagen University, I combine rigorous academic training with hands-on experience building real-world applications.
+              I combine rigorous academic training with hands-on experience building real-world applications that make a difference.
             </p>
             <div className="grid grid-cols-1 gap-6 py-2 sm:grid-cols-2">
               <div>
