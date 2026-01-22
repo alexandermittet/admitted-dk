@@ -15,9 +15,9 @@ export default function Page() {
       <Navbar7 />
       <Header84 />
       <Layout423 />
+      <Timeline18 />
       <Layout4 />
       <Testimonial22 />
-      <Timeline18 />
       <Cta31 />
       <Cta52 />
       <Footer15 />

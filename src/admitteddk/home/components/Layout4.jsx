@@ -12,30 +12,26 @@ export function Layout4() {
           <div>
             <p className="mb-3 font-semibold md:mb-4">Background</p>
             <h1 className="rb-5 mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
-              Built on two foundations
+              Technical expertise meets social engagement
             </h1>
             <p className="mb-6 md:mb-8 md:text-md">
-              MedImage AI Recruitments exists because the best work happens at
-              intersections. Medical imaging demands precision. Machine learning
-              demands rigor. Web deployment demands pragmatism.
+              I bring together deep technical knowledge with a passion for community and social impact. With a BSc in Machine Learning & Data Science and an MSc in Computer Science from Copenhagen University, I combine rigorous academic training with hands-on experience building real-world applications.
             </p>
             <div className="grid grid-cols-1 gap-6 py-2 sm:grid-cols-2">
               <div>
                 <h6 className="mb-3 text-md font-bold leading-[1.4] md:mb-4 md:text-xl">
-                  Medical imaging
+                  Education
                 </h6>
                 <p>
-                  Deep understanding of diagnostic imaging and algorithmic
-                  analysis
+                  BSc Machine Learning & Data Science and MSc Computer Science from Copenhagen University
                 </p>
               </div>
               <div>
                 <h6 className="mb-3 text-md font-bold leading-[1.4] md:mb-4 md:text-xl">
-                  Web deployment
+                  Community engagement
                 </h6>
                 <p>
-                  Proven ability to ship machine learning applications to
-                  production
+                  Volunteering at ITU Analog Coffee Bar, Save the Children Youth, Radial Ungdom, and European Youth
                 </p>
               </div>
             </div>
@@ -54,7 +50,7 @@ export function Layout4() {
           </div>
           <div>
             <img
-              src="/stock/accuray-6pQPFuD7nJY-unsplash.avif"
+              src="/uniavisen red jacket.avif"
               className="h-full w-full object-cover"
               alt="Medical imaging technology"
             />

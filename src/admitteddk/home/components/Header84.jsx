@@ -9,10 +9,12 @@ export function Header84() {
   return (
     <section id="relume" className="px-[5%] py-12 md:py-16 lg:py-20">
       <div className="container">
-        <div className="grid auto-cols-fr grid-cols-1 border border-border-primary lg:grid-cols-2">
+        <div className="flex flex-col lg:flex-row">
           <div className="flex flex-col justify-center p-8 md:p-12">
             <h1 className="mb-5 text-6xl font-bold md:mb-6 md:text-9xl lg:text-10xl">
-              Medical imaging meets machine learning
+              Machine Learning expertise:
+              <br />
+              <span className="font-normal">From medical imaging, to everyday tools on the web</span>
             </h1>
             <p className="md:text-md">
               I build intelligent systems that read what others miss. Deploying
@@ -30,8 +32,8 @@ export function Header84() {
           </div>
           <div className="flex items-center justify-center">
             <img
-              src="/stock/accuray-5VkNa1LrS8A-unsplash.avif"
-              className="h-full w-full object-cover"
+              src="/alex frb.avif"
+              className="aspect-[3/4] w-auto max-w-md object-cover scale-[0.8]"
               alt="Medical imaging and machine learning"
             />
           </div>

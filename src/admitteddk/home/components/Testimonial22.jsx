@@ -19,14 +19,13 @@ export function Testimonial22() {
             <div className="rb-5 mb-5 md:mb-6">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/webflow-logo.svg"
-                  alt="Webflow logo"
+                  src="/digital headhunter.avif"
+                  alt="Digital Headhunter logo"
                   className="max-h-12"
                 />
               </div>
               <blockquote className="md:text-md">
-                "The rare combination of medical knowledge and engineering skill
-                made all the difference in our deployment."
+                "Exceptional technical expertise combined with deep business understanding. A rare find in the tech talent market."
               </blockquote>
               <div className="mt-5 flex w-full flex-col items-start gap-4 md:mt-6 md:w-auto md:flex-row md:items-center">
                 <div>
@@ -37,8 +36,8 @@ export function Testimonial22() {
                   />
                 </div>
                 <div>
-                  <p className="font-semibold">Dr. Sarah Chen</p>
-                  <p>Chief Medical Officer, HealthTech</p>
+                  <p className="font-semibold">Brian Rasmussen</p>
+                  <p>@ Digital Headhunter</p>
                 </div>
               </div>
             </div>
@@ -53,8 +52,7 @@ export function Testimonial22() {
                 />
               </div>
               <blockquote className="md:text-md">
-                "Delivered a working system when others said it was impossible.
-                That's what matters in production."
+                "Helped us implement price optimization on marked vilkår, delivering significant improvements to our pricing strategy and market positioning."
               </blockquote>
               <div className="mt-5 flex w-full flex-col items-start gap-4 md:mt-6 md:w-auto md:flex-row md:items-center">
                 <div>
@@ -65,8 +63,8 @@ export function Testimonial22() {
                   />
                 </div>
                 <div>
-                  <p className="font-semibold">Marcus Thompson</p>
-                  <p>VP Engineering, Diagnostic Systems</p>
+                  <p className="font-semibold">Frederik Damsgaard</p>
+                  <p>@ Matter</p>
                 </div>
               </div>
             </div>

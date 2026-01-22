@@ -73,35 +73,18 @@ export function Timeline18() {
             <CarouselContent className="ml-0">
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
-                  <img
-                    src="/stock/hack-capital-uv5_bsypFUM-unsplash.avif"
-                    alt="Timeline milestone 2023"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
-                  <p>
-                    Student ML Developer at SIRI, UIM
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                <a 
+                  href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
+                >
                   <img
                     src="/alex-og-marcus-podcast.avif"
                     alt="Timeline milestone 2023"
                     className="h-full w-full object-cover"
                   />
-                </div>
+                </a>
                 <div className="mb-4 mt-8 flex w-full items-center">
                   <div className="h-[3px] w-full bg-white" />
                   <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
@@ -146,13 +129,18 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                <a 
+                  href="https://www.linkedin.com/posts/alexandermittet_bach-i-mach-stor-dag-for-mig-og-branchen-activity-7211427245058379778-DV_T?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
+                >
                   <img
                     src="/bsc.avif"
                     alt="Timeline milestone 2024"
                     className="h-full w-full object-cover"
                   />
-                </div>
+                </a>
                 <div className="mb-4 mt-8 flex w-full items-center">
                   <div className="h-[3px] w-full bg-white" />
                   <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
@@ -161,42 +149,70 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
-                    Successfully defended BSc Thesis for Hvidovre hospital 'Foundational Model for Endoscopy' with top grade
+                    <a 
+                      href="https://www.linkedin.com/posts/alexandermittet_bach-i-mach-stor-dag-for-mig-og-branchen-activity-7211427245058379778-DV_T?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Successfully defended BSc Thesis for Hvidovre hospital 'Foundational Model for Endoscopy' with top grade
+                    </a>
                   </p>
                 </div>
               </div>
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
-                  <img
-                    src="/erasmus.avif"
-                    alt="Timeline milestone 2025"
+                <a 
+                  href="https://www.linkedin.com/posts/alexandermittet_kustudieliv-on-instagram-machine-learning-activity-7250255137988898817-sCxp?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
+                >
+                  <video
+                    src="/instagram-takeover.mp4"
+                    alt="Timeline milestone 2024"
                     className="h-full w-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
                   />
-                </div>
+                </a>
                 <div className="mb-4 mt-8 flex w-full items-center">
                   <div className="h-[3px] w-full bg-white" />
                   <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
                   <div className="h-[3px] w-full bg-white" />
                 </div>
                 <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
-                    Erasmus exchange to University of Pisa
+                    <a 
+                      href="https://www.linkedin.com/posts/alexandermittet_kustudieliv-on-instagram-machine-learning-activity-7250255137988898817-sCxp?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Takeover on UCPH study life instagram
+                    </a>
                   </p>
                 </div>
               </div>
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                <a 
+                  href="https://copenhagenlightfestival.org/en-the-building-bubble-programme-2025/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
+                >
                   <img
                     src="/copenhagen-light-festival.avif"
                     alt="Timeline milestone 2025"
                     className="h-full w-full object-cover"
                   />
-                </div>
+                </a>
                 <div className="mb-4 mt-8 flex w-full items-center">
                   <div className="h-[3px] w-full bg-white" />
                   <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
@@ -219,13 +235,52 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                <a 
+                  href="https://uniavisen.dk/udveksling-kurerede-min-depression/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
+                >
+                  <img
+                    src="/erasmus.avif"
+                    alt="Timeline milestone 2025"
+                    className="h-full w-full object-cover"
+                  />
+                </a>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
+                  <p>
+                    <a 
+                      href="https://uniavisen.dk/udveksling-kurerede-min-depression/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Erasmus exchange to University of Pisa
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <a 
+                  href="https://catscribe.admitted.dk" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
+                >
                   <img
                     src="/catscribe.avif"
                     alt="Timeline milestone 2026"
                     className="h-full w-full object-cover"
                   />
-                </div>
+                </a>
                 <div className="mb-4 mt-8 flex w-full items-center">
                   <div className="h-[3px] w-full bg-white" />
                   <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
@@ -234,7 +289,14 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2026</h3>
                   <p>
-                    Developed 'catscribe' a purist audio-to-text transcription webapp, marketed for students.
+                    <a 
+                      href="https://catscribe.admitted.dk" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Developed 'catscribe' a purist audio-to-text transcription webapp, marketed for students.
+                    </a>
                   </p>
                 </div>
               </div>

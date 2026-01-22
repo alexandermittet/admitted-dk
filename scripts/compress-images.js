@@ -21,6 +21,12 @@ async function getAllImages(dir, fileList = []) {
       // Recursively search subdirectories
       await getAllImages(filePath, fileList);
     } else if (IMAGE_EXTENSIONS.includes(extname(file).toLowerCase())) {
+      // Skip favicon files - they should remain as PNG for browser compatibility
+      const fileName = basename(file, extname(file)).toLowerCase();
+      if (fileName === 'favicon') {
+        console.log(`Skipping favicon: ${filePath}`);
+        continue;
+      }
       fileList.push(filePath);
     }
   }
@@ -61,46 +67,61 @@ async function processImage(imagePath) {
       await mkdir(oldImageDir, { recursive: true });
     }
     
-    // Create AVIF version in original location first
+    // Check if AVIF already exists
     const avifPath = imagePath.replace(extname(imagePath), '.avif');
+    const avifExists = existsSync(avifPath);
     
-    await image
-      .clone()
-      .resize(width, height, {
-        fit: 'inside',
-        withoutEnlargement: true
-      })
-      .avif({ quality: 80 })
-      .toFile(avifPath);
-    
-    console.log(`  Created AVIF: ${avifPath}`);
-    
-    // Move original to old directory
-    await rename(imagePath, oldImagePath);
-    console.log(`  Moved original to: ${oldImagePath}`);
-    
-    // Compress the old image (reduce quality for JPEG, optimize PNG)
-    const oldImage = sharp(oldImagePath);
-    const oldExt = extname(oldImagePath).toLowerCase();
-    const tempPath = oldImagePath + '.tmp';
-    
-    if (oldExt === '.jpg' || oldExt === '.jpeg') {
-      await oldImage
-        .jpeg({ quality: 75, mozjpeg: true })
-        .toFile(tempPath);
-    } else if (oldExt === '.png') {
-      await oldImage
-        .png({ quality: 80, compressionLevel: 9 })
-        .toFile(tempPath);
+    // Create AVIF version in original location first (only if it doesn't exist)
+    if (!avifExists) {
+      await image
+        .clone()
+        .resize(width, height, {
+          fit: 'inside',
+          withoutEnlargement: true
+        })
+        .avif({ quality: 80 })
+        .toFile(avifPath);
+      
+      console.log(`  Created AVIF: ${avifPath}`);
     } else {
-      // For other formats, just keep as is
-      console.log(`  ✓ Done\n`);
-      return;
+      console.log(`  AVIF already exists: ${avifPath}`);
     }
     
-    // Replace old image with compressed version
-    await rename(tempPath, oldImagePath);
-    console.log(`  Compressed old image`);
+    // Move original to old directory AFTER successful conversion
+    // Check if file is already in old directory
+    if (!imagePath.startsWith(OLD_DIR)) {
+      // Check if old file already exists
+      if (existsSync(oldImagePath)) {
+        console.log(`  Original already exists in old directory: ${oldImagePath}`);
+      } else {
+        await rename(imagePath, oldImagePath);
+        console.log(`  Moved original to: ${oldImagePath}`);
+        
+        // Compress the old image (reduce quality for JPEG, optimize PNG)
+        const oldImage = sharp(oldImagePath);
+        const oldExt = extname(oldImagePath).toLowerCase();
+        const tempPath = oldImagePath + '.tmp';
+        
+        if (oldExt === '.jpg' || oldExt === '.jpeg') {
+          await oldImage
+            .jpeg({ quality: 75, mozjpeg: true })
+            .toFile(tempPath);
+          // Replace old image with compressed version
+          await rename(tempPath, oldImagePath);
+          console.log(`  Compressed old image`);
+        } else if (oldExt === '.png') {
+          await oldImage
+            .png({ quality: 80, compressionLevel: 9 })
+            .toFile(tempPath);
+          // Replace old image with compressed version
+          await rename(tempPath, oldImagePath);
+          console.log(`  Compressed old image`);
+        }
+      }
+    } else {
+      console.log(`  File is already in old directory, skipping move`);
+    }
+    
     console.log(`  ✓ Done\n`);
     
   } catch (error) {
