@@ -10,16 +10,18 @@ import { BackgroundEffects } from "./components/BackgroundEffects";
 function App() {
   return (
     <Router>
-      <FluidCursor
-        size={30}
-        color="white"
-        opacity={0.9}
-        border="none"
-        TransitionTime={0.1}
-        hideDefaultCursor={true}
-      />
+      <div style={{ position: 'fixed', top: 0, left: 0, width: 0, height: 0, overflow: 'hidden' }}>
+        <FluidCursor
+          size={30}
+          color="white"
+          opacity={0.9}
+          border="none"
+          TransitionTime={0.1}
+          hideDefaultCursor={true}
+        />
+      </div>
       <BackgroundEffects />
-      <div className="relative z-10">
+      <div className="relative z-10 m-0 p-0">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />

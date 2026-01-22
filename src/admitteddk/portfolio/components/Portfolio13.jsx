@@ -39,7 +39,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Machine learning
                   </a>
@@ -47,7 +47,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Medical imaging
                   </a>
@@ -55,7 +55,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Web deployment
                   </a>
@@ -91,7 +91,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Deep learning
                   </a>
@@ -99,7 +99,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Classification
                   </a>
@@ -107,7 +107,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     API integration
                   </a>
@@ -145,7 +145,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Full stack
                   </a>
@@ -153,7 +153,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     React frontend
                   </a>
@@ -161,7 +161,7 @@ export function Portfolio13() {
                 <li className="flex">
                   <a
                     href="#"
-                    className="bg-background-secondary px-2 py-1 text-sm font-semibold"
+                    className="bg-[#6B7280] px-2 py-1 text-sm font-semibold text-black"
                   >
                     Python backend
                   </a>

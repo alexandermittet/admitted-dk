@@ -11,7 +11,7 @@ import { Footer15 } from "../shared/components/Footer15";
 
 export default function Page() {
   return (
-    <div>
+    <div className="m-0 p-0">
       <Navbar7 />
       <Header84 />
       <Layout423 />
