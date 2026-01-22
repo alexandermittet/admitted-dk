@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+:root {
+  --background-primary: #000000;
+  --background-secondary: #b52020;
+  --text-primary: #ffffff;
+  --text-secondary: #e5e5e5;
+  --border-primary: #bbb0ff;
+}
+
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Rounded corners for all buttons */
+button,
+[role="button"],
+a[role="button"] {
+  border-radius: 0.5rem;
+  border: none !important;
+}
+
+/* White borders for form elements */
+input,
+select,
+textarea {
+  border: 1px solid white !important;
+}
+
+/* Rounded corners for all images */
+img {
+  border-radius: 0.9rem;
+}
