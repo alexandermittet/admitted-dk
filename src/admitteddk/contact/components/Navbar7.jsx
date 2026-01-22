@@ -50,8 +50,8 @@ export function Navbar7() {
           <img
             src="/admitted-logo-white.avif"
             alt="Logo image"
-            height="28"
-            className="h-7 w-auto"
+            height="16"
+            className="h-[16px] w-auto"
           />
         </Link>
         <div className="absolute hidden h-screen overflow-auto border-b border-border-primary bg-background-primary px-[5%] pb-24 pt-4 md:pb-0 lg:static lg:ml-6 lg:flex lg:h-auto lg:flex-1 lg:items-center lg:justify-between lg:border-none lg:bg-none lg:px-0 lg:pt-0">

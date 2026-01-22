@@ -76,98 +76,6 @@ export function Timeline18() {
                 <div className="w-3/5 overflow-hidden aspect-[2/3]">
                   <img
                     src="/stock/hack-capital-uv5_bsypFUM-unsplash.avif"
-                    alt="Timeline milestone 2018"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2018</h3>
-                  <p>
-                    Started working with medical imaging datasets and early
-                    machine learning frameworks
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
-                  <img
-                    src="/stock/ivana-cajina-HDd-NQ_AMNQ-unsplash.avif"
-                    alt="Timeline milestone 2019"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2019</h3>
-                  <p>
-                    First production deployment of imaging analysis system for
-                    diagnostic clinic
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
-                  <img
-                    src="/stock/kaidi-guo-jGlqOzrhn9k-unsplash.avif"
-                    alt="Timeline milestone 2020"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2020</h3>
-                  <p>
-                    Expanded into full stack development, building web
-                    interfaces for AI systems
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
-                  <img
-                    src="/stock/kerensa-pickett-GjpUV4k76F8-unsplash.avif"
-                    alt="Timeline milestone 2022"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2022</h3>
-                  <p>
-                    Led cross-functional team deploying machine learning models
-                    at scale
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <div className="w-3/5 overflow-hidden aspect-[2/3]">
-                  <img
-                    src="/stock/nathan-dumlao-q3YZ4g7j9yc-unsplash.avif"
                     alt="Timeline milestone 2023"
                     className="h-full w-full object-cover"
                   />
@@ -180,8 +88,7 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
                   <p>
-                    Founded MedImage AI Recruitments to bridge medical imaging
-                    and engineering
+                    Student ML Developer at SIRI, UIM
                   </p>
                 </div>
               </div>
@@ -190,7 +97,36 @@ export function Timeline18() {
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <div className="w-3/5 overflow-hidden aspect-[2/3]">
                   <img
-                    src="/stock/national-cancer-institute-NFvdKIhxYlU-unsplash.avif"
+                    src="/alex-og-marcus-podcast.avif"
+                    alt="Timeline milestone 2023"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
+                  <p>
+                    <a 
+                      href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Participated in UCPH Study Life podcast
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/digitechsummit.avif"
                     alt="Timeline milestone 2024"
                     className="h-full w-full object-cover"
                   />
@@ -203,8 +139,102 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
-                    Consulting on production ML systems and recruiting
-                    specialized talent
+                    TrafficPulse selected as showcase at Digital Tech Summit Copenhagen
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/bsc.avif"
+                    alt="Timeline milestone 2024"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
+                  <p>
+                    Successfully defended BSc Thesis for Hvidovre hospital 'Foundational Model for Endoscopy' with top grade
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/erasmus.avif"
+                    alt="Timeline milestone 2025"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
+                  <p>
+                    Erasmus exchange to University of Pisa
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/copenhagen-light-festival.avif"
+                    alt="Timeline milestone 2025"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
+                  <p>
+                    <a 
+                      href="https://copenhagenlightfestival.org/en-the-building-bubble-programme-2025/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="underline hover:no-underline"
+                    >
+                      Selected for exhibition at Copenhagen Light Festival 25
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/catscribe.avif"
+                    alt="Timeline milestone 2026"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2026</h3>
+                  <p>
+                    Developed 'catscribe' a purist audio-to-text transcription webapp, marketed for students.
                   </p>
                 </div>
               </div>

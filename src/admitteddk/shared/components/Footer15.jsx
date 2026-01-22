@@ -30,8 +30,8 @@ export function Footer15() {
                   <img
                     src="/admitted-logo-white.avif"
                     alt="Logo image"
-                    className="inline-block h-7 w-auto"
-                    height="28"
+                    className="inline-block h-[16px] w-auto"
+                    height="16"
                   />
                 </Link>
               </div>

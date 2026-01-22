@@ -6,31 +6,31 @@
 export const colors = {
   // Background colors
   background: {
-    primary: "#000000",
-    secondary: "#b52020",
-    dark: "#1a1a1a",
-    navbar: "#264653",
-    footer: "#264653",
+    primary: "rgb(0, 0, 0)",
+    secondary: "rgb(181, 32, 32)",
+    dark: "rgb(26, 26, 26)",
+    navbar: "rgb(38, 70, 83)",
+    footer: "rgb(38, 70, 83)",
   },
   
   // Text colors
   text: {
-    primary: "#ffffff",
-    secondary: "#e5e5e5",
-    black: "#000000",
+    primary: "rgb(255, 255, 255)",
+    secondary: "rgb(229, 229, 229)",
+    black: "rgb(0, 0, 0)",
   },
   
   // Border colors
   border: {
-    primary: "#ff2bf4",
-    white: "#ffffff",
+    primary: "rgb(133, 133, 133)",
+    white: "rgb(255, 255, 255)",
     whiteOpacity: "rgba(255, 255, 255, 0.2)",
     whiteOpacity30: "rgba(255, 255, 255, 0.3)",
   },
   
   // Accent/Button colors
   accent: {
-    primary: "#0A6F8F",
+    primary: "rgb(10, 111, 143)",
     primaryHover: "rgba(10, 111, 143, 0.9)",
     primaryGlow: "rgba(10, 111, 143, 0.15)",
     primaryGlowLight: "rgba(10, 111, 143, 0.08)",
@@ -38,7 +38,7 @@ export const colors = {
   
   // Tag/Badge colors
   tag: {
-    gray: "#6B7280",
+    gray: "rgb(107, 114, 128)",
   },
 };
 
