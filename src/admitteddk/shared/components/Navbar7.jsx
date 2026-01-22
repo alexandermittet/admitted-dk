@@ -43,7 +43,7 @@ export function Navbar7() {
   return (
     <section
       id="relume"
-      className="relative z-[999] flex min-h-16 w-full items-center border-b border-white/20 bg-black text-white px-[5%] md:min-h-18 m-0"
+      className="relative z-[999] flex min-h-16 w-full items-center border-b border-white/20 bg-background-primary text-white px-[5%] md:min-h-18 m-0"
     >
       <div className="mx-auto flex size-full max-w-full items-center justify-between">
         <Link to="/">
@@ -128,7 +128,7 @@ export function Navbar7() {
             initial="close"
             exit="close"
             transition={{ duration: 0.4 }}
-            className="absolute left-0 right-0 top-0 block h-dvh overflow-auto border-b border-border-primary bg-black px-[5%] pb-8 pt-4"
+            className="absolute left-0 right-0 top-0 block h-dvh overflow-auto border-b border-border-primary bg-background-primary px-[5%] pb-8 pt-4"
           >
             <div className="flex flex-col">
               <Link to="/" className="block py-3 text-md text-white">

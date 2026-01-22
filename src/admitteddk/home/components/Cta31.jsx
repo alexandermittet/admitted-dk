@@ -18,7 +18,7 @@ export function Cta31() {
             deployment
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
-            <Button title="Portfolio" onClick={() => navigate("/portfolio")} className="bg-[#0A6F8F] hover:bg-[#0A6F8F]/90 text-white">Portfolio</Button>
+            <Button title="Portfolio" onClick={() => navigate("/portfolio")} className="bg-accent-primary hover:bg-accent-primary-hover text-white">Portfolio</Button>
             <Button title="Contact" variant="secondary" onClick={() => navigate("/contact")}>
               Contact
             </Button>

@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 
 import relumeTailwind from "@relume_io/relume-tailwind";
+import { colors } from "./src/colors.config.js";
+
 export default {
   content: [
     "./index.html",
@@ -15,6 +17,34 @@ export default {
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
         secondary: ['Karla', 'sans-serif'],
+      },
+      colors: {
+        background: {
+          primary: colors.background.primary,
+          secondary: colors.background.secondary,
+          dark: colors.background.dark,
+          navbar: colors.background.navbar,
+          footer: colors.background.footer,
+        },
+        text: {
+          primary: colors.text.primary,
+          secondary: colors.text.secondary,
+          black: colors.text.black,
+        },
+        border: {
+          primary: colors.border.primary,
+          white: colors.border.white,
+        },
+        accent: {
+          primary: colors.accent.primary,
+          "primary-hover": colors.accent.primaryHover,
+        },
+        // Direct access for hover states
+        "accent-primary": colors.accent.primary,
+        "accent-primary-hover": colors.accent.primaryHover,
+        tag: {
+          gray: colors.tag.gray,
+        },
       },
     },
   },

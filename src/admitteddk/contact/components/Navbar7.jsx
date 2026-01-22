@@ -43,7 +43,7 @@ export function Navbar7() {
   return (
     <section
       id="relume"
-      className="relative z-[999] flex min-h-16 w-full items-center border-b border-white/20 bg-[#264653] text-white px-[5%] md:min-h-18"
+      className="relative z-[999] flex min-h-16 w-full items-center border-b border-white/20 bg-background-navbar text-white px-[5%] md:min-h-18"
     >
       <div className="mx-auto flex size-full max-w-full items-center justify-between">
         <Link to="/">

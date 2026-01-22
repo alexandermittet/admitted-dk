@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { colors } from "../colors.config.js";
 
 export function BackgroundEffects() {
   const canvasRef = useRef(null);
@@ -203,7 +204,7 @@ export function BackgroundEffects() {
           width: "500px",
           height: "500px",
           borderRadius: "100%",
-          background: "radial-gradient(circle, rgba(10, 111, 143, 0.15) 0%, rgba(10, 111, 143, 0.08) 40%, transparent 70%)",
+          background: `radial-gradient(circle, ${colors.accent.primaryGlow} 0%, ${colors.accent.primaryGlowLight} 40%, transparent 70%)`,
           filter: "blur(40px)",
           willChange: "transform",
         }}

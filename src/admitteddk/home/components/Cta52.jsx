@@ -23,7 +23,7 @@ export function Cta52() {
                 title="Subscribe"
                 variant="primary"
                 size="sm"
-                className="bg-[#0A6F8F] hover:bg-[#0A6F8F]/90 text-white items-center justify-center px-6 py-3"
+                className="bg-accent-primary hover:bg-accent-primary-hover text-white items-center justify-center px-6 py-3"
               >
                 Subscribe
               </Button>

@@ -15,7 +15,7 @@ export function Testimonial22() {
           <p className="md:text-md">What others say about the work</p>
         </div>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <div className="flex w-full flex-col items-start justify-between border-2 border-white/30 bg-[#1a1a1a] p-6 md:p-8">
+          <div className="flex w-full flex-col items-start justify-between border-2 border-white/30 bg-background-dark p-6 md:p-8">
             <div className="rb-5 mb-5 md:mb-6">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <img
@@ -48,7 +48,7 @@ export function Testimonial22() {
               </Button>
             </div>
           </div>
-          <div className="flex w-full flex-col items-start justify-between border-2 border-white/30 bg-[#1a1a1a] p-6 md:p-8">
+          <div className="flex w-full flex-col items-start justify-between border-2 border-white/30 bg-background-dark p-6 md:p-8">
             <div className="rb-5 mb-5 md:mb-6">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <img
@@ -81,7 +81,7 @@ export function Testimonial22() {
               </Button>
             </div>
           </div>
-          <div className="flex w-full flex-col items-start justify-between border-2 border-white/30 bg-[#1a1a1a] p-6 md:p-8">
+          <div className="flex w-full flex-col items-start justify-between border-2 border-white/30 bg-background-dark p-6 md:p-8">
             <div className="rb-5 mb-5 md:mb-6">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <img

@@ -40,7 +40,7 @@ export function Layout4() {
               </div>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <Button title="Portfolio" variant="secondary" className="bg-[#0A6F8F] hover:bg-[#0A6F8F]/90 text-white">
+              <Button title="Portfolio" variant="secondary" className="bg-accent-primary hover:bg-accent-primary-hover text-white">
                 Portfolio
               </Button>
               <Button

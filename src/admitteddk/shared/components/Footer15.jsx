@@ -13,7 +13,7 @@ import { FaXTwitter } from "react-icons/fa6";
 
 export function Footer15() {
   return (
-    <footer id="relume" className="bg-[#264653] text-white px-[5%] py-12 md:py-18 lg:py-20">
+    <footer id="relume" className="bg-background-footer text-white px-[5%] py-12 md:py-18 lg:py-20">
       <div className="container">
         <div className="flex justify-center pb-10 md:pb-14 lg:pb-16">
           <div className="flex items-center gap-4 md:gap-6">
