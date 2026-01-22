@@ -190,9 +190,8 @@ export function Timeline18() {
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
           <div className="mx-auto w-full max-w-lg text-center">
-            <p className="mb-3 font-semibold md:mb-4">Journey</p>
             <h2 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
-              My story
+              My journey
             </h2>
             <p className="md:text-md">
               Every experience shaped who I am today. Each challenge taught me
