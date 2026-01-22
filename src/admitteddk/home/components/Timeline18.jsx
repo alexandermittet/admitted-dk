@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Button,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -55,9 +54,9 @@ export function Timeline18() {
               last. The path was deliberate.
             </p>
             <div className="mt-6 flex items-center justify-center gap-x-4 md:mt-8">
-              <Button title="Timeline" variant="secondary">
-                Timeline
-              </Button>
+              <p className="text-xs italic text-gray-400">
+                click and drag to scroll the timeline
+              </p>
             </div>
           </div>
         </div>

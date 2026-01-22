@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 export function BackgroundEffects() {
   const canvasRef = useRef(null);
+  const noiseLayerRef = useRef(null);
   const cursorGlowRef = useRef(null);
   const smoothPosition = useRef({ x: 0, y: 0 });
   const targetPosition = useRef({ x: 0, y: 0 });
@@ -105,6 +106,56 @@ export function BackgroundEffects() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Static noise layer
+  useEffect(() => {
+    const canvas = noiseLayerRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    // Generate simple static noise
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const value = Math.random() * 255;
+      data[i] = value;     // R
+      data[i + 1] = value; // G
+      data[i + 2] = value; // B
+      data[i + 3] = 255;   // A (opacity controlled by CSS)
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    const handleResize = () => {
+      const newWidth = window.innerWidth;
+      const newHeight = window.innerHeight;
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      
+      const newImageData = ctx.createImageData(newWidth, newHeight);
+      const newData = newImageData.data;
+      
+      for (let i = 0; i < newData.length; i += 4) {
+        const value = Math.random() * 255;
+        newData[i] = value;
+        newData[i + 1] = value;
+        newData[i + 2] = value;
+        newData[i + 3] = 255;
+      }
+      
+      ctx.putImageData(newImageData, 0, 0);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Smooth cursor tracking
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -140,7 +191,7 @@ export function BackgroundEffects() {
       {/* Fractal noise background */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-0 opacity-30"
+        className="fixed inset-0 pointer-events-none z-0 opacity-50"
         style={{ mixBlendMode: "overlay" }}
       />
       
@@ -156,6 +207,13 @@ export function BackgroundEffects() {
           filter: "blur(40px)",
           willChange: "transform",
         }}
+      />
+      
+      {/* Static noise layer */}
+      <canvas
+        ref={noiseLayerRef}
+        className="fixed inset-0 pointer-events-none z-10"
+        style={{ opacity: 0.10}}
       />
     </>
   );
