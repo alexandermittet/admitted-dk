@@ -12,8 +12,8 @@ export default function Page() {
       <Navbar7 />
       <Header62 />
       <Contact15 />
-      <Contact6 />
-      <Faq4 />
+      {/* <Contact6 />
+      <Faq4 /> */}
       <Footer15 />
     </div>
   );

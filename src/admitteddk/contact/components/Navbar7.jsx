@@ -63,12 +63,6 @@ export function Navbar7() {
               Portfolio
             </Link>
             <Link
-              to="/portfolio"
-              className="relative block w-auto py-3 text-md lg:inline-block lg:px-4 lg:py-6 lg:text-base"
-            >
-              Project
-            </Link>
-            <Link
               to="/contact"
               className="relative block w-auto py-3 text-md lg:inline-block lg:px-4 lg:py-6 lg:text-base"
             >

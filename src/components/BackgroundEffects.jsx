@@ -203,7 +203,7 @@ export function BackgroundEffects() {
           width: "500px",
           height: "500px",
           borderRadius: "100%",
-          background: "radial-gradient(circle, rgba(255, 165, 0, 0.15) 0%, rgba(255, 165, 0, 0.08) 40%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(10, 111, 143, 0.15) 0%, rgba(10, 111, 143, 0.08) 40%, transparent 70%)",
           filter: "blur(40px)",
           willChange: "transform",
         }}
