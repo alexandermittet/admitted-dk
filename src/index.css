@@ -33,11 +33,6 @@ body {
   background-color: var(--background-primary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-  font-size: 0;
-}
-
-body > * {
-  font-size: 1rem;
 }
 
 /* Rounded corners for all buttons */
@@ -60,29 +55,3 @@ img {
   border-radius: 0.9rem;
 }
 
-/* Make FluidCursor more dense and fluid */
-/* Target cursor trail elements - make them follow more closely */
-div[id*="cursor"],
-div[class*="cursor"],
-div[class*="Cursor"] {
-  transition: transform 0.05s linear !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Override any fixed positioned elements that are part of cursor trail */
-body > div[style*="position: fixed"] {
-  transition: transform 0.05s linear !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Ensure cursor elements don't create layout space - they should be fixed positioned */
-body > div[id*="cursor"],
-body > div[class*="cursor"],
-body > div[class*="Cursor"] {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 0 !important;
-}
