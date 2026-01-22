@@ -21,7 +21,7 @@ export function Testimonial22() {
                 <img
                   src="/digital headhunter.avif"
                   alt="Digital Headhunter logo"
-                  className="max-h-12"
+                  className="max-h-[2.7rem]"
                 />
               </div>
               <blockquote className="md:text-md">
@@ -46,9 +46,9 @@ export function Testimonial22() {
             <div className="rb-5 mb-5 md:mb-6">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/webflow-logo.svg"
-                  alt="Webflow logo"
-                  className="max-h-12"
+                  src="/matter-no-bg.avif"
+                  alt="Matter logo"
+                  className="max-h-[2.2rem]"
                 />
               </div>
               <blockquote className="md:text-md">
@@ -73,14 +73,13 @@ export function Testimonial22() {
             <div className="rb-5 mb-5 md:mb-6">
               <div className="mb-8 md:mb-10 lg:mb-12">
                 <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/webflow-logo.svg"
-                  alt="Webflow logo"
-                  className="max-h-12"
+                  src="/ørsted.avif"
+                  alt="Ørsted logo"
+                  className="max-h-[2.0rem]"
                 />
               </div>
               <blockquote className="md:text-md">
-                "Someone who understands both the medicine and the code. That's
-                uncommon and invaluable."
+                "Brings exceptional technical depth to complex energy challenges. Transformed our data infrastructure with precision and strategic insight."
               </blockquote>
               <div className="mt-5 flex w-full flex-col items-start gap-4 md:mt-6 md:w-auto md:flex-row md:items-center">
                 <div>
@@ -91,8 +90,8 @@ export function Testimonial22() {
                   />
                 </div>
                 <div>
-                  <p className="font-semibold">Elena Rodriguez</p>
-                  <p>Director, Medical AI Lab</p>
+                  <p className="font-semibold">Simon Mølsted</p>
+                  <p>@ Ørsted</p>
                 </div>
               </div>
             </div>
