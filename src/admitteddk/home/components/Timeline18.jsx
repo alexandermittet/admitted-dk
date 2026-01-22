@@ -60,13 +60,17 @@ export function Timeline18() {
             </div>
           </div>
         </div>
-        <Carousel
-          setApi={useActive.setApi}
-          className="relative h-full overflow-hidden"
+        <div
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)'
+          }}
         >
-          <div className="absolute left-0 z-20 h-full w-8 bg-gradient-to-r from-black to-transparent lg:w-16" />
-          <div className="absolute right-0 z-20 h-full w-8 bg-gradient-to-l from-black to-transparent lg:w-16" />
-          <CarouselContent className="ml-0">
+          <Carousel
+            setApi={useActive.setApi}
+            className="relative h-full overflow-hidden"
+          >
+            <CarouselContent className="ml-0">
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <div className="w-3/5 overflow-hidden aspect-[2/3]">
@@ -211,6 +215,7 @@ export function Timeline18() {
           />
           <CarouselNext className="z-30 size-12" />
         </Carousel>
+        </div>
       </div>
     </section>
   );
