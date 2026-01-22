@@ -15,7 +15,7 @@ function App() {
         color="white"
         opacity={0.9}
         border="none"
-        TransitionTime={0.9}
+        TransitionTime={0.1}
         hideDefaultCursor={true}
       />
       <BackgroundEffects />

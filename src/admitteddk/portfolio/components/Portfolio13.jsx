@@ -23,7 +23,7 @@ export function Portfolio13() {
               <a href="#">
                 <img
                   src="/stock/cagatay-orhan-PYh4QCX_fmE-unsplash.avif"
-                  className="h-full w-full object-cover"
+                  className="w-full aspect-[4/3] object-fill"
                   alt="Lung segmentation pipeline project"
                 />
               </a>
@@ -77,7 +77,7 @@ export function Portfolio13() {
               <a href="#">
                 <img
                   src="/stock/fotis-fotopoulos-DuHKoV44prg-unsplash.avif"
-                  className="h-full w-full object-cover"
+                  className="w-full aspect-[4/3] object-fill"
                   alt="Pathology classifier project"
                 />
               </a>
@@ -129,7 +129,7 @@ export function Portfolio13() {
               <a href="#">
                 <img
                   src="/stock/hack-capital-uv5_bsypFUM-unsplash.avif"
-                  className="h-full w-full object-cover"
+                  className="w-full aspect-[4/3] object-fill"
                   alt="Diagnostic dashboard project"
                 />
               </a>

@@ -39,3 +39,16 @@ textarea {
 img {
   border-radius: 0.9rem;
 }
+
+/* Make FluidCursor more dense and fluid */
+/* Target cursor trail elements - make them follow more closely */
+div[id*="cursor"],
+div[class*="cursor"],
+div[class*="Cursor"] {
+  transition: transform 0.05s linear !important;
+}
+
+/* Override any fixed positioned elements that are part of cursor trail */
+body > div[style*="position: fixed"] {
+  transition: transform 0.05s linear !important;
+}
