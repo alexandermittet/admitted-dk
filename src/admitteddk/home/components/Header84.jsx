@@ -18,8 +18,9 @@ export function Header84() {
             </h1>
             <p className="md:text-md">
               I build intelligent systems that read what others miss. Deploying
-              machine learning into production means understanding both the
-              science and the code.
+              machine learning needs a deep understanding of both the
+              science, the code, and the people who will use it.
+              After all, what is technology worth if it's not user-friendly.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
               <Button title="Portfolio" variant="primary" onClick={() => navigate("/portfolio")} className="bg-accent-primary hover:bg-accent-primary-hover text-white">
