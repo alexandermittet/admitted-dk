@@ -31,7 +31,7 @@ export function Layout4() {
                   Community engagement
                 </h6>
                 <p>
-                  Volunteering at ITU Analog Coffee Bar, Save the Children Youth, Radial Ungdom, and European Youth
+                  Volunteering at ITU Analog Coffee Bar, Save the Children Youth, Radikal Ungdom, and European Youth
                 </p>
               </div>
             </div>
