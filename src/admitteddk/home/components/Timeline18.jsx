@@ -50,7 +50,7 @@ export function Timeline18() {
       return;
     }
 
-    const REAL_SLIDE_COUNT = 7; // Number of actual slides (not including clones)
+    const REAL_SLIDE_COUNT = 11; // Number of actual slides (not including clones)
     const CLONE_START_INDEX = 0; // Clone of last slide at beginning
     const CLONE_END_INDEX = REAL_SLIDE_COUNT + 1; // Clone of first slide at end
     const FIRST_REAL_INDEX = 1; // First real slide
@@ -255,6 +255,72 @@ export function Timeline18() {
             {/* First real slide */}
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/DI.avif"
+                    alt="Timeline milestone 2023"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
+                  <p>
+                    Student Assistant @ DI
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/stock/nathan-dumlao-q3YZ4g7j9yc-unsplash.avif"
+                    alt="Timeline milestone 2023"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
+                  <p>
+                    Student Assistant @ UIM SIRI
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/alex KU UCPH.avif"
+                    alt="Timeline milestone 2023"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
+                  <p>
+                    Started as Teaching Assistant @ UCPH
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
                   href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
                   target="_blank" 
@@ -283,6 +349,28 @@ export function Timeline18() {
                     >
                       Participated in UCPH Study Life podcast
                     </a>
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
+              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
+                  <img
+                    src="/ITU.avif"
+                    alt="Timeline milestone 2024"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="mb-4 mt-8 flex w-full items-center">
+                  <div className="h-[3px] w-full bg-white" />
+                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
+                  <div className="h-[3px] w-full bg-white" />
+                </div>
+                <div className="px-6 text-center">
+                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
+                  <p>
+                    Teaching Assistant @ ITU
                   </p>
                 </div>
               </div>
@@ -486,18 +574,13 @@ export function Timeline18() {
             {/* Clone of first slide at end for seamless loop */}
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
-                >
+                <div className="w-3/5 overflow-hidden aspect-[2/3]">
                   <img
-                    src="/alex-og-marcus-podcast.avif"
+                    src="/DI.avif"
                     alt="Timeline milestone 2023"
                     className="h-full w-full object-cover"
                   />
-                </a>
+                </div>
                 <div className="mb-4 mt-8 flex w-full items-center">
                   <div className="h-[3px] w-full bg-white" />
                   <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
@@ -506,14 +589,7 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
                   <p>
-                    <a 
-                      href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="underline hover:no-underline"
-                    >
-                      Participated in UCPH Study Life podcast
-                    </a>
+                    Student Assistant @ DI
                   </p>
                 </div>
               </div>

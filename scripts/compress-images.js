@@ -2,8 +2,12 @@ import sharp from 'sharp';
 import { readdir, stat, mkdir, rename } from 'fs/promises';
 import { join, dirname, extname, basename } from 'path';
 import { existsSync } from 'fs';
+import { fileURLToPath } from "url";
 
-const PUBLIC_DIR = join(process.cwd(), 'public');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const PROJECT_ROOT = join(__dirname, "..");
+const PUBLIC_DIR = join(PROJECT_ROOT, "public");
 const OLD_DIR = join(PUBLIC_DIR, 'old');
 
 // Supported image extensions
