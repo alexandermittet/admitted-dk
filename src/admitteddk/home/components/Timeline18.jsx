@@ -213,6 +213,7 @@ export function Timeline18() {
         >
           <Carousel
             setApi={useActive.setApi}
+            opts={{ loop: true }}
             className="relative h-full overflow-hidden"
           >
             <CarouselContent className="ml-0">
