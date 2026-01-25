@@ -279,7 +279,7 @@ export function Timeline18() {
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <div className="w-3/5 overflow-hidden aspect-[2/3]">
                   <img
-                    src="/stock/nathan-dumlao-q3YZ4g7j9yc-unsplash.avif"
+                    src="public/uim siri.avif"
                     alt="Timeline milestone 2023"
                     className="h-full w-full object-cover"
                   />
