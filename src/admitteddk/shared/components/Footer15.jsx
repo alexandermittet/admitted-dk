@@ -10,7 +10,7 @@ import {
   BiLogoGithub,
 } from "react-icons/bi";
 import { FaXTwitter } from "react-icons/fa6";
-import { links } from "../../../../links.config";
+import { links } from "../../../links.config";
 
 export function Footer15() {
   return (

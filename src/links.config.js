@@ -1,4 +1,4 @@
-export const links = {
+  export const links = {
   email: "alex@admitted.dk",
   social: {
     facebook: "https://www.facebook.com/alexandermittet",

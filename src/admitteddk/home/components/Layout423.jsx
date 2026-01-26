@@ -123,7 +123,7 @@ export function Layout423() {
                 </h3>
                 <div className="lg:hidden">
                   <p className="mt-5 text-text-alternative md:mt-6">
-                    Lifts model accuracy by 16 percentage points (55->71) using self supervised masked autoencoder pretraining, for sparse data applications
+                    Lifts model accuracy by 16 percentage points (55→71) using self supervised masked autoencoder pretraining, for sparse data applications
                   </p>
                   <div className="mt-6 md:mt-8">
                     <Button
@@ -148,7 +148,7 @@ export function Layout423() {
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
                   <p className="mt-5 text-text-alternative md:mt-6">
-                    Lifts model accuracy by 16 percentage points (55->71) using self supervised masked autoencoder pretraining, for sparse data applications
+                    Lifts model accuracy by 16 percentage points (55→71) using self supervised masked autoencoder pretraining, for sparse data applications
                   </p>
                 </motion.div>
               </AnimatePresence>
