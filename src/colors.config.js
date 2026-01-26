@@ -42,7 +42,7 @@ export const colors = {
   button: {
     primary: "rgb(10, 111, 143)", // Portfolio, Subscribe buttons
     primaryHover: "rgba(10, 111, 143, 0.9)",
-    contact: "rgb(113, 115, 120)", // Contact buttons
+    contact: "rgb(10, 12, 13)", // Contact buttons
     contactHover: "rgba(0, 0, 0, 0.9)",
     learn: "rgb(0, 0, 0)", // Learn buttons in projects
     learnHover: "rgba(0, 0, 0, 0.9)",
