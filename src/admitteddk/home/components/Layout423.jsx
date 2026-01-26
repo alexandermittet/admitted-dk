@@ -53,7 +53,7 @@ export function Layout423() {
                 loop
                 muted
                 playsInline
-                className="size-full object-cover"
+                className="size-full object-cover rounded-lg"
               />
             </div>
             <div className="group relative flex h-full min-h-[70vh] flex-col justify-end p-6 md:p-8">
@@ -72,7 +72,7 @@ export function Layout423() {
                   <div className="mt-6 md:mt-8">
                     <Button
                       variant="primary"
-                      className="bg-button-learn hover:bg-button-learn-hover text-white"
+                      className="bg-button-learn hover:bg-button-learn-hover text-text-primary"
                     >
                       Learn
                     </Button>
@@ -128,7 +128,7 @@ export function Layout423() {
                   <div className="mt-6 md:mt-8">
                     <Button
                       variant="primary"
-                      className="bg-button-learn hover:bg-button-learn-hover text-white"
+                      className="bg-button-learn hover:bg-button-learn-hover text-text-primary"
                     >
                       Learn
                     </Button>
@@ -184,7 +184,7 @@ export function Layout423() {
                   <div className="mt-6 md:mt-8">
                     <Button
                       variant="primary"
-                      className="bg-button-learn hover:bg-button-learn-hover text-white"
+                      className="bg-button-learn hover:bg-button-learn-hover text-text-primary"
                     >
                       Learn
                     </Button>

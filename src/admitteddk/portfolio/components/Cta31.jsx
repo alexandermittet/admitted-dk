@@ -17,7 +17,7 @@ export function Cta31() {
             Explore detailed case studies and reach out about your next project.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
-            <Button title="Contact" onClick={() => navigate("/contact")} className="bg-button-contact hover:bg-button-contact-hover rounded-lg text-white">Contact</Button>
+            <Button title="Contact" onClick={() => navigate("/contact")} className="bg-button-contact hover:bg-button-contact-hover rounded-lg text-text-primary">Contact</Button>
           </div>
         </div>
         <img

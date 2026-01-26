@@ -17,8 +17,8 @@ export function Cta31() {
             deployment
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
-            <Button title="Portfolio" onClick={() => window.open(links.social.githubPortfolio, '_blank', 'noopener,noreferrer')} className="bg-button-primary hover:bg-button-primary-hover text-white">Portfolio</Button>
-            <Button title="Contact" variant="secondary" onClick={() => window.location.href = `mailto:${links.email}`} className="bg-button-contact hover:bg-button-contact-hover text-white">
+            <Button title="Portfolio" onClick={() => window.open(links.social.githubPortfolio, '_blank', 'noopener,noreferrer')} className="bg-button-primary hover:bg-button-primary-hover text-text-primary">Portfolio</Button>
+            <Button title="Contact" variant="secondary" onClick={() => window.location.href = `mailto:${links.email}`} className="bg-button-contact hover:bg-button-contact-hover text-text-primary">
               Contact
             </Button>
           </div>

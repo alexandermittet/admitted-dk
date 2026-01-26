@@ -30,6 +30,8 @@ export default {
           primary: colors.text.primary,
           secondary: colors.text.secondary,
           black: colors.text.black,
+          alternative: colors.text.alternative,
+          muted: colors.text.muted,
         },
         border: {
           primary: colors.border.primary,

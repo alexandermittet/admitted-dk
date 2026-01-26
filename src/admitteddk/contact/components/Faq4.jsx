@@ -124,7 +124,7 @@ export function Faq4() {
           </h4>
           <p className="md:text-md">Send a message and we'll talk it through</p>
           <div className="mt-6 md:mt-8">
-            <Button title="Contact" variant="secondary" className="bg-button-contact hover:bg-button-contact-hover text-white">
+            <Button title="Contact" variant="secondary" className="bg-button-contact hover:bg-button-contact-hover text-text-primary">
               Contact
             </Button>
           </div>

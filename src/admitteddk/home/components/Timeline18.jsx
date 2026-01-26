@@ -199,7 +199,7 @@ export function Timeline18() {
               resilience. Each opportunity revealed new possibilities.
             </p>
             <div className="mt-6 flex items-center justify-center gap-x-4 md:mt-8">
-              <p className="text-xs italic text-gray-400">
+              <p className="text-xs italic text-text-muted">
                 click and drag to scroll the timeline
               </p>
             </div>

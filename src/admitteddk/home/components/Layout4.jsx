@@ -36,13 +36,13 @@ export function Layout4() {
               </div>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <Button title="Portfolio" variant="secondary" className="bg-button-primary hover:bg-button-primary-hover text-white">
+              <Button title="Portfolio" variant="secondary" className="bg-button-primary hover:bg-button-primary-hover text-text-primary">
                 Portfolio
               </Button>
               <Button
                 title="Contact"
                 variant="primary"
-                className="bg-button-contact hover:bg-button-contact-hover text-white"
+                className="bg-button-contact hover:bg-button-contact-hover text-text-primary"
               >
                 Contact
               </Button>
