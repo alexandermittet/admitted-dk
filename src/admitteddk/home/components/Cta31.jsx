@@ -19,8 +19,8 @@ export function Cta31() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
             <Button title="Portfolio" onClick={() => navigate("/portfolio")} className="bg-accent-primary hover:bg-accent-primary-hover text-white">Portfolio</Button>
-            <Button title="Contact" variant="secondary" onClick={() => navigate("/contact")}>
-              Contact
+            <Button title="Contact" variant="secondary" asChild>
+              <a href="mailto:alex@admitted.dk">Contact</a>
             </Button>
           </div>
         </div>

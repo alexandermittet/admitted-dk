@@ -26,8 +26,8 @@ export function Header84() {
               <Button title="Portfolio" variant="primary" onClick={() => navigate("/portfolio")} className="bg-accent-primary hover:bg-accent-primary-hover text-white">
                 Portfolio
               </Button>
-              <Button title="Contact" variant="secondary" onClick={() => navigate("/contact")}>
-                Contact
+              <Button title="Contact" variant="secondary" asChild>
+                <a href="mailto:alex@admitted.dk">Contact</a>
               </Button>
             </div>
           </div>
