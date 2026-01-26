@@ -41,9 +41,9 @@ export const colors = {
   // Button colors
   button: {
     primary: "rgb(10, 111, 143)", // Portfolio, Subscribe buttons
-    primaryHover: "rgba(10, 111, 143, 0.9)",
-    contact: "rgb(10, 12, 13)", // Contact buttons
-    contactHover: "rgba(0, 0, 0, 0.9)",
+    primaryHover: "rgb(79, 128, 143)",
+    contact: "rgb(3, 30, 39)", // Contact buttons
+    contactHover: "rgb(1, 10, 13)",
     learn: "rgb(0, 0, 0)", // Learn buttons in projects
     learnHover: "rgba(0, 0, 0, 0.9)",
   },
