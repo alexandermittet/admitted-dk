@@ -18,6 +18,8 @@ export const colors = {
     primary: "rgb(255, 255, 255)",
     secondary: "rgb(229, 229, 229)",
     black: "rgb(0, 0, 0)",
+    alternative: "rgb(255, 255, 255)", // For text on dark overlays
+    muted: "rgb(156, 163, 175)", // Gray-400 equivalent for subtle text
   },
   
   // Border colors
@@ -40,7 +42,7 @@ export const colors = {
   button: {
     primary: "rgb(10, 111, 143)", // Portfolio, Subscribe buttons
     primaryHover: "rgba(10, 111, 143, 0.9)",
-    contact: "rgb(0, 0, 0)", // Contact buttons
+    contact: "rgb(113, 115, 120)", // Contact buttons
     contactHover: "rgba(0, 0, 0, 0.9)",
     learn: "rgb(0, 0, 0)", // Learn buttons in projects
     learnHover: "rgba(0, 0, 0, 0.9)",
@@ -81,6 +83,8 @@ export const getCssVariables = () => {
     --text-primary: ${colors.text.primary};
     --text-secondary: ${colors.text.secondary};
     --text-black: ${colors.text.black};
+    --text-alternative: ${colors.text.alternative};
+    --text-muted: ${colors.text.muted};
     --border-primary: ${colors.border.primary};
     --border-white: ${colors.border.white};
     --border-white-opacity: ${colors.border.whiteOpacity};
