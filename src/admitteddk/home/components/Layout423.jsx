@@ -72,7 +72,7 @@ export function Layout423() {
                   <div className="mt-6 md:mt-8">
                     <Button
                       variant="primary"
-                      className="bg-black text-white"
+                      className="bg-button-learn hover:bg-button-learn-hover text-white"
                     >
                       Learn
                     </Button>
@@ -128,7 +128,7 @@ export function Layout423() {
                   <div className="mt-6 md:mt-8">
                     <Button
                       variant="primary"
-                      className="bg-black text-white"
+                      className="bg-button-learn hover:bg-button-learn-hover text-white"
                     >
                       Learn
                     </Button>
@@ -184,7 +184,7 @@ export function Layout423() {
                   <div className="mt-6 md:mt-8">
                     <Button
                       variant="primary"
-                      className="bg-black text-white"
+                      className="bg-button-learn hover:bg-button-learn-hover text-white"
                     >
                       Learn
                     </Button>

@@ -28,12 +28,22 @@ export const colors = {
     whiteOpacity30: "rgba(255, 255, 255, 0.3)",
   },
   
-  // Accent/Button colors
+  // Accent colors
   accent: {
     primary: "rgb(10, 111, 143)",
     primaryHover: "rgba(10, 111, 143, 0.9)",
     primaryGlow: "rgba(10, 111, 143, 0.15)",
     primaryGlowLight: "rgba(10, 111, 143, 0.08)",
+  },
+  
+  // Button colors
+  button: {
+    primary: "rgb(10, 111, 143)", // Portfolio, Subscribe buttons
+    primaryHover: "rgba(10, 111, 143, 0.9)",
+    contact: "rgb(0, 0, 0)", // Contact buttons
+    contactHover: "rgba(0, 0, 0, 0.9)",
+    learn: "rgb(0, 0, 0)", // Learn buttons in projects
+    learnHover: "rgba(0, 0, 0, 0.9)",
   },
   
   // Tag/Badge colors
@@ -79,6 +89,12 @@ export const getCssVariables = () => {
     --accent-primary-hover: ${colors.accent.primaryHover};
     --accent-primary-glow: ${colors.accent.primaryGlow};
     --accent-primary-glow-light: ${colors.accent.primaryGlowLight};
+    --button-primary: ${colors.button.primary};
+    --button-primary-hover: ${colors.button.primaryHover};
+    --button-contact: ${colors.button.contact};
+    --button-contact-hover: ${colors.button.contactHover};
+    --button-learn: ${colors.button.learn};
+    --button-learn-hover: ${colors.button.learnHover};
     --tag-gray: ${colors.tag.gray};
   `;
 };

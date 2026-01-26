@@ -42,6 +42,21 @@ export default {
         // Direct access for hover states
         "accent-primary": colors.accent.primary,
         "accent-primary-hover": colors.accent.primaryHover,
+        button: {
+          primary: colors.button.primary,
+          "primary-hover": colors.button.primaryHover,
+          contact: colors.button.contact,
+          "contact-hover": colors.button.contactHover,
+          learn: colors.button.learn,
+          "learn-hover": colors.button.learnHover,
+        },
+        // Direct access for button hover states
+        "button-primary": colors.button.primary,
+        "button-primary-hover": colors.button.primaryHover,
+        "button-contact": colors.button.contact,
+        "button-contact-hover": colors.button.contactHover,
+        "button-learn": colors.button.learn,
+        "button-learn-hover": colors.button.learnHover,
         tag: {
           gray: colors.tag.gray,
         },
