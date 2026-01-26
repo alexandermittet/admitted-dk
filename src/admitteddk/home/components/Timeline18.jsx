@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@relume_io/relume-ui";
 import React, { useEffect, useState, useRef } from "react";
+import { links } from "../../../links.config";
 
 const useCarousel = () => {
   const [api, setApi] = useState();
@@ -221,7 +222,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://catscribe.admitted.dk" 
+                  href={links.projects.catscribe} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -241,7 +242,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2026</h3>
                   <p>
                     <a 
-                      href="https://catscribe.admitted.dk" 
+                      href={links.projects.catscribe} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
@@ -322,7 +323,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
+                  href={links.external.linkedinPostPodcast} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -342,7 +343,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
                   <p>
                     <a 
-                      href="https://www.linkedin.com/posts/alexandermittet_machine-learning-og-datavidenskab-activity-7051166476245823488-23ST/?originalSubdomain=dk" 
+                      href={links.external.linkedinPostPodcast} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
@@ -400,7 +401,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://www.linkedin.com/posts/alexandermittet_bach-i-mach-stor-dag-for-mig-og-branchen-activity-7211427245058379778-DV_T?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                  href={links.external.linkedinPostBsc} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -420,7 +421,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
                     <a 
-                      href="https://www.linkedin.com/posts/alexandermittet_bach-i-mach-stor-dag-for-mig-og-branchen-activity-7211427245058379778-DV_T?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                      href={links.external.linkedinPostBsc} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
@@ -434,7 +435,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://www.linkedin.com/posts/alexandermittet_kustudieliv-on-instagram-machine-learning-activity-7250255137988898817-sCxp?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                  href={links.external.linkedinPostInstagram} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -458,7 +459,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
                     <a 
-                      href="https://www.linkedin.com/posts/alexandermittet_kustudieliv-on-instagram-machine-learning-activity-7250255137988898817-sCxp?utm_source=share&utm_medium=member_desktop&rcm=ACoAADInas0BrQSyqkdUHkacwjsOask0tTczNgk" 
+                      href={links.external.linkedinPostInstagram} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
@@ -506,7 +507,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://uniavisen.dk/udveksling-kurerede-min-depression/" 
+                  href={links.external.uniavisenArticle} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -526,7 +527,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
                   <p>
                     <a 
-                      href="https://uniavisen.dk/udveksling-kurerede-min-depression/" 
+                      href={links.external.uniavisenArticle} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
@@ -540,7 +541,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://catscribe.admitted.dk" 
+                  href={links.projects.catscribe} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -560,7 +561,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2026</h3>
                   <p>
                     <a 
-                      href="https://catscribe.admitted.dk" 
+                      href={links.projects.catscribe} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"

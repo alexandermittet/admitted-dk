@@ -10,6 +10,7 @@ import {
   BiLogoGithub,
 } from "react-icons/bi";
 import { FaXTwitter } from "react-icons/fa6";
+import { links } from "../../../../links.config";
 
 export function Footer15() {
   return (
@@ -43,29 +44,29 @@ export function Footer15() {
                 <p className="mb-1 text-sm font-semibold">Contact</p>
                 
                 <a
-                  href="mailto:info@relume.io"
+                  href={`mailto:${links.email}`}
                   className="block text-sm underline decoration-black underline-offset-1"
                 >
-                  alex@admitted.dk
+                  {links.email}
                 </a>
               </div>
               <div className="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-x-3">
-                <a href="https://www.facebook.com/alexandermittet">
+                <a href={links.social.facebook}>
                   <BiLogoFacebookCircle className="size-6" />
                 </a>
-                <a href="https://instagram.com/alexandermittet">
+                <a href={links.social.instagram}>
                   <BiLogoInstagram className="size-6" />
                 </a>
-                <a href="https://x.com/alexandermittet">
+                <a href={links.social.twitter}>
                   <FaXTwitter className="size-6 p-0.5" />
                 </a>
-                <a href="https://www.linkedin.com/in/alexandermittet/">
+                <a href={links.social.linkedin}>
                   <BiLogoLinkedinSquare className="size-6" />
                 </a>
-                <a href="https://www.youtube.com/@amittet">
+                <a href={links.social.youtube}>
                   <BiLogoYoutube className="size-6" />
                 </a>
-                <a href="https://github.com/alexandermittet">
+                <a href={links.social.github}>
                   <BiLogoGithub className="size-6" />
                 </a>
               </div>

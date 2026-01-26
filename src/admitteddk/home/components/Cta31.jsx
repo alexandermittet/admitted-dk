@@ -2,6 +2,7 @@
 
 import { Button } from "@relume_io/relume-ui";
 import React from "react";
+import { links } from "../../../links.config";
 
 export function Cta31() {
   return (
@@ -17,10 +18,10 @@ export function Cta31() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
             <Button title="Portfolio" asChild className="bg-accent-primary hover:bg-accent-primary-hover text-white">
-              <a href="https://github.com/alexandermittet?tab=repositories" target="_blank" rel="noopener noreferrer" className="border-0 rounded-full">Portfolio</a>
+              <a href={links.social.githubPortfolio} target="_blank" rel="noopener noreferrer" className="border-0 rounded-lg">Portfolio</a>
             </Button>
             <Button title="Contact" variant="secondary" asChild>
-              <a href="mailto:alex@admitted.dk" className="border-0 rounded-full">Contact</a>
+              <a href={`mailto:${links.email}`} className="border-0 rounded-lg">Contact</a>
             </Button>
           </div>
         </div>

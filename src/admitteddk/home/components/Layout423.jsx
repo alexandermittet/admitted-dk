@@ -4,6 +4,7 @@ import { Button } from "@relume_io/relume-ui";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { RxChevronRight } from "react-icons/rx";
+import { links } from "../../../links.config";
 
 const useRelume = () => {
   const [hoveredFeatureIdx, setHoveredFeatureIdx] = useState(null);
@@ -39,7 +40,7 @@ export function Layout423() {
         </div>
         <div className="flex flex-col justify-between gap-6 md:gap-8 lg:flex-row">
           <a
-            href="https://www.linkedin.com/feed/update/urn:li:activity:7141124407405502464/"
+            href={links.external.trafficPulseLinkedIn}
             className="relative flex w-full flex-col overflow-hidden lg:h-full lg:w-1/2 lg:transition-all lg:duration-200 lg:hover:w-[70%]"
             onMouseOver={hoverState.handleMouseEnter(0)}
             onMouseLeave={hoverState.handleMouseLeave}
@@ -98,7 +99,7 @@ export function Layout423() {
             </div>
           </a>
           <a
-            href="https://github.com/alexandermittet/bachelors-thesis"
+            href={links.projects.bachelorsThesis}
             className="relative flex w-full flex-col overflow-hidden lg:h-full lg:w-1/2 lg:transition-all lg:duration-200 lg:hover:w-[70%]"
             onMouseOver={hoverState.handleMouseEnter(1)}
             onMouseLeave={hoverState.handleMouseLeave}
@@ -154,7 +155,7 @@ export function Layout423() {
             </div>
           </a>
           <a
-            href="https://catscribe.admitted.dk"
+            href={links.projects.catscribe}
             className="relative flex w-full flex-col overflow-hidden lg:h-full lg:w-1/2 lg:transition-all lg:duration-200 lg:hover:w-[70%]"
             onMouseOver={hoverState.handleMouseEnter(2)}
             onMouseLeave={hoverState.handleMouseLeave}
