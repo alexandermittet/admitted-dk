@@ -473,7 +473,7 @@ export function Timeline18() {
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
                 <a 
-                  href="https://copenhagenlightfestival.org/en-the-building-bubble-programme-2025/" 
+                  href={links.external.copenhagenLightFestival} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
@@ -493,7 +493,7 @@ export function Timeline18() {
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
                   <p>
                     <a 
-                      href="https://copenhagenlightfestival.org/en-the-building-bubble-programme-2025/" 
+                      href={links.external.copenhagenLightFestival} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
