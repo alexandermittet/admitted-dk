@@ -22,11 +22,11 @@ export function Header84() {
               After all, what is technology worth if it's not user-friendly.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <Button title="Portfolio" variant="primary" asChild className="bg-accent-primary hover:bg-accent-primary-hover text-white">
-                <a href={links.social.githubPortfolio} target="_blank" rel="noopener noreferrer" className="border-0 rounded-lg">Portfolio</a>
+              <Button title="Portfolio" variant="primary" onClick={() => window.open(links.social.githubPortfolio, '_blank', 'noopener,noreferrer')} className="bg-accent-primary hover:bg-accent-primary-hover text-white">
+                Portfolio
               </Button>
-              <Button title="Contact" variant="secondary" asChild>
-                <a href={`mailto:${links.email}`} className="border-0 rounded-lg">Contact</a>
+              <Button title="Contact" variant="secondary" onClick={() => window.location.href = `mailto:${links.email}`}>
+                Contact
               </Button>
             </div>
           </div>
