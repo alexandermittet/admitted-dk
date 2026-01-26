@@ -53,7 +53,7 @@ export function Layout423() {
                 loop
                 muted
                 playsInline
-                className="size-full object-cover rounded-lg"
+                className="size-full object-cover"
               />
             </div>
             <div className="group relative flex h-full min-h-[70vh] flex-col justify-end p-6 md:p-8">

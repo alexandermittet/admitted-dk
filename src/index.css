@@ -56,6 +56,11 @@ img {
   border-radius: 0.9rem;
 }
 
+/* Rounded corners for all videos */
+video {
+  border-radius: 0.9rem;
+}
+
 /* Footer background color */
 footer.bg-background-footer,
 footer[id="relume"] {
