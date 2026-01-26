@@ -2,10 +2,8 @@
 
 import { Button } from "@relume_io/relume-ui";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 export function Header84() {
-  const navigate = useNavigate();
   return (
     <section id="relume" className="px-[5%] py-12 md:py-16 lg:py-20">
       <div className="container">
@@ -23,8 +21,8 @@ export function Header84() {
               After all, what is technology worth if it's not user-friendly.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <Button title="Portfolio" variant="primary" onClick={() => navigate("/portfolio")} className="bg-accent-primary hover:bg-accent-primary-hover text-white">
-                Portfolio
+              <Button title="Portfolio" variant="primary" asChild className="bg-accent-primary hover:bg-accent-primary-hover text-white">
+                <a href="https://github.com/alexandermittet?tab=repositories" target="_blank" rel="noopener noreferrer">Portfolio</a>
               </Button>
               <Button title="Contact" variant="secondary" asChild>
                 <a href="mailto:alex@admitted.dk">Contact</a>

@@ -2,10 +2,8 @@
 
 import { Button } from "@relume_io/relume-ui";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 export function Cta31() {
-  const navigate = useNavigate();
   return (
     <section id="relume" className="px-[5%] py-16 md:py-24 lg:py-28">
       <div className="container flex flex-col items-center">
@@ -18,7 +16,9 @@ export function Cta31() {
             deployment
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-8">
-            <Button title="Portfolio" onClick={() => navigate("/portfolio")} className="bg-accent-primary hover:bg-accent-primary-hover text-white">Portfolio</Button>
+            <Button title="Portfolio" asChild className="bg-accent-primary hover:bg-accent-primary-hover text-white">
+              <a href="https://github.com/alexandermittet?tab=repositories" target="_blank" rel="noopener noreferrer">Portfolio</a>
+            </Button>
             <Button title="Contact" variant="secondary" asChild>
               <a href="mailto:alex@admitted.dk">Contact</a>
             </Button>
