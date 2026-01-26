@@ -22,10 +22,10 @@ export function Header84() {
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
               <Button title="Portfolio" variant="primary" asChild className="bg-accent-primary hover:bg-accent-primary-hover text-white">
-                <a href="https://github.com/alexandermittet?tab=repositories" target="_blank" rel="noopener noreferrer">Portfolio</a>
+                <a href="https://github.com/alexandermittet?tab=repositories" target="_blank" rel="noopener noreferrer" className="border-0 rounded-full">Portfolio</a>
               </Button>
               <Button title="Contact" variant="secondary" asChild>
-                <a href="mailto:alex@admitted.dk">Contact</a>
+                <a href="mailto:alex@admitted.dk" className="border-0 rounded-full">Contact</a>
               </Button>
             </div>
           </div>
