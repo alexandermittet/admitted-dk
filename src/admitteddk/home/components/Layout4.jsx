@@ -23,7 +23,7 @@ export function Layout4() {
                   Education
                 </h6>
                 <p>
-                  BSc Machine Learning & Data Science and MSc Computer Science from Copenhagen University
+                  BSc Machine Learning & Data Science \n and \n MSc Computer Science from Copenhagen University
                 </p>
               </div>
               <div>
@@ -31,7 +31,7 @@ export function Layout4() {
                   Community engagement
                 </h6>
                 <p>
-                  Volunteering at ITU Analog Coffee Bar, Save the Children Youth, Radikal Ungdom, and European Youth
+                  Volunteering at ITU Analog Coffee Bar, Save the Children Youth, doing development projects in Ukraine and Argentina with Radikal Ungdom, and in Georgia with European Youth Denmark.
                 </p>
               </div>
             </div>
