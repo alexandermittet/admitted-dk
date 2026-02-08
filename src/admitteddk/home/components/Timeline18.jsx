@@ -381,7 +381,7 @@ export function Timeline18() {
                 <div className="w-3/5 overflow-hidden aspect-[2/3]">
                   <img
                     src="/digitechsummit.avif"
-                    alt="Timeline milestone 2024"
+                    alt="Timeline milestone 2023"
                     className="h-full w-full object-cover"
                   />
                 </div>
