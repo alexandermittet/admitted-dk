@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   BiLogoFacebookCircle,
@@ -11,8 +11,11 @@ import {
 } from "react-icons/bi";
 import { FaXTwitter } from "react-icons/fa6";
 import { links } from "../../../links.config";
+import { LegalModal } from "./LegalModal";
 
 export function Footer15() {
+  const [activeModal, setActiveModal] = useState(null);
+
   return (
     <footer id="relume" className="bg-background-footer text-text-primary px-[5%] py-12 md:py-18 lg:py-20">
       <div className="container">
@@ -78,17 +81,20 @@ export function Footer15() {
           <p className="mt-8 md:mt-0">© {new Date().getFullYear()} admitted. All rights reserved.</p>
           <ul className="grid grid-flow-row grid-cols-[max-content] justify-center gap-y-4 text-sm md:grid-flow-col md:gap-x-6 md:gap-y-0">
             <li className="underline">
-              <a href="https://example.com/terms">Terms of Service</a>
+              <button onClick={() => setActiveModal("terms")} className="cursor-pointer underline">Terms of Service</button>
             </li>
             <li className="underline">
-              <a href="https://example.com/privacy">Privacy Policy</a>
+              <button onClick={() => setActiveModal("privacy")} className="cursor-pointer underline">Privacy Policy</button>
             </li>
             <li className="underline">
-              <a href="https://example.com/cookies">Cookies Settings</a>
+              <button onClick={() => setActiveModal("cookies")} className="cursor-pointer underline">Cookies Settings</button>
             </li>
           </ul>
         </div>
       </div>
+      {activeModal && (
+        <LegalModal type={activeModal} onClose={() => setActiveModal(null)} />
+      )}
     </footer>
   );
 }
