@@ -3,6 +3,7 @@
 import { Button } from "@relume_io/relume-ui";
 import React from "react";
 import { RxChevronRight } from "react-icons/rx";
+import { links } from "../../../links.config";
 
 export function Layout4() {
   return (
@@ -36,12 +37,13 @@ export function Layout4() {
               </div>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <Button title="Portfolio" variant="secondary" className="bg-button-primary hover:bg-button-primary-hover text-text-primary">
+              <Button title="Portfolio" variant="secondary" onClick={() => window.open(links.social.githubPortfolio, '_blank', 'noopener,noreferrer')} className="bg-button-primary hover:bg-button-primary-hover text-text-primary">
                 Portfolio
               </Button>
               <Button
                 title="Contact"
                 variant="primary"
+                onClick={() => window.location.href = `mailto:${links.email}`}
                 className="bg-button-contact hover:bg-button-contact-hover text-text-primary"
               >
                 Contact
