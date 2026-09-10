@@ -1,4 +1,4 @@
-<title>A diamond has corners, a circle doesn't</title>
+<title>ML: L1 vs L2 vs no Regularization</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
 <style>
   :root{
@@ -77,8 +77,8 @@
     text-wrap: balance;
     margin: 0;
   }
-  h1{ font-size: clamp(1.7rem, 5vw, 2.3rem); letter-spacing: -0.01em; line-height: 1.2; max-width: 34ch; }
-  h2{ font-size: 1.35rem; margin-top: 0; max-width: 30ch; }
+  h1{ font-size: clamp(1.7rem, 5vw, 2.3rem); letter-spacing: -0.01em; line-height: 1.2; }
+  h2{ font-size: 1.35rem; margin-top: 0; }
   .byline{
     font-size: 0.8rem;
     letter-spacing: 0.02em;
@@ -91,7 +91,6 @@
     line-height: 1.68;
     color: var(--ink-2);
     margin-top: 28px;
-    max-width: 68ch;
   }
   article > p{ margin: 0 0 20px; }
   article p:first-of-type::first-letter{
@@ -307,26 +306,12 @@
 
 <div class="wrap">
 
-  <h1>A diamond has corners. A circle doesn't.</h1>
-  <div class="byline">ML notes for admitted.dk &middot; regularization</div>
+  <h1>L1 vs L2 vs No Regularization</h1>
+  <div class="byline">ML notes for admitted.dk</div>
 
   <article>
-    <p>That's basically the entire reason lasso regression can turn a weight off completely, and ridge regression can't. If that sentence means nothing yet, good, it will by the end of this post.</p>
-
-    <p>Below are three ways of controlling a model's weights: no control at all, L1 (lasso), and L2 (ridge). First as shapes in weight space, then as an actual curve fitted to actual numbers. Both figures are computed live in your browser as you move the sliders, not drawn by hand to make a point.</p>
-  </article>
-
-  <div class="callout">
-    <span class="q">A question that comes up almost every year: is it that the loss surface gets jagged, and regularization smooths it out?</span>
-    Close, but the jaggedness is in the wrong place. The shapes below, the ellipse, the diamond, the circle, are always perfectly smooth. Regularization strength never roughens them up. What actually gets jagged is the <b>fitted function</b>: give a flexible model too much freedom and too little data, and it swings its weights wherever it takes to chase every bump of noise. Penalize large weights, and that freedom disappears. A smoother fit falls out as a side effect, not as the goal.
-  </div>
-
-  <article>
-    <h2>The shape of the constraint</h2>
-    <p>Here's the same regression problem in two dimensions, one weight on each axis. The rings are contours of the loss: every point on a ring gives the same squared error, and the dot at the center is the best fit possible with no restriction at all, wherever the data happens to pull it. It is not the origin, there's no reason it should be. The two axis lines only mark w&#8321; = 0 and w&#8322; = 0, so you can see a weight land exactly on one.</p>
-    <p>No penalty just picks that dot and stops. L1 and L2 both add a rule instead: the weights are only allowed to live inside some region around zero. The solution becomes wherever that region first touches a ring of loss, nothing more exotic than that.</p>
-    <p>The two regions differ in exactly one way that matters. A circle's edge is round everywhere, so as it shrinks, the touching point slides along smoothly, with no reason to prefer any particular spot. A diamond has corners sitting right on the axes, and shrinking it tends to pull the touching point onto one of those corners, because a corner reaches further out relative to its size than a flat edge does. Land on a corner, and the weight there is exactly zero. Not small. Zero.</p>
-    <p>Drag the slider and watch it happen.</p>
+    <p>If the world were perfect, we probably wouldn't need regularization at all. But real loss surfaces, past two dimensions, are rarely one clean slope down to the answer. They're full of bumps, shallow pits, and false valleys that look like the bottom but aren't. An optimizer rolling down that surface can fall into one of those pits early and never find its way out.</p>
+    <p>That's the deep-end version, further down this post. Here's the simplest possible one first, live: two weights, one smooth bowl, three ways of controlling where the ball is allowed to stop. That's basically the entire reason lasso regression can turn a weight off completely, and ridge regression can't. Drag the slider below.</p>
   </article>
 
   <figure>
@@ -363,6 +348,18 @@
     </div>
     <figcaption>Fig. 1 &mdash; same loss, three constraints. Drag the regularization amount and watch where L1 lands versus L2.</figcaption>
   </figure>
+
+  <article>
+    <h2>The shape of the constraint</h2>
+    <p>Here's what you just dragged. It's the same regression problem in two dimensions, one weight on each axis. The rings are contours of the loss: every point on a ring gives the same squared error, and the dot at the center is the best fit possible with no restriction at all, wherever the data happens to pull it. It is not the origin, there's no reason it should be. The two axis lines only mark w&#8321; = 0 and w&#8322; = 0, so you can see a weight land exactly on one.</p>
+    <p>No penalty just picks that dot and stops. L1 and L2 both add a rule instead: the weights are only allowed to live inside some region around zero. The solution becomes wherever that region first touches a ring of loss, nothing more exotic than that.</p>
+    <p>The two regions differ in exactly one way that matters. A circle's edge is round everywhere, so as it shrinks, the touching point slides along smoothly, with no reason to prefer any particular spot. A diamond has corners sitting right on the axes, and shrinking it tends to pull the touching point onto one of those corners, because a corner reaches further out relative to its size than a flat edge does. Land on a corner, and the weight there is exactly zero. Not small. Zero.</p>
+  </article>
+
+  <div class="callout">
+    <span class="q">A question that comes up almost every year: is it that the loss surface gets jagged, and regularization smooths it out?</span>
+    Close, but the jaggedness is in the wrong place. The shapes above were always perfectly smooth, an ellipse, a diamond, a circle. Regularization strength never roughens them up. What actually gets jagged is the <b>fitted function</b>, which is exactly what's coming up next: give a flexible model too much freedom and too little data, and it swings its weights wherever it takes to chase every bump of noise. Penalize large weights, and that freedom disappears. A smoother fit falls out as a side effect, not as the goal.
+  </div>
 
   <article>
     <h2>Same idea, an actual fit</h2>
@@ -445,6 +442,11 @@
   </article>
 
   <figure>
+    <div class="controls">
+      <label for="err-slider">Regularization strength (&lambda;)</label>
+      <input type="range" id="err-slider" min="0" max="1" step="0.005" value="0.32">
+      <span class="val" id="err-val">0.32</span>
+    </div>
     <div class="panels" id="err-panels">
       <div class="panel">
         <div class="panel-title"><span class="swatch" style="background:var(--l1)"></span>L1 (lasso)</div>
@@ -464,7 +466,7 @@
   </figure>
 
   <article>
-    <p class="exercise"><b>Try this:</b> push the L1 slider on the fit panel as high as it goes, then bring it down slowly. Watch how many coefficients turn on before the curve stops looking like garbage, and watch the vertical line in Fig. 2c cross the dot at roughly the same place. That dot is what cross-validation finds: the strength that does best on data the model hasn't seen, instead of eyeballing a chart.</p>
+    <p class="exercise"><b>Try this:</b> push the L1 slider on the fit panel (Fig. 2) as high as it goes, then bring it down slowly, and note roughly where the curve stops looking like garbage. Now try Fig. 2c's own slider and see where its dot actually sits. That dot is what cross-validation finds: the strength that does best on data the model hasn't seen, instead of eyeballing a chart. See how close your eyeball estimate got.</p>
   </article>
 
   <div class="closing">
@@ -499,15 +501,15 @@
   </figure>
 
   <article>
-    <p>Plain gradient descent (black) zigzags hardest when the bowl is most stretched out, at low regularization, and travels straighter once the slider rounds it off, though push the strength far enough and even a round bowl gets steep enough to make a fixed step size wobble again. The adaptive methods barely react either way, they rescale their own steps to whatever curvature they find underfoot.</p>
-    <p>AdamW is worth watching closely here. The other five fold the regularization straight into the gradient, the same mechanism as ridge in Fig. 1 and 2. AdamW instead subtracts it from the weights directly on every step, decoupled from its adaptive part entirely. That decoupling is the actual difference between Adam and AdamW, and it's why AdamW tends to land closer to zero than the same &lambda; run through gradient-based regularization on any of the adaptive methods.</p>
+    <p>Plain gradient descent (black) zigzags hardest when the bowl is most stretched out, at low regularization, and travels straighter once the slider rounds it off, though push the strength far enough and even a round bowl gets steep enough to make a fixed step size wobble again. The adaptive methods barely react either way, they rescale their own steps to whatever curvature they find underfoot. It also just needs more steps to get anywhere, which is why it's still moving after the others have stopped. Dupont's original gave plain SGD a bigger learning rate than everyone else too (2e-2 against 1e-2, in his own words "to make it converge faster"), and it still took 500 steps against Adam's 100. Same idea here: SGD and Prodigy both run longer than the rest.</p>
+    <p>These races run at a fixed 9 milliseconds per step, the same timing for all six optimizers. SGD and Prodigy take 400 steps each, Momentum and Nesterov take 200, and RMSProp and AdamW take 150. Watch closely and some paths will freeze mid-slide while others keep rolling: when a path stops, that optimizer has finished its steps and you're seeing the literal difference in iteration count. That frozen moment while other optimizers continue is the step-budget inequality made visible.</p>
+    <p>AdamW is worth watching closely here, and it's the one that can look broken at first glance: at higher regularization its path stops well short of the ring center, marked instead with a small green diamond of its own. That's not it giving up early. The other five fold the regularization straight into the gradient, the same mechanism as ridge in Fig. 1 and 2, and all converge on the same ring center. AdamW instead subtracts the regularization from the weights directly on every step, decoupled from its adaptive part entirely. That decoupling is the actual difference between Adam and AdamW, and it's why AdamW's diamond consistently lands closer to zero than the ring the other five are aiming for.</p>
     <p>One optimizer here has no learning rate at all. Prodigy estimates its own step size from how far it has already travelled from where it started, which is also why it looks hesitant for the first stretch of any race: it's still working out the scale of the problem.</p>
   </article>
 
   <article>
     <h2>A rougher hill</h2>
-    <p>If the world were perfect, we probably wouldn't need regularization at all. But real loss surfaces, past two dimensions, are rarely one clean slope down to the answer. They're full of bumps, shallow pits, and false valleys that look like the bottom but aren't. An optimizer rolling down that surface can fall into one of those pits early and never find its way out.</p>
-    <p>Below is a much rougher surface than Fig. 3's tilted bowl: several wells of different depths, one of them the real bottom, the rest just convincing enough to trap something rolling through. Click to drop the same six optimizers in and watch where they actually end up. Different starting points, and different optimizers from the same starting point, can land in entirely different holes.</p>
+    <p>Remember the bumps and false valleys from the opening. Fig. 3's bowl didn't actually have any, one smooth slope down. Here's a surface that does: several wells of different depths, one of them the real bottom, the rest just convincing enough to trap something rolling through. Click to drop the same six optimizers in and watch where they actually end up. Different starting points, and different optimizers from the same starting point, can land in entirely different holes.</p>
     <p>Regularization helps here too, and the slider does the same thing it did in Fig. 3: it adds a pull toward the center on top of the existing surface. Turn it up and watch the shallow pits get swallowed by that pull first, the surface simplifies down to a single basin, and it stops mattering where anyone started.</p>
   </article>
 
@@ -531,6 +533,7 @@
 
   <article>
     <p>At low regularization, watch where the deepest well actually is versus where most starting points end up: the true bottom isn't always the easiest one to reach. That's a real, general fact about optimizing anything complicated, a gradient only ever tells you which way is down from where you're standing, never whether there's a better down somewhere else. Momentum can carry an optimizer straight through a shallow pit it would otherwise have stopped in, which is one reason it's rarely turned off in practice.</p>
+    <p>This figure uses a different timing model: all six paths are drawn as a fraction of their total length over one shared 4-second window, so every optimizer finishes at exactly the same moment regardless of how many internal steps it took. Prodigy needs 6,000 steps to warm up on this flatter surface, compared to 400 for SGD, 200 for Momentum and Nesterov, and 150 each for RMSProp and AdamW. That early stillness in Prodigy's path while others keep moving is real, it's the algorithm slowly building signal before it dares to step, just time-compressed into a normal animation length. The gap in raw work, hidden by the shared duration, is why Prodigy needs more steps to get anywhere: thousands of tiny exploratory moves versus hundreds for the rest.</p>
   </article>
 
   <footer>Loss surfaces and fitted curves above are computed live from closed-form ridge and lasso solutions, not illustrative sketches. Figs. 3 and 4's optimizer paths are real gradient descent, run in your browser.</footer>
@@ -962,15 +965,23 @@
     renderBars(barContainers.none, bNone, 'var(--none)');
     renderBars(barContainers.l1, bLasso, 'var(--l1)');
     renderBars(barContainers.l2, bRidge, 'var(--l2)');
-
-    updateErrorMarker(t);
   }
-
-  errMarkers.l1 = drawErrorPanel(errSvgs.l1, errCurves.lasso, 'var(--l1)');
-  errMarkers.l2 = drawErrorPanel(errSvgs.l2, errCurves.ridge, 'var(--l2)');
 
   document.getElementById('fit-slider').addEventListener('input', renderFit);
   renderFit();
+
+  // Fig. 2c has its own slider, independent of Fig. 2's, so it can be
+  // explored on its own rather than silently riding whatever Fig. 2 is set to.
+  errMarkers.l1 = drawErrorPanel(errSvgs.l1, errCurves.lasso, 'var(--l1)');
+  errMarkers.l2 = drawErrorPanel(errSvgs.l2, errCurves.ridge, 'var(--l2)');
+
+  function renderErrMarker(){
+    const t = parseFloat(document.getElementById('err-slider').value);
+    document.getElementById('err-val').textContent = t.toFixed(3);
+    updateErrorMarker(t);
+  }
+  document.getElementById('err-slider').addEventListener('input', renderErrMarker);
+  renderErrMarker();
 
   // ===================================================================
   // Fig. 2b: same idea, pushed harder. N=16 points, degree 15 polynomial
@@ -1216,12 +1227,19 @@
       }
     },
     {
-      // AdamW: weight decay = 2*lambda, applied directly to the parameter,
-      // decoupled from the adaptive denominator and NOT routed through the
-      // gradient the way the other five use `lambda`. That's the whole point.
+      // AdamW: weight decay grows with lambda (matching 2*lambda for small
+      // lambda, same as before) but saturates as lambda grows, so lr*wd
+      // stays comfortably under 1 (non-oscillatory) even at the top of the
+      // slider. Uncapped, lr*wd approached 2 (the marginal-stability bound
+      // of the x -= lr*wd*x recurrence taken alone) at this figure's max
+      // lambda, which produced a sign-flipping overshoot on every step that
+      // grew with lambda. Applied directly to the parameter, decoupled from
+      // the adaptive denominator and NOT routed through the gradient the
+      // way the other five use `lambda`. That's the whole point.
       key:'adamw', label:'AdamW', color:'#008300',
       gen(x0,y0,lambda){
-        const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8, wd=2*lambda;
+        const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8;
+        const wdRaw=2*lambda, wd=wdRaw/(1+wdRaw/3);
         let x=x0,y=y0,mx=0,my=0,vx=0,vy=0; const h=[[x,y]];
         for(let i=1;i<=steps;i++){
           const [gx,gy]=optGrad(x,y,0);
@@ -1369,6 +1387,20 @@
     const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
     const maxLen = Math.max(...paths.map(p => p.hist.length), 1);
 
+    // AdamW's decoupled weight decay targets a different resting point than
+    // the shared ring center the other five converge to (see the paragraph
+    // below this figure), so mark its own endpoint distinctly instead of
+    // leaving it looking like it just stopped short.
+    const adamwPath = paths.find(p => p.o.key === 'adamw');
+    if (adamwPath){
+      const [fx, fy] = adamwPath.hist[adamwPath.hist.length - 1];
+      const [mx, my] = mapOpt(fx, fy);
+      overlaySvg.appendChild(svgEl('rect', {
+        x: mx-4, y: my-4, width: 8, height: 8,
+        fill: 'none', stroke: adamwPath.o.color, 'stroke-width': 1.5, transform: `rotate(45 ${mx} ${my})`
+      }));
+    }
+
     const pathEls = {};
     paths.forEach(p => {
       const el = svgEl('path', { d:'', fill:'none', stroke:p.o.color, 'stroke-width':2.2, 'stroke-opacity':0.9 });
@@ -1477,9 +1509,10 @@
       return [ WILD_DOM.min + (px/WILD_SIZE)*span, WILD_DOM.max - (py/WILD_SIZE)*span ];
     }
 
-    // Same six optimizers and hyperparameters as Fig. 3, verified stable
-    // (no blowup) across this landscape and the full lambda range in Node
-    // before wiring up.
+    // Same six optimizers as Fig. 3, verified stable (no blowup) across
+    // this landscape and the full lambda range in Node before wiring up.
+    // Hyperparameters match Fig. 3 except Prodigy's beta3/steps, tuned
+    // further for this rougher, flatter surface (see comment above it).
     const WILD_OPTS = [
       { key:'sgd', label:'SGD', color:'var(--ink)',
         gen(x0,y0,lambda){
@@ -1514,9 +1547,13 @@
           return h;
         }
       },
+      // Same saturating weight decay as Fig. 3's AdamW (wd grows like
+      // 2*lambda for small lambda but is capped so lr*wd stays well under
+      // 1), for consistency: they're meant to be the same optimizer.
       { key:'adamw', label:'AdamW', color:'#008300',
         gen(x0,y0,lambda){
-          const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8, wd=2*lambda;
+          const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8;
+          const wdRaw=2*lambda, wd=wdRaw/(1+wdRaw/3);
           let x=x0,y=y0,mx=0,my=0,vx=0,vy=0; const h=[[x,y]];
           for(let i=1;i<=steps;i++){
             const [gx,gy]=wildGrad(x,y,0);
@@ -1530,9 +1567,19 @@
           return h;
         }
       },
+      // Prodigy needs a longer leash here than in Fig. 3: this surface's
+      // gradients are much weaker almost everywhere (background pull is
+      // (WILD_K+lambda)*x with WILD_K=0.12, versus Fig. 3's much steeper
+      // bowl), so the r/s accumulators that estimate its step size take far
+      // longer to build up enough signal to grow d past its 1e-6 floor.
+      // beta3 is tuned down further than Fig. 3's already-adjusted value,
+      // and steps is raised substantially, purely so that warm-up finishes
+      // (and the resulting jump becomes visible) inside this landscape's
+      // click-to-race animation instead of leaving Prodigy looking frozen.
+      // Mechanism is unchanged from Fig. 3's verified-correct Prodigy.
       { key:'prodigy', label:'Prodigy', color:'#c98500',
         gen(x0,y0,lambda){
-          const steps=400, b1=0.9, b2=0.999, beta3=0.98, eps=1e-8, gamma=1;
+          const steps=6000, b1=0.9, b2=0.999, beta3=0.3, eps=1e-8, gamma=1;
           let x=x0,y=y0; const ix=x0, iy=y0;
           let mx=0,my=0,vx=0,vy=0,sx=0,sy=0,r=0,d=1e-6;
           const h=[[x,y]];
@@ -1630,7 +1677,6 @@
 
       const active = WILD_OPTS.filter(o => wildEnabled[o.key]);
       const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
-      const maxLen = Math.max(...paths.map(p => p.hist.length), 1);
 
       const pathEls = {};
       paths.forEach(p => {
@@ -1639,13 +1685,22 @@
         pathEls[p.o.key] = el;
       });
 
-      const stepMs = 9;
+      // Prodigy needs thousands of raw steps to warm up on this flatter
+      // surface (see the comment on its `gen` above), way more than the
+      // other five. Rather than stepping everyone at the same ms-per-step
+      // (which would stretch the whole race to Prodigy's pace, a 50+ second
+      // wait), every path is drawn as a fraction of its OWN length over one
+      // shared, fixed wall-clock duration. Fast optimizers still finish
+      // "faster" in the sense of needing fewer of their own steps to settle,
+      // Prodigy's early stillness then sudden movement is preserved, it's
+      // just all compressed into a normal-length animation.
+      const DURATION_MS = 4000;
       const t0 = performance.now();
       function frame(now){
         if (myId !== wildRaceId) return;
-        const step = Math.min(Math.floor((now-t0)/stepMs), maxLen-1);
+        const frac = Math.min((now-t0)/DURATION_MS, 1);
         paths.forEach(p => {
-          const n = Math.min(step+1, p.hist.length);
+          const n = Math.max(1, Math.min(Math.round(frac*p.hist.length), p.hist.length));
           let d = '';
           for (let i=0;i<n;i++){
             const [px,py] = mapWild(p.hist[i][0], p.hist[i][1]);
@@ -1653,7 +1708,7 @@
           }
           pathEls[p.o.key].setAttribute('d', d);
         });
-        if (step < maxLen-1) requestAnimationFrame(frame);
+        if (frac < 1) requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
     }
