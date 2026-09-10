@@ -384,6 +384,10 @@
   // ===================================================================
   // Fig. 3: optimizer race on the same bowl, reusing A and w0 from Fig. 1
   // ===================================================================
+  // Same bowl constants as the regularization post's Fig. 1: anisotropic
+  // quadratic loss with its unconstrained minimum at w0 (not the origin).
+  const A = { a: 0.6, b: 5, c: 0 };
+  const w0 = { x: 0.3, y: 1.6 };
   const OPT_DOM = { min: -5.5, max: 5.5 };
   const OPT_SIZE = 420;
 
