@@ -60,7 +60,7 @@ export function Navbar7() {
               href="/ml/regularization"
               className="relative block w-auto py-3 text-md text-text-primary lg:inline-block lg:px-4 lg:py-6 lg:text-base"
             >
-              Notes
+              Machine Learning Notes
             </a>
           </div>
         </div>
@@ -129,7 +129,7 @@ export function Navbar7() {
                 Home
               </Link>
               <a href="/ml/regularization" className="block py-3 text-md text-white">
-                Notes
+                Machine Learning Notes
               </a>
             </div>
           </motion.div>
