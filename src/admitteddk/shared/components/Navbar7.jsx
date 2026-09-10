@@ -56,18 +56,12 @@ export function Navbar7() {
         </Link>
         <div className="absolute hidden h-screen overflow-auto border-b border-border-primary bg-background-primary px-[5%] pb-24 pt-4 md:pb-0 lg:static lg:ml-6 lg:flex lg:h-auto lg:flex-1 lg:items-center lg:justify-between lg:border-none lg:bg-transparent lg:px-0 lg:pt-0">
           <div className="flex flex-col items-center lg:flex-row">
-            {/* <Link
-              to="/portfolio"
+            <a
+              href="/ml/regularization"
               className="relative block w-auto py-3 text-md text-text-primary lg:inline-block lg:px-4 lg:py-6 lg:text-base"
             >
-              Portfolio
-            </Link>
-            <Link
-              to="/contact"
-              className="relative block w-auto py-3 text-md text-text-primary lg:inline-block lg:px-4 lg:py-6 lg:text-base"
-            >
-              Contact
-            </Link> */}
+              Machine Learning Notes
+            </a>
           </div>
         </div>
         <button
@@ -134,12 +128,9 @@ export function Navbar7() {
               <Link to="/" className="block py-3 text-md text-text-primary">
                 Home
               </Link>
-              {/* <Link to="/portfolio" className="block py-3 text-md text-white">
-                Portfolio
-              </Link>
-              <Link to="/contact" className="block py-3 text-md text-white">
-                Contact
-              </Link> */}
+              <a href="/ml/regularization" className="block py-3 text-md text-white">
+                Machine Learning Notes
+              </a>
             </div>
           </motion.div>
         </motion.div>

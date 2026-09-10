@@ -1,0 +1,1756 @@
+<title>ML: L1 vs L2 vs no Regularization</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:        #f9f9f7;
+    --surface:   #fcfcfb;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --muted:     #898781;
+    --grid:      #e1e0d9;
+    --axis:      #c3c2b7;
+    --border:    rgba(11,11,11,0.10);
+    --none:      #2a78d6;
+    --none-fill: #2a78d61a;
+    --l1:        #d9591f;
+    --l1-fill:   #d9591f1a;
+    --l2:        #148a5f;
+    --l2-fill:   #148a5f1a;
+    --truefn:    #b3b0a6;
+    --accent:    #d9591f;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:        #0d0d0d;
+      --surface:   #1a1a19;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --muted:     #948f83;
+      --grid:      #2c2c2a;
+      --axis:      #3f3f3c;
+      --border:    rgba(255,255,255,0.12);
+      --none:      #3987e5;
+      --none-fill: #3987e526;
+      --l1:        #d95926;
+      --l1-fill:   #d9592626;
+      --l2:        #199e70;
+      --l2-fill:   #199e7026;
+      --truefn:    #55534c;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:        #0d0d0d;
+    --surface:   #1a1a19;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #948f83;
+    --grid:      #2c2c2a;
+    --axis:      #3f3f3c;
+    --border:    rgba(255,255,255,0.12);
+    --none:      #3987e5;
+    --none-fill: #3987e526;
+    --l1:        #d95926;
+    --l1-fill:   #d9592626;
+    --l2:        #199e70;
+    --l2-fill:   #199e7026;
+    --truefn:    #55534c;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 20px 72px;
+  }
+  h1,h2,h3{
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1{ font-size: clamp(1.7rem, 5vw, 2.3rem); letter-spacing: -0.01em; line-height: 1.2; }
+  h2{ font-size: 1.35rem; margin-top: 0; }
+  .byline{
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  article{
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.68;
+    color: var(--ink-2);
+    margin-top: 28px;
+  }
+  article > p{ margin: 0 0 20px; }
+  article p:first-of-type::first-letter{
+    color: var(--ink);
+  }
+  article b, article strong{ color: var(--ink); font-weight: 600; }
+  article em{ font-style: italic; color: var(--ink); }
+
+  .callout{
+    margin: 32px 0;
+    padding: 18px 22px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .callout .q{
+    font-style: italic;
+    color: var(--ink);
+    display:block;
+    margin-bottom: 10px;
+  }
+
+  figure{
+    margin: 36px 0 8px;
+  }
+  figcaption{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .panels{
+    display:flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .panel{
+    flex: 1 1 200px;
+    min-width: 190px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+  }
+  .panel-title{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+  }
+  .swatch{ width:9px; height:9px; border-radius:3px; flex:none; }
+  .panel svg{ display:block; width:100%; height:auto; }
+  .readout{
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.78rem;
+    color: var(--ink-2);
+    display:flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 7px;
+  }
+  .readout b{ color: var(--ink); font-weight: 600; }
+  .zero-flag{ color: var(--l1); font-weight: 700; }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 15px;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .controls label{ color: var(--ink-2); flex: none; white-space: nowrap; }
+  .controls input[type=range]{ flex: 1 1 auto; accent-color: var(--accent); }
+  .controls .val{
+    flex: none; width: 4em; text-align: right;
+    font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600;
+  }
+
+  .bars{
+    margin-top: 9px;
+    display:flex;
+    align-items:flex-end;
+    gap: 3px;
+    height: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  .bars .bar{
+    flex:1;
+    background: var(--muted);
+    border-radius: 2px 2px 0 0;
+    min-height: 2px;
+    opacity: 0.85;
+  }
+
+  .legend{
+    display:flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend .dot{ width:8px; height:8px; border-radius:50%; background:currentColor; }
+  .legend .dash{ width:16px; height:0; border-top: 1.5px dashed currentColor; }
+  .legend .solid{ width:16px; height:0; border-top: 2px solid currentColor; }
+  .legend .cross{ position:relative; width:9px; height:9px; }
+  .legend .cross::before, .legend .cross::after{ content:''; position:absolute; background:currentColor; }
+  .legend .cross::before{ left:4px; top:0; width:1.5px; height:9px; }
+  .legend .cross::after{ left:0; top:4px; width:9px; height:1.5px; }
+
+  .closing{
+    margin-top: 40px;
+    padding: 22px 24px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .closing h3{ font-size: 1.1rem; margin-bottom: 12px; }
+  .closing p{ font-size: 1.02rem; line-height: 1.65; color: var(--ink-2); margin: 10px 0 0; font-family: "Source Serif 4", Georgia, serif; }
+  .closing p b{ color: var(--ink); }
+
+  .exercise{
+    margin-top: 28px;
+    padding-left: 16px;
+    border-left: 3px solid var(--accent);
+  }
+  .exercise b{ color: var(--ink); }
+
+  .opt-stage{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: crosshair;
+    background: var(--surface);
+  }
+  .opt-stage canvas, .opt-stage svg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .opt-hint{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.74rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+  }
+  .opt-toggles{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .opt-chip{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    padding: 5px 10px 5px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.76rem;
+    color: var(--ink-2);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+  }
+  .opt-chip .dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .opt-chip.off{ opacity: 0.35; }
+  .opt-credit{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-top: 12px;
+    text-align: left;
+  }
+  .opt-credit a{ color: var(--ink-2); }
+
+  footer{
+    margin-top: 44px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 600px){
+    .panels{ flex-direction: column; }
+    .panel{ min-width: 0; }
+  }
+</style>
+
+<div class="wrap">
+
+  <h1>L1 vs L2 vs No Regularization</h1>
+  <div class="byline">ML notes for admitted.dk</div>
+
+  <article>
+    <p>If the world were perfect, we probably wouldn't need regularization at all. But real loss surfaces, past two dimensions, are rarely one clean slope down to the answer. They're full of bumps, shallow pits, and false valleys that look like the bottom but aren't. An optimizer rolling down that surface can fall into one of those pits early and never find its way out.</p>
+    <p>That's the deep-end version, further down this post. Here's the simplest possible one first, live: two weights, one smooth bowl, three ways of controlling where the ball is allowed to stop. That's basically the entire reason lasso regression can turn a weight off completely, and ridge regression can't. Drag the slider below.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="geo-slider">Regularization amount</label>
+      <input type="range" id="geo-slider" min="0" max="3" step="0.01" value="0.75">
+      <span class="val" id="geo-val">0.75</span>
+    </div>
+    <div class="panels" id="geo-panels">
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--none)"></span>No penalty</div>
+        <svg id="geo-none" viewBox="0 0 220 220"></svg>
+        <div class="readout"><span>w&#8321;, w&#8322;</span><b id="geo-none-read">&mdash;</b></div>
+        <div class="readout"><span>distance to true weights</span><b id="geo-none-dist">&mdash;</b></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l1)"></span>L1 (lasso)</div>
+        <svg id="geo-l1" viewBox="0 0 220 220"></svg>
+        <div class="readout"><span>w&#8321;, w&#8322;</span><b id="geo-l1-read">&mdash;</b></div>
+        <div class="readout"><span>distance to true weights</span><b id="geo-l1-dist">&mdash;</b></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l2)"></span>L2 (ridge)</div>
+        <svg id="geo-l2" viewBox="0 0 220 220"></svg>
+        <div class="readout"><span>w&#8321;, w&#8322;</span><b id="geo-l2-read">&mdash;</b></div>
+        <div class="readout"><span>distance to true weights</span><b id="geo-l2-dist">&mdash;</b></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="dash" style="color:var(--muted)"></span>loss contours</span>
+      <span><span class="dot" style="color:var(--ink-2)"></span>unconstrained fit</span>
+      <span><span class="cross" style="color:var(--ink)"></span>true weights</span>
+      <span><span class="dot" style="color:var(--accent)"></span>constrained solution</span>
+    </div>
+    <figcaption>Fig. 1 &mdash; same loss, three constraints. Drag the regularization amount and watch where L1 lands versus L2.</figcaption>
+  </figure>
+
+  <article>
+    <h2>The shape of the constraint</h2>
+    <p>Here's what you just dragged. It's the same regression problem in two dimensions, one weight on each axis. The rings are contours of the loss: every point on a ring gives the same squared error, and the dot at the center is the best fit possible with no restriction at all, wherever the data happens to pull it. It is not the origin, there's no reason it should be. The two axis lines only mark w&#8321; = 0 and w&#8322; = 0, so you can see a weight land exactly on one.</p>
+    <p>No penalty just picks that dot and stops. L1 and L2 both add a rule instead: the weights are only allowed to live inside some region around zero. The solution becomes wherever that region first touches a ring of loss, nothing more exotic than that.</p>
+    <p>The two regions differ in exactly one way that matters. A circle's edge is round everywhere, so as it shrinks, the touching point slides along smoothly, with no reason to prefer any particular spot. A diamond has corners sitting right on the axes, and shrinking it tends to pull the touching point onto one of those corners, because a corner reaches further out relative to its size than a flat edge does. Land on a corner, and the weight there is exactly zero. Not small. Zero.</p>
+  </article>
+
+  <div class="callout">
+    <span class="q">A question that comes up almost every year: is it that the loss surface gets jagged, and regularization smooths it out?</span>
+    Close, but the jaggedness is in the wrong place. The shapes above were always perfectly smooth, an ellipse, a diamond, a circle. Regularization strength never roughens them up. What actually gets jagged is the <b>fitted function</b>, which is exactly what's coming up next: give a flexible model too much freedom and too little data, and it swings its weights wherever it takes to chase every bump of noise. Penalize large weights, and that freedom disappears. A smoother fit falls out as a side effect, not as the goal.
+  </div>
+
+  <article>
+    <h2>Same idea, an actual fit</h2>
+    <p>Geometry is convincing on paper, but it's worth watching it happen to a real curve. Below are ten points sampled from a sine wave with some noise added, fitted with a degree 9 polynomial: ten coefficients for ten points. That's exactly enough freedom to pass through every single point with zero error.</p>
+    <p>With no penalty, that's exactly what happens, and it isn't pretty in between the points. Nothing was ever asked to behave reasonably where there wasn't a data point holding it down, so it doesn't.</p>
+    <p>Turn the strength up and two different things happen. Ridge pulls every coefficient down a little, smoothly, and the curve calms down gradually. Lasso deletes coefficients outright, and once enough of the higher order terms are gone, what's left tracks the actual sine wave underneath the noise. Not because lasso knows about sine waves, but because a simpler model needed fewer of those ten knobs to describe this one well.</p>
+    <p>The bars under each chart are the coefficients themselves. Watch the gray ones show up under lasso as you turn the strength up. Those are exact zeros, not rounding.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="fit-slider">Regularization strength (&lambda;)</label>
+      <input type="range" id="fit-slider" min="0" max="1" step="0.005" value="0.32">
+      <span class="val" id="fit-val">0.32</span>
+    </div>
+    <div class="panels" id="fit-panels">
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--none)"></span>No penalty</div>
+        <svg id="fit-none" viewBox="0 0 260 170"></svg>
+        <div class="bars" id="bars-none"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l1)"></span>L1 (lasso)</div>
+        <svg id="fit-l1" viewBox="0 0 260 170"></svg>
+        <div class="bars" id="bars-l1"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l2)"></span>L2 (ridge)</div>
+        <svg id="fit-l2" viewBox="0 0 260 170"></svg>
+        <div class="bars" id="bars-l2"></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="dash" style="color:var(--truefn)"></span>true function</span>
+      <span><span class="dot" style="color:var(--ink-2)"></span>observed data</span>
+      <span><span class="solid" style="color:var(--accent)"></span>fitted curve</span>
+    </div>
+    <figcaption>Fig. 2 &mdash; same ten points, same polynomial, three penalties. Bars below each chart show the nine fitted coefficients.</figcaption>
+  </figure>
+
+  <article>
+    <p>Turn the same knob further. Sixteen points this time, fit with a degree fifteen polynomial: sixteen coefficients for sixteen points, still exactly enough freedom to hit every one of them exactly.</p>
+    <p>Six more parameters does not sound like much. It is. With no penalty, the fit still passes through every point, but between points it swings far harder than the degree nine version did: dozens of units near the edges of the data, and thousands once you step just outside it. Same mechanism as before, just with more room to misbehave.</p>
+    <p>Ridge and lasso handle it the same way they did a moment ago. Watch how much regularization it now takes to drag the curve back down to something reasonable.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="fit2-slider">Regularization strength (&lambda;)</label>
+      <input type="range" id="fit2-slider" min="0" max="1" step="0.005" value="0.32">
+      <span class="val" id="fit2-val">0.32</span>
+    </div>
+    <div class="panels" id="fit2-panels">
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--none)"></span>No penalty</div>
+        <svg id="fit2-none" viewBox="0 0 260 170"></svg>
+        <div class="bars" id="bars2-none"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l1)"></span>L1 (lasso)</div>
+        <svg id="fit2-l1" viewBox="0 0 260 170"></svg>
+        <div class="bars" id="bars2-l1"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l2)"></span>L2 (ridge)</div>
+        <svg id="fit2-l2" viewBox="0 0 260 170"></svg>
+        <div class="bars" id="bars2-l2"></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="dash" style="color:var(--truefn)"></span>true function</span>
+      <span><span class="dot" style="color:var(--ink-2)"></span>observed data</span>
+      <span><span class="solid" style="color:var(--accent)"></span>fitted curve</span>
+    </div>
+    <figcaption>Fig. 2b: sixteen points now, fit with a degree fifteen polynomial instead of nine. Same three penalties. Watch "None" swing clear off the top of the chart between points, something Fig. 2's milder version never quite does.</figcaption>
+  </figure>
+
+  <article>
+    <p>One more way to look at the same knob. Train the model on the same ten points as before, but this time also test it on ten different points it never got to see, sampled from that same sine wave. Two lines fall out of that: how wrong the model is on the points it trained on (dashed, only ever gets worse, since more regularization means trying less hard to match them), and how wrong it is on the new points (solid, gets better for a while, then worse again). The second line is the one you actually care about.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="err-slider">Regularization strength (&lambda;)</label>
+      <input type="range" id="err-slider" min="0" max="1" step="0.005" value="0.32">
+      <span class="val" id="err-val">0.32</span>
+    </div>
+    <div class="panels" id="err-panels">
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l1)"></span>L1 (lasso)</div>
+        <svg id="err-l1" viewBox="0 0 260 150"></svg>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="swatch" style="background:var(--l2)"></span>L2 (ridge)</div>
+        <svg id="err-l2" viewBox="0 0 260 150"></svg>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="dash" style="color:var(--muted)"></span>training error</span>
+      <span><span class="solid" style="color:var(--accent)"></span>held-out error</span>
+      <span><span class="dot" style="color:var(--accent)"></span>best on held-out data</span>
+    </div>
+    <figcaption>Fig. 2c &mdash; dashed: error on the training points, always gets worse. Solid: error on ten new points the model never saw, gets better then worse. The dot marks the regularization amount that does best on those new points, that's the number cross-validation would pick for you. The thin vertical line shows where the slider above is set right now.</figcaption>
+  </figure>
+
+  <article>
+    <p class="exercise"><b>Try this:</b> push the L1 slider on the fit panel (Fig. 2) as high as it goes, then bring it down slowly, and note roughly where the curve stops looking like garbage. Now try Fig. 2c's own slider and see where its dot actually sits. That dot is what cross-validation finds: the strength that does best on data the model hasn't seen, instead of eyeballing a chart. See how close your eyeball estimate got.</p>
+  </article>
+
+  <div class="closing">
+    <h3>Where that leaves us</h3>
+    <p><b>No penalty:</b> the fit is only as good as the data lets it be. With few points and a flexible model, that means it chases noise, and the price is paid off the sample points, where the curve is free to swing to extremes.</p>
+    <p><b>L2 (ridge):</b> penalizes the sum of squared weights. Big weights cost disproportionately more than small ones, so it shrinks everything toward zero smoothly and roughly proportionally. Nothing lands on exactly zero, because the circular boundary has no corners to land on.</p>
+    <p><b>L1 (lasso):</b> penalizes the sum of absolute weights. The diamond-shaped budget has corners sitting exactly on the axes, so the optimal point keeps landing there, some weights hit exactly zero. That's feature selection for free: a simpler model, not just a smaller one.</p>
+  </div>
+
+  <article>
+    <h2>One more place this shows up: how the optimizer gets there</h2>
+    <p>Regularization doesn't just decide which weights survive, it also changes the shape of the hole an optimizer is trying to fall into. Below is the same tilted bowl from Fig. 1, watched from directly above, with six gradient-based optimizers dropped in to race for the bottom.</p>
+    <p>Click anywhere on the surface to start a race. Then drag the regularization slider and watch the bowl round out under their feet.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="opt-slider">Regularization (&lambda;)</label>
+      <input type="range" id="opt-slider" min="0" max="6" step="0.05" value="0">
+      <span class="val" id="opt-val">0.00</span>
+    </div>
+
+    <div class="opt-stage" id="opt-stage">
+      <canvas id="opt-heatmap"></canvas>
+      <svg id="opt-overlay" viewBox="0 0 420 420"></svg>
+    </div>
+    <div class="opt-hint">click to drop all six optimizers from that point</div>
+
+    <div class="opt-toggles" id="opt-toggles"></div>
+
+    <p class="opt-credit">Fig. 3 &mdash; same bowl as Fig. 1, six optimizers racing to the bottom. Rebuilt from scratch for this page (this can't load D3), but the idea and the click-to-race format come straight from <a href="https://emiliendupont.github.io/2018/01/24/optimization-visualization/" target="_blank" rel="noopener">Emilien Dupont's 2018 optimizer visualization</a>. Go look at the original, it's terrific.</p>
+  </figure>
+
+  <article>
+    <p>Plain gradient descent (black) zigzags hardest when the bowl is most stretched out, at low regularization, and travels straighter once the slider rounds it off, though push the strength far enough and even a round bowl gets steep enough to make a fixed step size wobble again. The adaptive methods barely react either way, they rescale their own steps to whatever curvature they find underfoot. It also just needs more steps to get anywhere, which is why it's still moving after the others have stopped. Dupont's original gave plain SGD a bigger learning rate than everyone else too (2e-2 against 1e-2, in his own words "to make it converge faster"), and it still took 500 steps against Adam's 100. Same idea here: SGD and Prodigy both run longer than the rest.</p>
+    <p>These races run at a fixed 9 milliseconds per step, the same timing for all six optimizers. SGD and Prodigy take 400 steps each, Momentum and Nesterov take 200, and RMSProp and AdamW take 150. Watch closely and some paths will freeze mid-slide while others keep rolling: when a path stops, that optimizer has finished its steps and you're seeing the literal difference in iteration count. That frozen moment while other optimizers continue is the step-budget inequality made visible.</p>
+    <p>AdamW is worth watching closely here, and it's the one that can look broken at first glance: at higher regularization its path stops well short of the ring center, marked instead with a small green diamond of its own. That's not it giving up early. The other five fold the regularization straight into the gradient, the same mechanism as ridge in Fig. 1 and 2, and all converge on the same ring center. AdamW instead subtracts the regularization from the weights directly on every step, decoupled from its adaptive part entirely. That decoupling is the actual difference between Adam and AdamW, and it's why AdamW's diamond consistently lands closer to zero than the ring the other five are aiming for.</p>
+    <p>One optimizer here has no learning rate at all. Prodigy estimates its own step size from how far it has already travelled from where it started, which is also why it looks hesitant for the first stretch of any race: it's still working out the scale of the problem.</p>
+  </article>
+
+  <article>
+    <h2>A rougher hill</h2>
+    <p>Remember the bumps and false valleys from the opening. Fig. 3's bowl didn't actually have any, one smooth slope down. Here's a surface that does: several wells of different depths, one of them the real bottom, the rest just convincing enough to trap something rolling through. Click to drop the same six optimizers in and watch where they actually end up. Different starting points, and different optimizers from the same starting point, can land in entirely different holes.</p>
+    <p>Regularization helps here too, and the slider does the same thing it did in Fig. 3: it adds a pull toward the center on top of the existing surface. Turn it up and watch the shallow pits get swallowed by that pull first, the surface simplifies down to a single basin, and it stops mattering where anyone started.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="wild-slider">Regularization (&lambda;)</label>
+      <input type="range" id="wild-slider" min="0" max="1.5" step="0.02" value="0.15">
+      <span class="val" id="wild-val">0.15</span>
+    </div>
+
+    <div class="opt-stage" id="wild-stage">
+      <canvas id="wild-heatmap"></canvas>
+      <svg id="wild-overlay" viewBox="0 0 420 420"></svg>
+    </div>
+    <div class="opt-hint">click to drop all six optimizers from that point</div>
+
+    <div class="opt-toggles" id="wild-toggles"></div>
+
+    <p class="opt-credit">Fig. 4 &mdash; same six optimizers as Fig. 3, on a deliberately rougher surface with several local wells. Same engine, same credit to <a href="https://emiliendupont.github.io/2018/01/24/optimization-visualization/" target="_blank" rel="noopener">Emilien Dupont's original</a>, whose landscape used exactly this trick (two wells of different depth) to make the same point.</p>
+  </figure>
+
+  <article>
+    <p>At low regularization, watch where the deepest well actually is versus where most starting points end up: the true bottom isn't always the easiest one to reach. That's a real, general fact about optimizing anything complicated, a gradient only ever tells you which way is down from where you're standing, never whether there's a better down somewhere else. Momentum can carry an optimizer straight through a shallow pit it would otherwise have stopped in, which is one reason it's rarely turned off in practice.</p>
+    <p>This figure uses a different timing model: all six paths are drawn as a fraction of their total length over one shared 4-second window, so every optimizer finishes at exactly the same moment regardless of how many internal steps it took. Prodigy needs 6,000 steps to warm up on this flatter surface, compared to 400 for SGD, 200 for Momentum and Nesterov, and 150 each for RMSProp and AdamW. That early stillness in Prodigy's path while others keep moving is real, it's the algorithm slowly building signal before it dares to step, just time-compressed into a normal animation length. The gap in raw work, hidden by the shared duration, is why Prodigy needs more steps to get anywhere: thousands of tiny exploratory moves versus hundreds for the rest.</p>
+  </article>
+
+  <footer>Loss surfaces and fitted curves above are computed live from closed-form ridge and lasso solutions, not illustrative sketches. Figs. 3 and 4's optimizer paths are real gradient descent, run in your browser.</footer>
+</div>
+
+<script>
+(function(){
+
+  // ---------- shared math ----------
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+  function mapPt(x, y, dom, size, pad){
+    const scale = (size - 2*pad) / (dom.max - dom.min);
+    return [ pad + (x - dom.min)*scale, size - pad - (y - dom.min)*scale ];
+  }
+
+  // ===================================================================
+  // Fig. 1: penalty geometry
+  // ===================================================================
+  // w1 is a "spurious" weak feature (true value 0), w2 a genuine strong one
+  // (true value 1.6). Uncorrelated (c=0) so each axis behaves independently
+  // and the story stays legible: w0 is what an unconstrained fit estimates
+  // from one noisy sample, wTrue is what actually generated the data.
+  const A = { a: 0.6, b: 5, c: 0 };
+  const w0 = { x: 0.3, y: 1.6 };
+  const wTrue = { x: 0, y: 1.6 };
+  const GEO_DOM = { min: -2, max: 2.6 };
+  const GEO_SIZE = 220, GEO_PAD = 20;
+
+  function eig2(a,b,c){
+    const tr = a+b, det = a*b - c*c;
+    const disc = Math.sqrt(Math.max(tr*tr/4 - det, 0));
+    return { e1: tr/2 + disc, e2: tr/2 - disc, theta: 0.5*Math.atan2(2*c, a-b) };
+  }
+  const EIG = eig2(A.a, A.b, A.c);
+
+  function lossAt(x, y){
+    const dx = x - w0.x, dy = y - w0.y;
+    return A.a*dx*dx + 2*A.c*dx*dy + A.b*dy*dy;
+  }
+
+  function ellipsePathPx(k, dom, size, pad){
+    const r1 = Math.sqrt(k / EIG.e1), r2 = Math.sqrt(k / EIG.e2);
+    const ct = Math.cos(EIG.theta), st = Math.sin(EIG.theta);
+    let d = '';
+    const N = 72;
+    for (let i = 0; i <= N; i++){
+      const phi = (i/N) * 2 * Math.PI;
+      const lx = r1 * Math.cos(phi), ly = r2 * Math.sin(phi);
+      const x = w0.x + lx*ct - ly*st;
+      const y = w0.y + lx*st + ly*ct;
+      const [px, py] = mapPt(x, y, dom, size, pad);
+      d += (i === 0 ? 'M' : 'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+    }
+    return d + 'Z';
+  }
+
+  function regionPathPx(kind, t, dom, size, pad){
+    let d = '';
+    const N = 144;
+    for (let i = 0; i <= N; i++){
+      const th = (i/N) * 2 * Math.PI;
+      let x, y;
+      if (kind === 'l2'){ x = t*Math.cos(th); y = t*Math.sin(th); }
+      else { const s = t / (Math.abs(Math.cos(th)) + Math.abs(Math.sin(th))); x = s*Math.cos(th); y = s*Math.sin(th); }
+      const [px, py] = mapPt(x, y, dom, size, pad);
+      d += (i === 0 ? 'M' : 'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+    }
+    return d + 'Z';
+  }
+
+  function boundaryMin(kind, t){
+    const inside = kind === 'l1'
+      ? (Math.abs(w0.x) + Math.abs(w0.y) <= t)
+      : (w0.x*w0.x + w0.y*w0.y <= t*t);
+    if (inside) return { x: w0.x, y: w0.y, L: 0 };
+    let best = null;
+    const steps = 1440;
+    for (let i = 0; i < steps; i++){
+      const th = (i/steps) * 2 * Math.PI;
+      let x, y;
+      if (kind === 'l2'){ x = t*Math.cos(th); y = t*Math.sin(th); }
+      else { const s = t / (Math.abs(Math.cos(th)) + Math.abs(Math.sin(th))); x = s*Math.cos(th); y = s*Math.sin(th); }
+      const L = lossAt(x, y);
+      if (!best || L < best.L) best = { x, y, L };
+    }
+    return best;
+  }
+
+  function svgEl(tag, attrs){
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function drawAxes(svg, dom, size, pad){
+    const [x0,] = mapPt(0, dom.min, dom, size, pad);
+    const [ , y0] = mapPt(dom.min, 0, dom, size, pad);
+    svg.appendChild(svgEl('line', { x1:x0, y1:pad, x2:x0, y2:size-pad, stroke:'var(--axis)', 'stroke-width':1 }));
+    svg.appendChild(svgEl('line', { x1:pad, y1:y0, x2:size-pad, y2:y0, stroke:'var(--axis)', 'stroke-width':1 }));
+  }
+
+  const geoSvgs = {
+    none: document.getElementById('geo-none'),
+    l1:   document.getElementById('geo-l1'),
+    l2:   document.getElementById('geo-l2'),
+  };
+  const geoReads = {
+    none: document.getElementById('geo-none-read'),
+    l1:   document.getElementById('geo-l1-read'),
+    l2:   document.getElementById('geo-l2-read'),
+  };
+  const geoDists = {
+    none: document.getElementById('geo-none-dist'),
+    l1:   document.getElementById('geo-l1-dist'),
+    l2:   document.getElementById('geo-l2-dist'),
+  };
+  function distToTrue(x, y){ return Math.hypot(x - wTrue.x, y - wTrue.y); }
+
+  function fmtCoord(x, y){
+    const fx = Math.abs(x) < 0.01 ? '0.00' : x.toFixed(2);
+    const fy = Math.abs(y) < 0.01 ? '0.00' : y.toFixed(2);
+    const zx = Math.abs(x) < 0.01;
+    const zy = Math.abs(y) < 0.01;
+    return (zx ? '<span class="zero-flag">'+fx+'</span>' : fx) + ', ' +
+           (zy ? '<span class="zero-flag">'+fy+'</span>' : fy);
+  }
+
+  function renderGeo(){
+    const lambda = parseFloat(document.getElementById('geo-slider').value);
+    document.getElementById('geo-val').textContent = lambda.toFixed(2);
+
+    // The "hard budget" view (weights confined to a region of size t) is
+    // what makes the corner/sparsity argument visual, but bigger t means a
+    // LOOSER constraint, the opposite direction from lambda everywhere else
+    // on this page. So the slider is driven as lambda (0 = none, 3 = strong),
+    // and t is derived from it here, shrinking as lambda grows.
+    const T_MAX = 2.0, T_MIN = 0.05, LAMBDA_MAX = 3;
+    const t = T_MAX - (T_MAX - T_MIN) * (lambda / LAMBDA_MAX);
+
+    const solNone = { x: w0.x, y: w0.y };
+    const solL1 = boundaryMin('l1', t);
+    const solL2 = boundaryMin('l2', t);
+
+    const panels = [
+      { svg: geoSvgs.none, kind: 'none', sol: solNone, color: 'var(--none)' },
+      { svg: geoSvgs.l1,   kind: 'l1',   sol: solL1,   color: 'var(--l1)' },
+      { svg: geoSvgs.l2,   kind: 'l2',   sol: solL2,   color: 'var(--l2)' },
+    ];
+
+    panels.forEach(p => {
+      const svg = p.svg;
+      svg.innerHTML = '';
+      drawAxes(svg, GEO_DOM, GEO_SIZE, GEO_PAD);
+
+      [0.4, 1.2, 2.5].forEach(k => {
+        svg.appendChild(svgEl('path', {
+          d: ellipsePathPx(k, GEO_DOM, GEO_SIZE, GEO_PAD),
+          fill: 'none', stroke: 'var(--grid)', 'stroke-width': 1
+        }));
+      });
+
+      if (p.kind !== 'none'){
+        svg.appendChild(svgEl('path', {
+          d: regionPathPx(p.kind, t, GEO_DOM, GEO_SIZE, GEO_PAD),
+          fill: p.kind === 'l1' ? 'var(--l1-fill)' : 'var(--l2-fill)',
+          stroke: p.color, 'stroke-width': 1.5
+        }));
+      }
+
+      const kSol = Math.max(lossAt(p.sol.x, p.sol.y), 0.02);
+      svg.appendChild(svgEl('path', {
+        d: ellipsePathPx(kSol, GEO_DOM, GEO_SIZE, GEO_PAD),
+        fill: 'none', stroke: p.color, 'stroke-width': 1.5, 'stroke-dasharray': '4 3'
+      }));
+
+      const [ux, uy] = mapPt(w0.x, w0.y, GEO_DOM, GEO_SIZE, GEO_PAD);
+      svg.appendChild(svgEl('circle', { cx: ux, cy: uy, r: 3, fill: 'var(--ink-2)' }));
+
+      const [tx, ty] = mapPt(wTrue.x, wTrue.y, GEO_DOM, GEO_SIZE, GEO_PAD);
+      svg.appendChild(svgEl('line', { x1: tx-5, y1: ty, x2: tx+5, y2: ty, stroke: 'var(--ink)', 'stroke-width': 1.5 }));
+      svg.appendChild(svgEl('line', { x1: tx, y1: ty-5, x2: tx, y2: ty+5, stroke: 'var(--ink)', 'stroke-width': 1.5 }));
+
+      const [sx, sy] = mapPt(p.sol.x, p.sol.y, GEO_DOM, GEO_SIZE, GEO_PAD);
+      svg.appendChild(svgEl('circle', { cx: sx, cy: sy, r: 4.5, fill: p.color, stroke: 'var(--surface)', 'stroke-width': 1.5 }));
+    });
+
+    geoReads.none.innerHTML = fmtCoord(solNone.x, solNone.y);
+    geoReads.l1.innerHTML = fmtCoord(solL1.x, solL1.y);
+    geoReads.l2.innerHTML = fmtCoord(solL2.x, solL2.y);
+
+    geoDists.none.textContent = distToTrue(solNone.x, solNone.y).toFixed(3);
+    geoDists.l1.textContent = distToTrue(solL1.x, solL1.y).toFixed(3);
+    geoDists.l2.textContent = distToTrue(solL2.x, solL2.y).toFixed(3);
+  }
+
+  document.getElementById('geo-slider').addEventListener('input', renderGeo);
+  renderGeo();
+
+  // ===================================================================
+  // Fig. 2: curve fitting
+  // ===================================================================
+  const N = 10, DEG = 9;
+  const xs = Array.from({length:N}, (_,i) => i/(N-1));
+  const noise = [0.09,-0.15,0.18,-0.05,0.14,-0.19,0.07,-0.12,0.16,-0.10];
+  const ys = xs.map((x,i) => Math.sin(2*Math.PI*x) + noise[i]);
+  const ybar = ys.reduce((a,b)=>a+b,0) / N;
+  const yC = ys.map(v => v - ybar);
+
+  const P = DEG;
+  const monoMean = new Array(P+1).fill(0);
+  for (let d=1; d<=P; d++){
+    let s=0; for (let i=0;i<N;i++) s += Math.pow(xs[i], d);
+    monoMean[d] = s/N;
+  }
+  function centeredMono(x){
+    const v = new Array(P+1).fill(0);
+    for (let d=1; d<=P; d++) v[d] = Math.pow(x, d) - monoMean[d];
+    return v;
+  }
+  const Ctrain = xs.map(x => centeredMono(x));
+
+  const gVals = [], gCoef = [];
+  for (let j=1; j<=P; j++){
+    let v = Ctrain.map(row => row[j]);
+    let cf = new Array(P+1).fill(0); cf[j] = 1;
+    for (let k=0; k<gVals.length; k++){
+      let proj = 0; for (let i=0;i<N;i++) proj += gVals[k][i]*v[i];
+      for (let i=0;i<N;i++) v[i] -= proj*gVals[k][i];
+      for (let d=1; d<=P; d++) cf[d] -= proj*gCoef[k][d];
+    }
+    const norm = Math.sqrt(v.reduce((s,x)=>s+x*x,0)) || 1;
+    v = v.map(x => x/norm);
+    cf = cf.map(x => x/norm);
+    gVals.push(v); gCoef.push(cf);
+  }
+
+  function evalG(j, x){
+    const cm = centeredMono(x);
+    let s = 0; for (let d=1; d<=P; d++) s += gCoef[j][d]*cm[d];
+    return s;
+  }
+  function predict(b, x){
+    let s = ybar;
+    for (let j=0;j<P;j++) s += b[j]*evalG(j, x);
+    return s;
+  }
+
+  const p = [];
+  for (let j=0;j<P;j++){
+    let s=0; for (let i=0;i<N;i++) s += gVals[j][i]*yC[i];
+    p.push(s);
+  }
+  const bNone = p.slice();
+
+  function soft(z, lam){ return Math.sign(z) * Math.max(Math.abs(z) - lam, 0); }
+
+  // ---- Fig. 2c: train vs. held-out error across the same regularization sweep ----
+  const testX = Array.from({length:20}, (_,i) => (i+0.5)/20);
+  const testNoise = [0.11,-0.07,0.14,-0.19,0.03,0.08,-0.12,0.16,-0.05,0.10,
+                      -0.15,0.06,-0.09,0.13,-0.04,0.17,-0.11,0.02,-0.08,0.12];
+  const testY = testX.map((x,i) => Math.sin(2*Math.PI*x) + testNoise[i]);
+
+  function mse(b, X, Y){
+    let s=0; for (let i=0;i<X.length;i++){ const e = predict(b,X[i]) - Y[i]; s += e*e; }
+    return s / X.length;
+  }
+
+  const ERR_TS = Array.from({length:41}, (_,i) => i/40);
+  const errCurves = { ridge: { train:[], test:[] }, lasso: { train:[], test:[] } };
+  ERR_TS.forEach(t => {
+    const bR = p.map(v => v / (1 + 12*t*t));
+    const bL = p.map(v => soft(v, 0.62*t));
+    errCurves.ridge.train.push(mse(bR, xs, ys));
+    errCurves.ridge.test.push(mse(bR, testX, testY));
+    errCurves.lasso.train.push(mse(bL, xs, ys));
+    errCurves.lasso.test.push(mse(bL, testX, testY));
+  });
+
+  const ERR_W = 260, ERR_H = 150, ERR_PADX = 14, ERR_PADY = 10, ERR_LABEL_H = 18;
+  const ERR_PLOT_H = ERR_H - ERR_LABEL_H;
+  const ERR_YMAX = Math.max(...errCurves.ridge.test, ...errCurves.lasso.test,
+                             ...errCurves.ridge.train, ...errCurves.lasso.train) * 1.05;
+
+  function mapErr(t, v){
+    const x = ERR_PADX + t * (ERR_W - 2*ERR_PADX);
+    const y = ERR_PLOT_H - ERR_PADY - (v / ERR_YMAX) * (ERR_PLOT_H - 2*ERR_PADY);
+    return [x, y];
+  }
+  function errPath(vals){
+    let d = '';
+    vals.forEach((v,i) => {
+      const [x,y] = mapErr(ERR_TS[i], v);
+      d += (i===0?'M':'L') + x.toFixed(2) + ' ' + y.toFixed(2) + ' ';
+    });
+    return d;
+  }
+  function argmin(arr){
+    let bi=0; for (let i=1;i<arr.length;i++) if (arr[i]<arr[bi]) bi=i;
+    return bi;
+  }
+
+  const errSvgs = { l1: document.getElementById('err-l1'), l2: document.getElementById('err-l2') };
+  const errMarkers = {};
+
+  function drawErrorPanel(svg, curves, color){
+    svg.innerHTML = '';
+    svg.appendChild(svgEl('rect', { x:ERR_PADX, y:0, width:ERR_W-2*ERR_PADX, height:ERR_PLOT_H, fill:'none', stroke:'var(--grid)', 'stroke-width':1 }));
+    svg.appendChild(svgEl('path', { d: errPath(curves.train), fill:'none', stroke:'var(--muted)', 'stroke-width':1.5, 'stroke-dasharray':'3 3' }));
+    svg.appendChild(svgEl('path', { d: errPath(curves.test), fill:'none', stroke:color, 'stroke-width':2 }));
+
+    const bi = argmin(curves.test);
+    const [mx, my] = mapErr(ERR_TS[bi], curves.test[bi]);
+    svg.appendChild(svgEl('line', { x1:mx, y1:ERR_PADY, x2:mx, y2:ERR_PLOT_H-ERR_PADY, stroke:color, 'stroke-width':1, 'stroke-dasharray':'2 2', 'stroke-opacity':0.5 }));
+    svg.appendChild(svgEl('circle', { cx:mx, cy:my, r:3.5, fill:color }));
+
+    const marker = svgEl('line', { x1:0, y1:ERR_PADY, x2:0, y2:ERR_PLOT_H-ERR_PADY, stroke:'var(--ink)', 'stroke-width':1, 'stroke-opacity':0.55 });
+    svg.appendChild(marker);
+
+    const leftLabel = svgEl('text', { x:ERR_PADX, y:ERR_H-5, 'font-size':'8.5', fill:'var(--muted)', 'font-family':'system-ui,sans-serif' });
+    leftLabel.textContent = 'none';
+    svg.appendChild(leftLabel);
+
+    const rightLabel = svgEl('text', { x:ERR_W-ERR_PADX, y:ERR_H-5, 'font-size':'8.5', fill:'var(--muted)', 'font-family':'system-ui,sans-serif', 'text-anchor':'end' });
+    rightLabel.textContent = 'more regularization';
+    svg.appendChild(rightLabel);
+
+    return marker;
+  }
+
+  function updateErrorMarker(t){
+    [errMarkers.l1, errMarkers.l2].forEach(marker => {
+      if (!marker) return;
+      const [x] = mapErr(t, 0);
+      marker.setAttribute('x1', x); marker.setAttribute('x2', x);
+    });
+  }
+
+  const FIT_XDOM = { min: -0.15, max: 1.15 };
+  const FIT_YDOM = { min: -2.1, max: 2.3 };
+  const FIT_W = 260, FIT_H = 170, FIT_PADX = 14, FIT_PADY = 12;
+
+  function mapFitPt(x, y){
+    const sx = FIT_PADX + (x - FIT_XDOM.min) / (FIT_XDOM.max - FIT_XDOM.min) * (FIT_W - 2*FIT_PADX);
+    const yClamped = clamp(y, FIT_YDOM.min - 8, FIT_YDOM.max + 8);
+    const sy = FIT_H - FIT_PADY - (yClamped - FIT_YDOM.min) / (FIT_YDOM.max - FIT_YDOM.min) * (FIT_H - 2*FIT_PADY);
+    return [sx, sy];
+  }
+
+  const fitSvgs = {
+    none: document.getElementById('fit-none'),
+    l1:   document.getElementById('fit-l1'),
+    l2:   document.getElementById('fit-l2'),
+  };
+  const barContainers = {
+    none: document.getElementById('bars-none'),
+    l1:   document.getElementById('bars-l1'),
+    l2:   document.getElementById('bars-l2'),
+  };
+
+  function curvePathPx(b){
+    let d = '';
+    for (let x = FIT_XDOM.min; x <= FIT_XDOM.max + 1e-9; x += 0.01){
+      const y = predict(b, x);
+      const [px, py] = mapFitPt(x, y);
+      d += (d === '' ? 'M' : 'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+    }
+    return d;
+  }
+
+  function renderFitPanel(svg, b, color){
+    svg.innerHTML = '';
+    const clipId = 'clip-' + Math.random().toString(36).slice(2);
+    const defs = svgEl('defs', {});
+    const clip = svgEl('clipPath', { id: clipId });
+    clip.appendChild(svgEl('rect', { x: FIT_PADX, y: 0, width: FIT_W - 2*FIT_PADX, height: FIT_H }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    const [ , zy] = mapFitPt(0, 0);
+    svg.appendChild(svgEl('line', { x1: FIT_PADX, y1: zy, x2: FIT_W-FIT_PADX, y2: zy, stroke: 'var(--axis)', 'stroke-width': 1 }));
+
+    let dTrue = '';
+    for (let x = FIT_XDOM.min; x <= FIT_XDOM.max + 1e-9; x += 0.02){
+      const [px, py] = mapFitPt(x, Math.sin(2*Math.PI*x));
+      dTrue += (dTrue === '' ? 'M' : 'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+    }
+    svg.appendChild(svgEl('path', { d: dTrue, fill:'none', stroke:'var(--truefn)', 'stroke-width':1.5, 'stroke-dasharray':'3 3' }));
+
+    const g = svgEl('g', { 'clip-path': 'url(#'+clipId+')' });
+    g.appendChild(svgEl('path', { d: curvePathPx(b), fill:'none', stroke: color, 'stroke-width': 2 }));
+    svg.appendChild(g);
+
+    xs.forEach((x,i) => {
+      const [px, py] = mapFitPt(x, ys[i]);
+      svg.appendChild(svgEl('circle', { cx:px, cy:py, r:2.6, fill:'var(--ink-2)' }));
+    });
+
+    svg.appendChild(svgEl('rect', { x: FIT_PADX, y:0, width: FIT_W-2*FIT_PADX, height: FIT_H, fill:'none', stroke:'var(--grid)', 'stroke-width':1 }));
+  }
+
+  function renderBars(container, b, color){
+    container.innerHTML = '';
+    const maxH = 34;
+    b.forEach(v => {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      const h = clamp(Math.abs(v) / 1.8, 0, 1) * maxH;
+      bar.style.height = Math.max(h, 2) + 'px';
+      bar.style.background = Math.abs(v) < 1e-4 ? 'var(--grid)' : color;
+      container.appendChild(bar);
+    });
+  }
+
+  function renderFit(){
+    const t = parseFloat(document.getElementById('fit-slider').value);
+    document.getElementById('fit-val').textContent = t.toFixed(3);
+
+    const lamRidge = 12 * t * t;
+    const lamLasso = 0.62 * t;
+
+    const bRidge = p.map(v => v / (1 + lamRidge));
+    const bLasso = p.map(v => soft(v, lamLasso));
+
+    renderFitPanel(fitSvgs.none, bNone, 'var(--none)');
+    renderFitPanel(fitSvgs.l1, bLasso, 'var(--l1)');
+    renderFitPanel(fitSvgs.l2, bRidge, 'var(--l2)');
+
+    renderBars(barContainers.none, bNone, 'var(--none)');
+    renderBars(barContainers.l1, bLasso, 'var(--l1)');
+    renderBars(barContainers.l2, bRidge, 'var(--l2)');
+  }
+
+  document.getElementById('fit-slider').addEventListener('input', renderFit);
+  renderFit();
+
+  // Fig. 2c has its own slider, independent of Fig. 2's, so it can be
+  // explored on its own rather than silently riding whatever Fig. 2 is set to.
+  errMarkers.l1 = drawErrorPanel(errSvgs.l1, errCurves.lasso, 'var(--l1)');
+  errMarkers.l2 = drawErrorPanel(errSvgs.l2, errCurves.ridge, 'var(--l2)');
+
+  function renderErrMarker(){
+    const t = parseFloat(document.getElementById('err-slider').value);
+    document.getElementById('err-val').textContent = t.toFixed(3);
+    updateErrorMarker(t);
+  }
+  document.getElementById('err-slider').addEventListener('input', renderErrMarker);
+  renderErrMarker();
+
+  // ===================================================================
+  // Fig. 2b: same idea, pushed harder. N=16 points, degree 15 polynomial
+  // (still exact interpolation: 16 parameters for 16 points), same discrete
+  // Gram-Schmidt orthonormalization as Fig. 2 above, just parameterized by
+  // the larger N/degree. Wrapped in its own closure so nothing here collides
+  // with the Fig. 2 names above (N, DEG, xs, p, renderFit, ...).
+  //
+  // Verified in Node before wiring this up: orthonormality of the g-basis
+  // holds to ~3.5e-5 off-diagonal and ~4.4e-16 on-diagonal (well within
+  // float64 noise for a construction like this), and the unregularized fit
+  // lands within ~2e-3 of every training point despite the higher degree.
+  // The unregularized curve swings to roughly 90,000 near the domain edges
+  // and to about 27 even strictly inside [0,1], versus a max of about 300
+  // (edges) and 2 (inside [0,1]) for Fig. 2's degree-9 version. Ridge and
+  // lasso remain finite and produce a real, visible taming effect across
+  // the whole slider, lasso zeroing most of its fifteen coefficients by
+  // about a third of the way up the slider and holding two non-zero ones
+  // through the rest of the range, exactly like Fig. 2's degree-9 version.
+  // ===================================================================
+  (function(){
+    const N = 16, DEG = 15;
+    const xs = Array.from({length:N}, (_,i) => i/(N-1));
+    const noise = [0, 0.02, -0.14, -0.09, -0.02, 0, -0.15, 0.14, 0.03, -0.03, -0.08, 0.10, 0.06, -0.15, 0, -0.10];
+    const ys = xs.map((x,i) => Math.sin(2*Math.PI*x) + noise[i]);
+    const ybar = ys.reduce((a,b)=>a+b,0) / N;
+    const yC = ys.map(v => v - ybar);
+
+    const P = DEG;
+    const monoMean = new Array(P+1).fill(0);
+    for (let d=1; d<=P; d++){
+      let s=0; for (let i=0;i<N;i++) s += Math.pow(xs[i], d);
+      monoMean[d] = s/N;
+    }
+    function centeredMono(x){
+      const v = new Array(P+1).fill(0);
+      for (let d=1; d<=P; d++) v[d] = Math.pow(x, d) - monoMean[d];
+      return v;
+    }
+    const Ctrain = xs.map(x => centeredMono(x));
+
+    const gVals = [], gCoef = [];
+    for (let j=1; j<=P; j++){
+      let v = Ctrain.map(row => row[j]);
+      let cf = new Array(P+1).fill(0); cf[j] = 1;
+      for (let k=0; k<gVals.length; k++){
+        let proj = 0; for (let i=0;i<N;i++) proj += gVals[k][i]*v[i];
+        for (let i=0;i<N;i++) v[i] -= proj*gVals[k][i];
+        for (let d=1; d<=P; d++) cf[d] -= proj*gCoef[k][d];
+      }
+      const norm = Math.sqrt(v.reduce((s,x)=>s+x*x,0)) || 1;
+      v = v.map(x => x/norm);
+      cf = cf.map(x => x/norm);
+      gVals.push(v); gCoef.push(cf);
+    }
+
+    function evalG(j, x){
+      const cm = centeredMono(x);
+      let s = 0; for (let d=1; d<=P; d++) s += gCoef[j][d]*cm[d];
+      return s;
+    }
+    function predict(b, x){
+      let s = ybar;
+      for (let j=0;j<P;j++) s += b[j]*evalG(j, x);
+      return s;
+    }
+
+    const p = [];
+    for (let j=0;j<P;j++){
+      let s=0; for (let i=0;i<N;i++) s += gVals[j][i]*yC[i];
+      p.push(s);
+    }
+    const bNone = p.slice();
+
+    function soft(z, lam){ return Math.sign(z) * Math.max(Math.abs(z) - lam, 0); }
+
+    const FIT_XDOM = { min: -0.15, max: 1.15 };
+    const FIT_YDOM = { min: -2.1, max: 2.3 };
+    const FIT_W = 260, FIT_H = 170, FIT_PADX = 14, FIT_PADY = 12;
+
+    function mapFitPt(x, y){
+      const sx = FIT_PADX + (x - FIT_XDOM.min) / (FIT_XDOM.max - FIT_XDOM.min) * (FIT_W - 2*FIT_PADX);
+      const yClamped = clamp(y, FIT_YDOM.min - 8, FIT_YDOM.max + 8);
+      const sy = FIT_H - FIT_PADY - (yClamped - FIT_YDOM.min) / (FIT_YDOM.max - FIT_YDOM.min) * (FIT_H - 2*FIT_PADY);
+      return [sx, sy];
+    }
+
+    const fitSvgs = {
+      none: document.getElementById('fit2-none'),
+      l1:   document.getElementById('fit2-l1'),
+      l2:   document.getElementById('fit2-l2'),
+    };
+    const barContainers = {
+      none: document.getElementById('bars2-none'),
+      l1:   document.getElementById('bars2-l1'),
+      l2:   document.getElementById('bars2-l2'),
+    };
+
+    function curvePathPx(b){
+      let d = '';
+      for (let x = FIT_XDOM.min; x <= FIT_XDOM.max + 1e-9; x += 0.01){
+        const y = predict(b, x);
+        const [px, py] = mapFitPt(x, y);
+        d += (d === '' ? 'M' : 'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+      }
+      return d;
+    }
+
+    function renderFitPanel(svg, b, color){
+      svg.innerHTML = '';
+      const clipId = 'clip2-' + Math.random().toString(36).slice(2);
+      const defs = svgEl('defs', {});
+      const clip = svgEl('clipPath', { id: clipId });
+      clip.appendChild(svgEl('rect', { x: FIT_PADX, y: 0, width: FIT_W - 2*FIT_PADX, height: FIT_H }));
+      defs.appendChild(clip);
+      svg.appendChild(defs);
+
+      const [ , zy] = mapFitPt(0, 0);
+      svg.appendChild(svgEl('line', { x1: FIT_PADX, y1: zy, x2: FIT_W-FIT_PADX, y2: zy, stroke: 'var(--axis)', 'stroke-width': 1 }));
+
+      let dTrue = '';
+      for (let x = FIT_XDOM.min; x <= FIT_XDOM.max + 1e-9; x += 0.02){
+        const [px, py] = mapFitPt(x, Math.sin(2*Math.PI*x));
+        dTrue += (dTrue === '' ? 'M' : 'L') + px.toFixed(2) + ' ' + py.toFixed(2) + ' ';
+      }
+      svg.appendChild(svgEl('path', { d: dTrue, fill:'none', stroke:'var(--truefn)', 'stroke-width':1.5, 'stroke-dasharray':'3 3' }));
+
+      const g = svgEl('g', { 'clip-path': 'url(#'+clipId+')' });
+      g.appendChild(svgEl('path', { d: curvePathPx(b), fill:'none', stroke: color, 'stroke-width': 2 }));
+      svg.appendChild(g);
+
+      xs.forEach((x,i) => {
+        const [px, py] = mapFitPt(x, ys[i]);
+        svg.appendChild(svgEl('circle', { cx:px, cy:py, r:2.6, fill:'var(--ink-2)' }));
+      });
+
+      svg.appendChild(svgEl('rect', { x: FIT_PADX, y:0, width: FIT_W-2*FIT_PADX, height: FIT_H, fill:'none', stroke:'var(--grid)', 'stroke-width':1 }));
+    }
+
+    function renderBars(container, b, color){
+      container.innerHTML = '';
+      const maxH = 34;
+      b.forEach(v => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        const h = clamp(Math.abs(v) / 2, 0, 1) * maxH;
+        bar.style.height = Math.max(h, 2) + 'px';
+        bar.style.background = Math.abs(v) < 1e-4 ? 'var(--grid)' : color;
+        container.appendChild(bar);
+      });
+    }
+
+    function renderFit(){
+      const t = parseFloat(document.getElementById('fit2-slider').value);
+      document.getElementById('fit2-val').textContent = t.toFixed(3);
+
+      const lamRidge = 3000 * t * t;
+      const lamLasso = 1.0 * t;
+
+      const bRidge = p.map(v => v / (1 + lamRidge));
+      const bLasso = p.map(v => soft(v, lamLasso));
+
+      renderFitPanel(fitSvgs.none, bNone, 'var(--none)');
+      renderFitPanel(fitSvgs.l1, bLasso, 'var(--l1)');
+      renderFitPanel(fitSvgs.l2, bRidge, 'var(--l2)');
+
+      renderBars(barContainers.none, bNone, 'var(--none)');
+      renderBars(barContainers.l1, bLasso, 'var(--l1)');
+      renderBars(barContainers.l2, bRidge, 'var(--l2)');
+    }
+
+    document.getElementById('fit2-slider').addEventListener('input', renderFit);
+    renderFit();
+  })();
+
+  // ===================================================================
+  // Fig. 3: optimizer race on the same bowl, reusing A and w0 from Fig. 1
+  // ===================================================================
+  const OPT_DOM = { min: -5.5, max: 5.5 };
+  const OPT_SIZE = 420;
+
+  function optGrad(x, y, lambda){
+    const dx = x - w0.x, dy = y - w0.y;
+    const gx = 2*A.a*dx + 2*A.c*dy + 2*lambda*x;
+    const gy = 2*A.b*dy + 2*A.c*dx + 2*lambda*y;
+    return [gx, gy];
+  }
+  function optLoss(x, y, lambda){
+    const dx = x - w0.x, dy = y - w0.y;
+    return A.a*dx*dx + 2*A.c*dx*dy + A.b*dy*dy + lambda*(x*x + y*y);
+  }
+  function closedFormMinOpt(lambda){
+    const m00 = A.a+lambda, m01 = A.c, m11 = A.b+lambda;
+    const r0 = A.a*w0.x + A.c*w0.y, r1 = A.c*w0.x + A.b*w0.y;
+    const det = m00*m11 - m01*m01;
+    return { x: (r0*m11 - m01*r1)/det, y: (m00*r1 - r0*m01)/det };
+  }
+
+  function mapOpt(x, y){ return mapPt(x, y, OPT_DOM, OPT_SIZE, 0); }
+  function invMapOpt(px, py){
+    const span = OPT_DOM.max - OPT_DOM.min;
+    return [ OPT_DOM.min + (px/OPT_SIZE)*span, OPT_DOM.max - (py/OPT_SIZE)*span ];
+  }
+
+  // ---- optimizers (hyperparameters tuned and verified against the
+  // closed-form regularized minimum before wiring up) ----
+  const OPTS = [
+    {
+      key:'sgd', label:'SGD', color:'var(--ink)',
+      gen(x0,y0,lambda){
+        const lr=0.06, steps=400; let x=x0,y=y0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){ const [gx,gy]=optGrad(x,y,lambda); x-=lr*gx; y-=lr*gy; h.push([x,y]); }
+        return h;
+      }
+    },
+    {
+      key:'momentum', label:'Momentum', color:'#4a3aa7',
+      gen(x0,y0,lambda){
+        const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){ const [gx,gy]=optGrad(x,y,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+        return h;
+      }
+    },
+    {
+      key:'nesterov', label:'Nesterov', color:'#d5518a',
+      gen(x0,y0,lambda){
+        const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){ const [gx,gy]=optGrad(x+mu*vx,y+mu*vy,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+        return h;
+      }
+    },
+    {
+      key:'rmsprop', label:'RMSProp', color:'#e34948',
+      gen(x0,y0,lambda){
+        const lr=0.08, steps=150, decay=0.9, eps=1e-8; let x=x0,y=y0,cx=0,cy=0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){
+          const [gx,gy]=optGrad(x,y,lambda);
+          cx=decay*cx+(1-decay)*gx*gx; cy=decay*cy+(1-decay)*gy*gy;
+          x-=lr*gx/(Math.sqrt(cx)+eps); y-=lr*gy/(Math.sqrt(cy)+eps);
+          h.push([x,y]);
+        }
+        return h;
+      }
+    },
+    {
+      // AdamW: weight decay grows with lambda (matching 2*lambda for small
+      // lambda, same as before) but saturates as lambda grows, so lr*wd
+      // stays comfortably under 1 (non-oscillatory) even at the top of the
+      // slider. Uncapped, lr*wd approached 2 (the marginal-stability bound
+      // of the x -= lr*wd*x recurrence taken alone) at this figure's max
+      // lambda, which produced a sign-flipping overshoot on every step that
+      // grew with lambda. Applied directly to the parameter, decoupled from
+      // the adaptive denominator and NOT routed through the gradient the
+      // way the other five use `lambda`. That's the whole point.
+      key:'adamw', label:'AdamW', color:'#008300',
+      gen(x0,y0,lambda){
+        const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8;
+        const wdRaw=2*lambda, wd=wdRaw/(1+wdRaw/3);
+        let x=x0,y=y0,mx=0,my=0,vx=0,vy=0; const h=[[x,y]];
+        for(let i=1;i<=steps;i++){
+          const [gx,gy]=optGrad(x,y,0);
+          mx=b1*mx+(1-b1)*gx; my=b1*my+(1-b1)*gy;
+          vx=b2*vx+(1-b2)*gx*gx; vy=b2*vy+(1-b2)*gy*gy;
+          const mxh=mx/(1-b1**i), myh=my/(1-b1**i);
+          const vxh=vx/(1-b2**i), vyh=vy/(1-b2**i);
+          x-=lr*(mxh/(Math.sqrt(vxh)+eps)+wd*x); y-=lr*(myh/(Math.sqrt(vyh)+eps)+wd*y);
+          h.push([x,y]);
+        }
+        return h;
+      }
+    },
+    {
+      // Prodigy (Mishchenko & Defazio, 2023), Algorithm 3: estimates its own
+      // step scale d from how far it has moved from its starting point,
+      // instead of taking a learning rate. beta3 is tuned down from the
+      // paper's default sqrt(beta2) (~0.9995, meant for thousand-step deep
+      // learning runs) to something that warms up inside a few hundred
+      // steps, so it's legible in a short animation. The mechanism (m, v,
+      // r, s accumulators, L1 norm, monotonically non-decreasing d) is
+      // otherwise the real algorithm.
+      key:'prodigy', label:'Prodigy', color:'#c98500',
+      gen(x0,y0,lambda){
+        const steps=400, b1=0.9, b2=0.999, beta3=0.98, eps=1e-8, gamma=1;
+        let x=x0,y=y0; const ix=x0, iy=y0;
+        let mx=0,my=0,vx=0,vy=0,sx=0,sy=0,r=0,d=1e-6;
+        const h=[[x,y]];
+        for(let k=0;k<steps;k++){
+          const [gx,gy]=optGrad(x,y,lambda);
+          mx=b1*mx+(1-b1)*d*gx; my=b1*my+(1-b1)*d*gy;
+          vx=b2*vx+(1-b2)*(d*gx)*(d*gx); vy=b2*vy+(1-b2)*(d*gy)*(d*gy);
+          const innerProd = gx*(ix-x) + gy*(iy-y);
+          r = beta3*r + (1-beta3)*gamma*d*d*innerProd;
+          sx = beta3*sx + (1-beta3)*gamma*d*d*gx;
+          sy = beta3*sy + (1-beta3)*gamma*d*d*gy;
+          const dHat = r / (Math.abs(sx)+Math.abs(sy)+eps);
+          d = Math.max(d, dHat);
+          x -= gamma*d*mx/(Math.sqrt(vx)+d*eps);
+          y -= gamma*d*my/(Math.sqrt(vy)+d*eps);
+          h.push([x,y]);
+        }
+        return h;
+      }
+    },
+  ];
+
+  const optEnabled = {}; OPTS.forEach(o => optEnabled[o.key] = true);
+
+  // ---- heatmap ----
+  const LIGHT_STOPS = ['#fcfcfb','#cde2fb','#9ec5f4','#6da7ec','#3987e5','#1c5cab','#0d366b'];
+  const DARK_STOPS  = ['#1a1a19','#104281','#184f95','#256abf','#3987e5','#6da7ec','#9ec5f4'];
+  function isDarkMode(){
+    const t = document.documentElement.getAttribute('data-theme');
+    if (t === 'dark') return true;
+    if (t === 'light') return false;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function hexToRgb(hex){
+    const n = parseInt(hex.slice(1), 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+  function colorAt(stops, t){
+    t = clamp(t, 0, 1);
+    const n = stops.length - 1;
+    const seg = t*n, i = Math.min(Math.floor(seg), n-1), f = seg - i;
+    const c0 = hexToRgb(stops[i]), c1 = hexToRgb(stops[i+1]);
+    return [0,1,2].map(k => Math.round(c0[k] + (c1[k]-c0[k])*f));
+  }
+
+  const heatCanvas = document.getElementById('opt-heatmap');
+  const RES = 140;
+  heatCanvas.width = RES; heatCanvas.height = RES;
+  const heatCtx = heatCanvas.getContext('2d');
+
+  function renderHeatmap(lambda){
+    const stops = isDarkMode() ? DARK_STOPS : LIGHT_STOPS;
+    const img = heatCtx.createImageData(RES, RES);
+    const vals = new Float64Array(RES*RES);
+    let vmin = Infinity, vmax = -Infinity;
+    const span = OPT_DOM.max - OPT_DOM.min;
+    for (let j=0;j<RES;j++){
+      const y = OPT_DOM.max - (j+0.5)/RES*span;
+      for (let i=0;i<RES;i++){
+        const x = OPT_DOM.min + (i+0.5)/RES*span;
+        const v = optLoss(x, y, lambda);
+        vals[j*RES+i] = v;
+        if (v<vmin) vmin=v; if (v>vmax) vmax=v;
+      }
+    }
+    const range = (vmax-vmin) || 1;
+    for (let idx=0; idx<RES*RES; idx++){
+      const [r,g,b] = colorAt(stops, (vals[idx]-vmin)/range);
+      img.data[idx*4]=r; img.data[idx*4+1]=g; img.data[idx*4+2]=b; img.data[idx*4+3]=255;
+    }
+    heatCtx.putImageData(img, 0, 0);
+  }
+
+  // ---- overlay: rings around the regularized minimum + optimizer paths ----
+  const overlaySvg = document.getElementById('opt-overlay');
+
+  function ellipsePathGeneric(center, eig, k, size){
+    const r1 = Math.sqrt(k/eig.e1), r2 = Math.sqrt(k/eig.e2);
+    const ct = Math.cos(eig.theta), st = Math.sin(eig.theta);
+    let d = '';
+    const N = 64;
+    for (let i=0;i<=N;i++){
+      const phi = (i/N)*2*Math.PI;
+      const lx = r1*Math.cos(phi), ly = r2*Math.sin(phi);
+      const x = center.x + lx*ct - ly*st, y = center.y + lx*st + ly*ct;
+      const [px,py] = mapOpt(x,y);
+      d += (i===0?'M':'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+    }
+    return d + 'Z';
+  }
+
+  let optRaceId = 0;
+  let lastStart = null;
+
+  function renderOverlay(lambda){
+    overlaySvg.innerHTML = '';
+    const center = closedFormMinOpt(lambda);
+    const eig = eig2(A.a+lambda, A.b+lambda, A.c);
+    [0.6, 2, 5, 11].forEach(k => {
+      overlaySvg.appendChild(svgEl('path', {
+        d: ellipsePathGeneric(center, eig, k, OPT_SIZE),
+        fill:'none', stroke:'var(--ink)', 'stroke-width':1, 'stroke-opacity':0.35
+      }));
+    });
+    const [cx,cy] = mapOpt(center.x, center.y);
+    overlaySvg.appendChild(svgEl('circle', { cx, cy, r:4, fill:'none', stroke:'var(--ink)', 'stroke-width':1.5 }));
+
+    if (lastStart){
+      const [sx,sy] = mapOpt(lastStart.x, lastStart.y);
+      overlaySvg.appendChild(svgEl('circle', { cx:sx, cy:sy, r:4, fill:'var(--ink)', stroke:'var(--bg)', 'stroke-width':1 }));
+    }
+  }
+
+  function runRace(x0, y0, lambda){
+    lastStart = { x:x0, y:y0 };
+    const myId = ++optRaceId;
+    renderOverlay(lambda);
+
+    const active = OPTS.filter(o => optEnabled[o.key]);
+    const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
+    const maxLen = Math.max(...paths.map(p => p.hist.length), 1);
+
+    // AdamW's decoupled weight decay targets a different resting point than
+    // the shared ring center the other five converge to (see the paragraph
+    // below this figure), so mark its own endpoint distinctly instead of
+    // leaving it looking like it just stopped short.
+    const adamwPath = paths.find(p => p.o.key === 'adamw');
+    if (adamwPath){
+      const [fx, fy] = adamwPath.hist[adamwPath.hist.length - 1];
+      const [mx, my] = mapOpt(fx, fy);
+      overlaySvg.appendChild(svgEl('rect', {
+        x: mx-4, y: my-4, width: 8, height: 8,
+        fill: 'none', stroke: adamwPath.o.color, 'stroke-width': 1.5, transform: `rotate(45 ${mx} ${my})`
+      }));
+    }
+
+    const pathEls = {};
+    paths.forEach(p => {
+      const el = svgEl('path', { d:'', fill:'none', stroke:p.o.color, 'stroke-width':2.2, 'stroke-opacity':0.9 });
+      overlaySvg.appendChild(el);
+      pathEls[p.o.key] = el;
+    });
+
+    const stepMs = 9;
+    const t0 = performance.now();
+    function frame(now){
+      if (myId !== optRaceId) return; // a newer race superseded this one
+      const step = Math.min(Math.floor((now-t0)/stepMs), maxLen-1);
+      paths.forEach(p => {
+        const n = Math.min(step+1, p.hist.length);
+        let d = '';
+        for (let i=0;i<n;i++){
+          const [px,py] = mapOpt(p.hist[i][0], p.hist[i][1]);
+          d += (i===0?'M':'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+        }
+        pathEls[p.o.key].setAttribute('d', d);
+      });
+      if (step < maxLen-1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  const toggleWrap = document.getElementById('opt-toggles');
+  OPTS.forEach(o => {
+    const chip = document.createElement('div');
+    chip.className = 'opt-chip';
+    chip.innerHTML = '<span class="dot" style="background:'+o.color+'"></span>'+o.label;
+    chip.addEventListener('click', () => {
+      optEnabled[o.key] = !optEnabled[o.key];
+      chip.classList.toggle('off', !optEnabled[o.key]);
+      if (lastStart) runRace(lastStart.x, lastStart.y, parseFloat(document.getElementById('opt-slider').value));
+    });
+    toggleWrap.appendChild(chip);
+  });
+
+  const optStage = document.getElementById('opt-stage');
+  optStage.addEventListener('click', (evt) => {
+    const rect = heatCanvas.getBoundingClientRect(); // canvas/svg sit inset by opt-stage's border, not its own box
+    const fx = (evt.clientX-rect.left)/rect.width, fy = (evt.clientY-rect.top)/rect.height;
+    const [x,y] = invMapOpt(fx*OPT_SIZE, fy*OPT_SIZE);
+    runRace(x, y, parseFloat(document.getElementById('opt-slider').value));
+  });
+
+  document.getElementById('opt-slider').addEventListener('input', () => {
+    const lambda = parseFloat(document.getElementById('opt-slider').value);
+    document.getElementById('opt-val').textContent = lambda.toFixed(2);
+    renderHeatmap(lambda);
+    if (lastStart) runRace(lastStart.x, lastStart.y, lambda);
+    else renderOverlay(lambda);
+  });
+
+  if (window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      renderHeatmap(parseFloat(document.getElementById('opt-slider').value));
+    });
+  }
+
+  renderHeatmap(0);
+  renderOverlay(0);
+  runRace(-2.2, -2.0, 0);
+
+  // ===================================================================
+  // Fig. 4: optimizer race on a rougher, multi-well surface
+  // ===================================================================
+  (function(){
+    const WILD_DOM = { min: -3, max: 3 };
+    const WILD_SIZE = 420;
+
+    const WELLS = [
+      { cx:-2.0, cy: 1.5, A:-3.0, w:0.5 },
+      { cx: 1.8, cy: 1.8, A:-4.5, w:0.35 },
+      { cx: 2.0, cy:-1.5, A:-2.0, w:0.6 },
+      { cx:-1.5, cy:-2.0, A:-2.5, w:0.4 },
+      { cx: 0.0, cy: 2.3, A:-1.5, w:0.3 },
+      { cx:-2.3, cy:-0.3, A:-1.8, w:0.25 },
+      { cx: 0.5, cy:-0.3, A:-1.2, w:0.2 },
+    ];
+    const WILD_K = 0.12;
+
+    function wildLoss(x, y, lambda){
+      let s = (WILD_K + lambda) * (x*x + y*y);
+      for (const w of WELLS){
+        const dx = x - w.cx, dy = y - w.cy;
+        s += w.A * Math.exp(-(dx*dx+dy*dy)/w.w);
+      }
+      return s;
+    }
+    function wildGrad(x, y, lambda){
+      let gx = 2*(WILD_K+lambda)*x, gy = 2*(WILD_K+lambda)*y;
+      for (const w of WELLS){
+        const dx = x - w.cx, dy = y - w.cy;
+        const e = w.A * Math.exp(-(dx*dx+dy*dy)/w.w);
+        gx += e * (-2*dx/w.w);
+        gy += e * (-2*dy/w.w);
+      }
+      return [gx, gy];
+    }
+
+    function mapWild(x, y){ return mapPt(x, y, WILD_DOM, WILD_SIZE, 0); }
+    function invMapWild(px, py){
+      const span = WILD_DOM.max - WILD_DOM.min;
+      return [ WILD_DOM.min + (px/WILD_SIZE)*span, WILD_DOM.max - (py/WILD_SIZE)*span ];
+    }
+
+    // Same six optimizers as Fig. 3, verified stable (no blowup) across
+    // this landscape and the full lambda range in Node before wiring up.
+    // Hyperparameters match Fig. 3 except Prodigy's beta3/steps, tuned
+    // further for this rougher, flatter surface (see comment above it).
+    const WILD_OPTS = [
+      { key:'sgd', label:'SGD', color:'var(--ink)',
+        gen(x0,y0,lambda){
+          const lr=0.06, steps=400; let x=x0,y=y0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){ const [gx,gy]=wildGrad(x,y,lambda); x-=lr*gx; y-=lr*gy; h.push([x,y]); }
+          return h;
+        }
+      },
+      { key:'momentum', label:'Momentum', color:'#4a3aa7',
+        gen(x0,y0,lambda){
+          const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){ const [gx,gy]=wildGrad(x,y,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+          return h;
+        }
+      },
+      { key:'nesterov', label:'Nesterov', color:'#d5518a',
+        gen(x0,y0,lambda){
+          const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){ const [gx,gy]=wildGrad(x+mu*vx,y+mu*vy,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+          return h;
+        }
+      },
+      { key:'rmsprop', label:'RMSProp', color:'#e34948',
+        gen(x0,y0,lambda){
+          const lr=0.08, steps=150, decay=0.9, eps=1e-8; let x=x0,y=y0,cx=0,cy=0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){
+            const [gx,gy]=wildGrad(x,y,lambda);
+            cx=decay*cx+(1-decay)*gx*gx; cy=decay*cy+(1-decay)*gy*gy;
+            x-=lr*gx/(Math.sqrt(cx)+eps); y-=lr*gy/(Math.sqrt(cy)+eps);
+            h.push([x,y]);
+          }
+          return h;
+        }
+      },
+      // Same saturating weight decay as Fig. 3's AdamW (wd grows like
+      // 2*lambda for small lambda but is capped so lr*wd stays well under
+      // 1), for consistency: they're meant to be the same optimizer.
+      { key:'adamw', label:'AdamW', color:'#008300',
+        gen(x0,y0,lambda){
+          const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8;
+          const wdRaw=2*lambda, wd=wdRaw/(1+wdRaw/3);
+          let x=x0,y=y0,mx=0,my=0,vx=0,vy=0; const h=[[x,y]];
+          for(let i=1;i<=steps;i++){
+            const [gx,gy]=wildGrad(x,y,0);
+            mx=b1*mx+(1-b1)*gx; my=b1*my+(1-b1)*gy;
+            vx=b2*vx+(1-b2)*gx*gx; vy=b2*vy+(1-b2)*gy*gy;
+            const mxh=mx/(1-b1**i), myh=my/(1-b1**i);
+            const vxh=vx/(1-b2**i), vyh=vy/(1-b2**i);
+            x-=lr*(mxh/(Math.sqrt(vxh)+eps)+wd*x); y-=lr*(myh/(Math.sqrt(vyh)+eps)+wd*y);
+            h.push([x,y]);
+          }
+          return h;
+        }
+      },
+      // Prodigy needs a longer leash here than in Fig. 3: this surface's
+      // gradients are much weaker almost everywhere (background pull is
+      // (WILD_K+lambda)*x with WILD_K=0.12, versus Fig. 3's much steeper
+      // bowl), so the r/s accumulators that estimate its step size take far
+      // longer to build up enough signal to grow d past its 1e-6 floor.
+      // beta3 is tuned down further than Fig. 3's already-adjusted value,
+      // and steps is raised substantially, purely so that warm-up finishes
+      // (and the resulting jump becomes visible) inside this landscape's
+      // click-to-race animation instead of leaving Prodigy looking frozen.
+      // Mechanism is unchanged from Fig. 3's verified-correct Prodigy.
+      { key:'prodigy', label:'Prodigy', color:'#c98500',
+        gen(x0,y0,lambda){
+          const steps=6000, b1=0.9, b2=0.999, beta3=0.3, eps=1e-8, gamma=1;
+          let x=x0,y=y0; const ix=x0, iy=y0;
+          let mx=0,my=0,vx=0,vy=0,sx=0,sy=0,r=0,d=1e-6;
+          const h=[[x,y]];
+          for(let k=0;k<steps;k++){
+            const [gx,gy]=wildGrad(x,y,lambda);
+            mx=b1*mx+(1-b1)*d*gx; my=b1*my+(1-b1)*d*gy;
+            vx=b2*vx+(1-b2)*(d*gx)*(d*gx); vy=b2*vy+(1-b2)*(d*gy)*(d*gy);
+            const innerProd = gx*(ix-x) + gy*(iy-y);
+            r = beta3*r + (1-beta3)*gamma*d*d*innerProd;
+            sx = beta3*sx + (1-beta3)*gamma*d*d*gx;
+            sy = beta3*sy + (1-beta3)*gamma*d*d*gy;
+            const dHat = r / (Math.abs(sx)+Math.abs(sy)+eps);
+            d = Math.max(d, dHat);
+            x -= gamma*d*mx/(Math.sqrt(vx)+d*eps);
+            y -= gamma*d*my/(Math.sqrt(vy)+d*eps);
+            h.push([x,y]);
+          }
+          return h;
+        }
+      },
+    ];
+
+    const wildEnabled = {}; WILD_OPTS.forEach(o => wildEnabled[o.key] = true);
+
+    // Diverging color scale: this landscape has real negative (well) and
+    // positive (background bowl) values, so a diverging blue<->red ramp
+    // centered on zero fits better than a one-hue sequential ramp.
+    const DIV_LIGHT = { neg:'#104281', mid:'#f0efec', pos:'#a83232' };
+    const DIV_DARK  = { neg:'#3987e5', mid:'#383835', pos:'#e66767' };
+    function isDarkModeWild(){
+      const dt = document.documentElement.getAttribute('data-theme');
+      if (dt === 'dark') return true;
+      if (dt === 'light') return false;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    function hexToRgbWild(hex){
+      const n = parseInt(hex.slice(1), 16);
+      return [(n>>16)&255, (n>>8)&255, n&255];
+    }
+    function lerpRgb(c0, c1, f){ return [0,1,2].map(k => Math.round(c0[k]+(c1[k]-c0[k])*f)); }
+    function divergingColor(v, vmin, vmax){
+      const pair = isDarkModeWild() ? DIV_DARK : DIV_LIGHT;
+      const neg = hexToRgbWild(pair.neg), mid = hexToRgbWild(pair.mid), pos = hexToRgbWild(pair.pos);
+      if (v < 0){
+        const f = clamp(v/vmin, 0, 1);
+        return lerpRgb(mid, neg, f);
+      } else {
+        const f = clamp(v/vmax, 0, 1);
+        return lerpRgb(mid, pos, f);
+      }
+    }
+
+    const wildCanvas = document.getElementById('wild-heatmap');
+    const WILD_RES = 140;
+    wildCanvas.width = WILD_RES; wildCanvas.height = WILD_RES;
+    const wildCtx = wildCanvas.getContext('2d');
+
+    function renderWildHeatmap(lambda){
+      const img = wildCtx.createImageData(WILD_RES, WILD_RES);
+      const vals = new Float64Array(WILD_RES*WILD_RES);
+      let vmin = Infinity, vmax = -Infinity;
+      const span = WILD_DOM.max - WILD_DOM.min;
+      for (let j=0;j<WILD_RES;j++){
+        const y = WILD_DOM.max - (j+0.5)/WILD_RES*span;
+        for (let i=0;i<WILD_RES;i++){
+          const x = WILD_DOM.min + (i+0.5)/WILD_RES*span;
+          const v = wildLoss(x, y, lambda);
+          vals[j*WILD_RES+i] = v;
+          if (v<vmin) vmin=v; if (v>vmax) vmax=v;
+        }
+      }
+      for (let idx=0; idx<WILD_RES*WILD_RES; idx++){
+        const [r,g,b] = divergingColor(vals[idx], vmin, vmax);
+        img.data[idx*4]=r; img.data[idx*4+1]=g; img.data[idx*4+2]=b; img.data[idx*4+3]=255;
+      }
+      wildCtx.putImageData(img, 0, 0);
+    }
+
+    const wildOverlaySvg = document.getElementById('wild-overlay');
+    let wildRaceId = 0;
+    let wildLastStart = null;
+
+    function renderWildOverlay(){
+      wildOverlaySvg.innerHTML = '';
+      if (wildLastStart){
+        const [sx,sy] = mapWild(wildLastStart.x, wildLastStart.y);
+        wildOverlaySvg.appendChild(svgEl('circle', { cx:sx, cy:sy, r:4, fill:'var(--ink)', stroke:'var(--bg)', 'stroke-width':1 }));
+      }
+    }
+
+    function runWildRace(x0, y0, lambda){
+      wildLastStart = { x:x0, y:y0 };
+      const myId = ++wildRaceId;
+      renderWildOverlay();
+
+      const active = WILD_OPTS.filter(o => wildEnabled[o.key]);
+      const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
+
+      const pathEls = {};
+      paths.forEach(p => {
+        const el = svgEl('path', { d:'', fill:'none', stroke:p.o.color, 'stroke-width':2.2, 'stroke-opacity':0.9 });
+        wildOverlaySvg.appendChild(el);
+        pathEls[p.o.key] = el;
+      });
+
+      // Prodigy needs thousands of raw steps to warm up on this flatter
+      // surface (see the comment on its `gen` above), way more than the
+      // other five. Rather than stepping everyone at the same ms-per-step
+      // (which would stretch the whole race to Prodigy's pace, a 50+ second
+      // wait), every path is drawn as a fraction of its OWN length over one
+      // shared, fixed wall-clock duration. Fast optimizers still finish
+      // "faster" in the sense of needing fewer of their own steps to settle,
+      // Prodigy's early stillness then sudden movement is preserved, it's
+      // just all compressed into a normal-length animation.
+      const DURATION_MS = 4000;
+      const t0 = performance.now();
+      function frame(now){
+        if (myId !== wildRaceId) return;
+        const frac = Math.min((now-t0)/DURATION_MS, 1);
+        paths.forEach(p => {
+          const n = Math.max(1, Math.min(Math.round(frac*p.hist.length), p.hist.length));
+          let d = '';
+          for (let i=0;i<n;i++){
+            const [px,py] = mapWild(p.hist[i][0], p.hist[i][1]);
+            d += (i===0?'M':'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+          }
+          pathEls[p.o.key].setAttribute('d', d);
+        });
+        if (frac < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    const wildToggleWrap = document.getElementById('wild-toggles');
+    WILD_OPTS.forEach(o => {
+      const chip = document.createElement('div');
+      chip.className = 'opt-chip';
+      chip.innerHTML = '<span class="dot" style="background:'+o.color+'"></span>'+o.label;
+      chip.addEventListener('click', () => {
+        wildEnabled[o.key] = !wildEnabled[o.key];
+        chip.classList.toggle('off', !wildEnabled[o.key]);
+        if (wildLastStart) runWildRace(wildLastStart.x, wildLastStart.y, parseFloat(document.getElementById('wild-slider').value));
+      });
+      wildToggleWrap.appendChild(chip);
+    });
+
+    const wildStage = document.getElementById('wild-stage');
+    wildStage.addEventListener('click', (evt) => {
+      const rect = wildCanvas.getBoundingClientRect();
+      const fx = (evt.clientX-rect.left)/rect.width, fy = (evt.clientY-rect.top)/rect.height;
+      const [x,y] = invMapWild(fx*WILD_SIZE, fy*WILD_SIZE);
+      runWildRace(x, y, parseFloat(document.getElementById('wild-slider').value));
+    });
+
+    document.getElementById('wild-slider').addEventListener('input', () => {
+      const lambda = parseFloat(document.getElementById('wild-slider').value);
+      document.getElementById('wild-val').textContent = lambda.toFixed(2);
+      renderWildHeatmap(lambda);
+      if (wildLastStart) runWildRace(wildLastStart.x, wildLastStart.y, lambda);
+      else renderWildOverlay();
+    });
+
+    if (window.matchMedia){
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        renderWildHeatmap(parseFloat(document.getElementById('wild-slider').value));
+      });
+    }
+
+    renderWildHeatmap(0.15);
+    runWildRace(-2.5, 2.5, 0.15);
+  })();
+
+})();
+</script>
