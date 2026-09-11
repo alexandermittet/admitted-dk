@@ -6,7 +6,6 @@ import {
   BiLogoFacebookCircle,
   BiLogoInstagram,
   BiLogoLinkedinSquare,
-  BiLogoYoutube,
   BiLogoGithub,
 } from "react-icons/bi";
 import { FaXTwitter } from "react-icons/fa6";
@@ -15,6 +14,7 @@ import { LegalModal } from "./LegalModal";
 
 export function Footer15() {
   const [activeModal, setActiveModal] = useState(null);
+  const [emailRevealed, setEmailRevealed] = useState(false);
 
   return (
     <footer id="relume" className="bg-background-footer text-text-primary px-[5%] py-12 md:py-18 lg:py-20">
@@ -45,13 +45,21 @@ export function Footer15() {
                   Copenhagen, Denmark
                 </p>
                 <p className="mb-1 text-sm font-semibold">Contact</p>
-                
-                <a
-                  href={`mailto:${links.email}`}
-                  className="block text-sm underline decoration-black underline-offset-1"
-                >
-                  {links.email}
-                </a>
+                {emailRevealed ? (
+                  <a
+                    href={`mailto:${links.email}`}
+                    className="block text-sm underline decoration-black underline-offset-1"
+                  >
+                    {links.email}
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => setEmailRevealed(true)}
+                    className="block cursor-pointer text-sm underline decoration-black underline-offset-1"
+                  >
+                    Click to reveal email
+                  </button>
+                )}
               </div>
               <div className="grid grid-flow-col grid-cols-[max-content] items-start justify-start gap-x-3">
                 <a href={links.social.facebook}>
@@ -65,9 +73,6 @@ export function Footer15() {
                 </a>
                 <a href={links.social.linkedin}>
                   <BiLogoLinkedinSquare className="size-6" />
-                </a>
-                <a href={links.social.youtube}>
-                  <BiLogoYoutube className="size-6" />
                 </a>
                 <a href={links.social.github}>
                   <BiLogoGithub className="size-6" />

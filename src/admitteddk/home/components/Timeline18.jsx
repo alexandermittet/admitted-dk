@@ -4,37 +4,16 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@relume_io/relume-ui";
 import React, { useEffect, useState, useRef } from "react";
 import { links } from "../../../links.config";
 
 const useCarousel = () => {
   const [api, setApi] = useState();
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const carouselPreviousClass = (index) => {
-    // Hide previous button when at the first real slide (index 2, since snap index 1 + 1)
-    // or at the clone at beginning (index 1, since snap index 0 + 1)
-    return `z-30 size-12 ${index === 1 || index === 2 ? "hidden" : ""}`;
-  };
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-    setCurrentIndex(api.selectedScrollSnap() + 1);
-    api.on("select", () => {
-      setCurrentIndex(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
 
   return {
     api,
     setApi,
-    carouselPreviousClass,
-    currentIndex,
   };
 };
 
@@ -549,10 +528,6 @@ export function Timeline18() {
               </div>
             </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious
-            className={useActive.carouselPreviousClass(useActive.currentIndex)}
-          />
-          <CarouselNext className="z-30 size-12" />
         </Carousel>
         </div>
       </div>
