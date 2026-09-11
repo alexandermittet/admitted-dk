@@ -109,6 +109,8 @@ export function Layout423() {
               <img
                 src="/BSc foundational model for endoscopy.avif"
                 alt="Foundational Model for Endocopy"
+                width={800}
+                height={560}
                 className="size-full object-cover"
               />
             </div>

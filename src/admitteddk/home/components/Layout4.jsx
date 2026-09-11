@@ -53,6 +53,8 @@ export function Layout4() {
           <div>
             <img
               src="/uniavisen red jacket.avif"
+              width={600}
+              height={400}
               className="h-full w-full object-cover"
               alt="Medical imaging technology"
             />

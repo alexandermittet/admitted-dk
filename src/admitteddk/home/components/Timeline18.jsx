@@ -226,6 +226,8 @@ export function Timeline18() {
                   <img
                     src="/DI.avif"
                     alt="Timeline milestone 2023"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -248,6 +250,8 @@ export function Timeline18() {
                   <img
                     src="/uim siri.avif"
                     alt="Timeline milestone 2023"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -270,6 +274,8 @@ export function Timeline18() {
                   <img
                     src="/alex KU UCPH.avif"
                     alt="Timeline milestone 2023"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -288,15 +294,17 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.external.linkedinPostPodcast} 
-                  target="_blank" 
+                <a
+                  href={links.external.linkedinPostPodcast}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
                 >
                   <img
                     src="/alex-og-marcus-podcast.avif"
                     alt="Timeline milestone 2023"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </a>
@@ -308,9 +316,9 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2023</h3>
                   <p>
-                    <a 
-                      href={links.external.linkedinPostPodcast} 
-                      target="_blank" 
+                    <a
+                      href={links.external.linkedinPostPodcast}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
                     >
@@ -326,6 +334,8 @@ export function Timeline18() {
                   <img
                     src="/ITU.avif"
                     alt="Timeline milestone 2024"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -348,6 +358,8 @@ export function Timeline18() {
                   <img
                     src="/digitechsummit.avif"
                     alt="Timeline milestone 2023"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -366,15 +378,17 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.external.linkedinPostBsc} 
-                  target="_blank" 
+                <a
+                  href={links.external.linkedinPostBsc}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
                 >
                   <img
                     src="/bsc.avif"
                     alt="Timeline milestone 2024"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </a>
@@ -386,9 +400,9 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
-                    <a 
-                      href={links.external.linkedinPostBsc} 
-                      target="_blank" 
+                    <a
+                      href={links.external.linkedinPostBsc}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
                     >
@@ -400,20 +414,21 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.external.linkedinPostInstagram} 
-                  target="_blank" 
+                <a
+                  href={links.external.linkedinPostInstagram}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
                 >
                   <video
                     src="/instagram-takeover.mp4"
-                    alt="Timeline milestone 2024"
                     className="h-full w-full object-cover"
                     autoPlay
                     loop
                     muted
                     playsInline
+                    width={300}
+                    height={450}
                   />
                 </a>
                 <div className="mb-4 mt-8 flex w-full items-center">
@@ -424,9 +439,9 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2024</h3>
                   <p>
-                    <a 
-                      href={links.external.linkedinPostInstagram} 
-                      target="_blank" 
+                    <a
+                      href={links.external.linkedinPostInstagram}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
                     >
@@ -438,15 +453,17 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.external.copenhagenLightFestival} 
-                  target="_blank" 
+                <a
+                  href={links.external.copenhagenLightFestival}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
                 >
                   <img
                     src="/copenhagen-light-festival.avif"
                     alt="Timeline milestone 2025"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </a>
@@ -458,9 +475,9 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
                   <p>
-                    <a 
-                      href={links.external.copenhagenLightFestival} 
-                      target="_blank" 
+                    <a
+                      href={links.external.copenhagenLightFestival}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
                     >
@@ -472,15 +489,17 @@ export function Timeline18() {
             </CarouselItem>
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.external.uniavisenArticle} 
-                  target="_blank" 
+                <a
+                  href={links.external.uniavisenArticle}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
                 >
                   <img
                     src="/erasmus.avif"
                     alt="Timeline milestone 2025"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </a>
@@ -492,9 +511,9 @@ export function Timeline18() {
                 <div className="px-6 text-center">
                   <h3 className="mb-2 text-xl font-bold md:text-2xl">2025</h3>
                   <p>
-                    <a 
-                      href={links.external.uniavisenArticle} 
-                      target="_blank" 
+                    <a
+                      href={links.external.uniavisenArticle}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:no-underline"
                     >
@@ -511,6 +530,8 @@ export function Timeline18() {
                   <img
                     src="/DI.avif"
                     alt="Timeline milestone 2023"
+                    width={300}
+                    height={450}
                     className="h-full w-full object-cover"
                   />
                 </div>
