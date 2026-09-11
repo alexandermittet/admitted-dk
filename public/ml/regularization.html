@@ -514,8 +514,9 @@
       <span><span class="dash" style="color:var(--muted)"></span>training error</span>
       <span><span class="solid" style="color:var(--accent)"></span>held-out error</span>
       <span><span class="dot" style="color:var(--accent)"></span>best on held-out data</span>
+      <span><span class="solid" style="color:var(--ink)"></span>gap = overfitting</span>
     </div>
-    <figcaption>Fig. 2c &mdash; dashed: error on the training points, always gets worse. Solid: error on ten new points the model never saw, gets better then worse. The dot marks the regularization amount that does best on those new points, that's the number cross-validation would pick for you. The thin vertical line shows where the slider above is set right now.</figcaption>
+    <figcaption>Fig. 2c &mdash; dashed: error on the training points, always gets worse. Solid: error on ten new points the model never saw, gets better then worse. The dot marks the regularization amount that does best on those new points, that's the number cross-validation would pick for you. The vertical segment connecting the two lines shows the gap at the slider's current setting, wide is overfitting, thin is underfitting.</figcaption>
   </figure>
 
   <article>
@@ -834,6 +835,12 @@
     let bi=0; for (let i=1;i<arr.length;i++) if (arr[i]<arr[bi]) bi=i;
     return bi;
   }
+  function interpErrVal(vals, t){
+    const idx = t * (vals.length - 1);
+    const i0 = Math.floor(idx), i1 = Math.min(i0 + 1, vals.length - 1);
+    const frac = idx - i0;
+    return vals[i0] + (vals[i1] - vals[i0]) * frac;
+  }
 
   const errSvgs = { l1: document.getElementById('err-l1'), l2: document.getElementById('err-l2') };
   const errMarkers = {};
@@ -849,8 +856,12 @@
     svg.appendChild(svgEl('line', { x1:mx, y1:ERR_PADY, x2:mx, y2:ERR_PLOT_H-ERR_PADY, stroke:color, 'stroke-width':1, 'stroke-dasharray':'2 2', 'stroke-opacity':0.5 }));
     svg.appendChild(svgEl('circle', { cx:mx, cy:my, r:3.5, fill:color }));
 
-    const marker = svgEl('line', { x1:0, y1:ERR_PADY, x2:0, y2:ERR_PLOT_H-ERR_PADY, stroke:'var(--ink)', 'stroke-width':1, 'stroke-opacity':0.55 });
-    svg.appendChild(marker);
+    const gapLine = svgEl('line', { x1:0, y1:0, x2:0, y2:0, stroke:'var(--ink)', 'stroke-width':1.5, 'stroke-opacity':0.4 });
+    svg.appendChild(gapLine);
+    const trainDot = svgEl('circle', { cx:0, cy:0, r:2.8, fill:'var(--muted)' });
+    svg.appendChild(trainDot);
+    const testDot = svgEl('circle', { cx:0, cy:0, r:2.8, fill:color });
+    svg.appendChild(testDot);
 
     const leftLabel = svgEl('text', { x:ERR_PADX, y:ERR_H-5, 'font-size':'8.5', fill:'var(--muted)', 'font-family':'system-ui,sans-serif' });
     leftLabel.textContent = 'none';
@@ -860,14 +871,20 @@
     rightLabel.textContent = 'more regularization';
     svg.appendChild(rightLabel);
 
-    return marker;
+    return { gapLine, trainDot, testDot, curves };
   }
 
   function updateErrorMarker(t){
-    [errMarkers.l1, errMarkers.l2].forEach(marker => {
-      if (!marker) return;
-      const [x] = mapErr(t, 0);
-      marker.setAttribute('x1', x); marker.setAttribute('x2', x);
+    [errMarkers.l1, errMarkers.l2].forEach(m => {
+      if (!m) return;
+      const trainV = interpErrVal(m.curves.train, t);
+      const testV = interpErrVal(m.curves.test, t);
+      const [x, ty] = mapErr(t, trainV);
+      const [ , sy] = mapErr(t, testV);
+      m.gapLine.setAttribute('x1', x); m.gapLine.setAttribute('x2', x);
+      m.gapLine.setAttribute('y1', ty); m.gapLine.setAttribute('y2', sy);
+      m.trainDot.setAttribute('cx', x); m.trainDot.setAttribute('cy', ty);
+      m.testDot.setAttribute('cx', x); m.testDot.setAttribute('cy', sy);
     });
   }
 
