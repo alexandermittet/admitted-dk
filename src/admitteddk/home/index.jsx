@@ -5,6 +5,7 @@ import { Layout423 } from "./components/Layout423";
 import { Layout4 } from "./components/Layout4";
 import { Testimonial22 } from "./components/Testimonial22";
 import { Timeline18 } from "./components/Timeline18";
+import { ProjectsCarousel } from "./components/ProjectsCarousel";
 import { Cta31 } from "./components/Cta31";
 import { Footer15 } from "../shared/components/Footer15";
 
@@ -15,6 +16,7 @@ export default function Page() {
       <Header84 />
       <Layout423 />
       <Timeline18 />
+      <ProjectsCarousel />
       <Layout4 />
       <Testimonial22 />
       <Cta31 />

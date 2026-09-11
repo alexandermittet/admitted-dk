@@ -51,7 +51,7 @@ export function Timeline18() {
       return;
     }
 
-    const REAL_SLIDE_COUNT = 11; // Number of actual slides (not including clones)
+    const REAL_SLIDE_COUNT = 9; // Number of actual slides (not including clones)
     const CLONE_START_INDEX = 0; // Clone of last slide at beginning
     const CLONE_END_INDEX = REAL_SLIDE_COUNT + 1; // Clone of first slide at end
     const FIRST_REAL_INDEX = 1; // First real slide
@@ -219,40 +219,6 @@ export function Timeline18() {
           >
             <CarouselContent className="ml-0">
             {/* Clone of last slide at beginning for seamless loop */}
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.projects.catscribe} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
-                >
-                  <img
-                    src="/catscribe.avif"
-                    alt="Timeline milestone 2026"
-                    className="h-full w-full object-cover"
-                  />
-                </a>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2026</h3>
-                  <p>
-                    <a 
-                      href={links.projects.catscribe} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="underline hover:no-underline"
-                    >
-                      Developed 'catscribe' a purist audio-to-text transcription webapp, marketed for students.
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
             {/* First real slide */}
             <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
               <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
@@ -533,40 +499,6 @@ export function Timeline18() {
                       className="underline hover:no-underline"
                     >
                       Erasmus exchange to University of Pisa
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </CarouselItem>
-            <CarouselItem className="basis-full pl-0 sm:basis-1/2 md:basis-1/3">
-              <div className="mb-4 flex w-full flex-col items-center md:mb-0 md:w-auto">
-                <a 
-                  href={links.projects.catscribe} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-3/5 overflow-hidden aspect-[2/3] cursor-pointer"
-                >
-                  <img
-                    src="/catscribe.avif"
-                    alt="Timeline milestone 2026"
-                    className="h-full w-full object-cover"
-                  />
-                </a>
-                <div className="mb-4 mt-8 flex w-full items-center">
-                  <div className="h-[3px] w-full bg-white" />
-                  <div className="z-20 size-[0.9375rem] flex-none rounded-full bg-white shadow-[0_0_0_8px_white]" />
-                  <div className="h-[3px] w-full bg-white" />
-                </div>
-                <div className="px-6 text-center">
-                  <h3 className="mb-2 text-xl font-bold md:text-2xl">2026</h3>
-                  <p>
-                    <a 
-                      href={links.projects.catscribe} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="underline hover:no-underline"
-                    >
-                      Developed 'catscribe' a purist audio-to-text transcription webapp, marketed for students.
                     </a>
                   </p>
                 </div>
