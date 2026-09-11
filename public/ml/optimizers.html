@@ -913,6 +913,7 @@
 
       const active = WILD_OPTS.filter(o => wildEnabled[o.key]);
       const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
+      const maxLen = Math.max(...paths.map(p => p.hist.length), 1);
 
       const pathEls = {};
       paths.forEach(p => {
@@ -927,22 +928,21 @@
         }
       });
 
-      // Prodigy needs thousands of raw steps to warm up on this flatter
-      // surface (see the comment on its `gen` above), way more than the
-      // other five. Rather than stepping everyone at the same ms-per-step
-      // (which would stretch the whole race to Prodigy's pace, a 50+ second
-      // wait), every path is drawn as a fraction of its OWN length over one
-      // shared, fixed wall-clock duration. Fast optimizers still finish
-      // "faster" in the sense of needing fewer of their own steps to settle,
-      // Prodigy's early stillness then sudden movement is preserved, it's
-      // just all compressed into a normal-length animation.
-      const DURATION_MS = 4000;
+      // All optimizers share one clock with a single step size, derived from
+      // the longest path. This way, animation duration directly reflects how
+      // many steps each optimizer actually needed: Prodigy's thousands appear
+      // as a longer animation than SGD's 400, Momentum's 200, or Adam's 150,
+      // showing real speed differences. The target duration is set so that
+      // even the longest path (Prodigy's 6000 steps) finishes in a reasonable,
+      // interactive timeframe (~4 seconds), scaling everything proportionally.
+      const TARGET_MS = 4000;
+      const stepMs = TARGET_MS / maxLen;
       const t0 = performance.now();
       function frame(now){
         if (myId !== wildRaceId) return;
-        const frac = Math.min((now-t0)/DURATION_MS, 1);
+        const step = Math.min(Math.floor((now-t0)/stepMs), maxLen-1);
         paths.forEach(p => {
-          const n = Math.max(1, Math.min(Math.round(frac*p.hist.length), p.hist.length));
+          const n = Math.min(step+1, p.hist.length);
           if (p.o.key === 'prodigy'){
             // Draw Prodigy with opacity gradient from 0.1 to 0.9
             const minOpacity = 0.1, maxOpacity = 0.9;
@@ -968,7 +968,7 @@
             pathEls[p.o.key].setAttribute('d', d);
           }
         });
-        if (frac < 1) requestAnimationFrame(frame);
+        if (step < maxLen-1) requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
     }
