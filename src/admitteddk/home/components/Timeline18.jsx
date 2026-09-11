@@ -299,7 +299,7 @@ export function Timeline18() {
                       href={links.external.linkedinPostPodcast}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline hover:no-underline"
+                      className="text-background-footer underline hover:no-underline"
                     >
                       Participated in UCPH Study Life podcast
                     </a>
@@ -383,7 +383,7 @@ export function Timeline18() {
                       href={links.external.linkedinPostBsc}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline hover:no-underline"
+                      className="text-background-footer underline hover:no-underline"
                     >
                       Successfully defended BSc Thesis for Hvidovre hospital 'Foundational Model for Endoscopy' with top grade
                     </a>
@@ -422,7 +422,7 @@ export function Timeline18() {
                       href={links.external.linkedinPostInstagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline hover:no-underline"
+                      className="text-background-footer underline hover:no-underline"
                     >
                       Takeover on UCPH study life instagram
                     </a>
@@ -458,7 +458,7 @@ export function Timeline18() {
                       href={links.external.copenhagenLightFestival}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline hover:no-underline"
+                      className="text-background-footer underline hover:no-underline"
                     >
                       Selected for exhibition at Copenhagen Light Festival 25
                     </a>
@@ -494,7 +494,7 @@ export function Timeline18() {
                       href={links.external.uniavisenArticle}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline hover:no-underline"
+                      className="text-background-footer underline hover:no-underline"
                     >
                       Erasmus exchange to University of Pisa
                     </a>

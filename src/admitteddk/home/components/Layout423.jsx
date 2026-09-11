@@ -107,10 +107,10 @@ export function Layout423() {
             <div className="absolute inset-0 flex size-full flex-col items-center justify-center self-start">
               <div className="absolute inset-0 bg-black/50" />
               <img
-                src="/BSc foundational model for endoscopy.avif"
-                alt="Foundational Model for Endocopy"
-                width={800}
-                height={560}
+                src="/foundational-model-endoscopy.avif"
+                alt="Foundational Model for Endoscopy"
+                width={2000}
+                height={1101}
                 className="size-full object-cover"
               />
             </div>
@@ -121,7 +121,7 @@ export function Layout423() {
                   Medical AI
                 </p>
                 <h3 className="text-2xl font-bold text-text-alternative md:text-3xl md:leading-[1.3] lg:text-4xl">
-                  Foundational Model for Endocopy
+                  Foundational Model for Endoscopy
                 </h3>
                 <div className="lg:hidden">
                   <p className="mt-5 text-text-alternative md:mt-6">
