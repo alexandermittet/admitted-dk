@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML: Optimizers and Their Differences</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+  @font-face{
+    font-family: "Concielian Classic Cond";
+    src: url("/concclassiccond.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root{
+    color-scheme: light;
+    --bg:        #f9f9f7;
+    --surface:   #fcfcfb;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --muted:     #898781;
+    --grid:      #e1e0d9;
+    --axis:      #c3c2b7;
+    --border:    rgba(11,11,11,0.10);
+    --none:      #2a78d6;
+    --none-fill: #2a78d61a;
+    --l1:        #d9591f;
+    --l1-fill:   #d9591f1a;
+    --l2:        #148a5f;
+    --l2-fill:   #148a5f1a;
+    --truefn:    #b3b0a6;
+    --accent:    #d9591f;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:        #0d0d0d;
+      --surface:   #1a1a19;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --muted:     #948f83;
+      --grid:      #2c2c2a;
+      --axis:      #3f3f3c;
+      --border:    rgba(255,255,255,0.12);
+      --none:      #3987e5;
+      --none-fill: #3987e526;
+      --l1:        #d95926;
+      --l1-fill:   #d9592626;
+      --l2:        #199e70;
+      --l2-fill:   #199e7026;
+      --truefn:    #55534c;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:        #0d0d0d;
+    --surface:   #1a1a19;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #948f83;
+    --grid:      #2c2c2a;
+    --axis:      #3f3f3c;
+    --border:    rgba(255,255,255,0.12);
+    --none:      #3987e5;
+    --none-fill: #3987e526;
+    --l1:        #d95926;
+    --l1-fill:   #d9592626;
+    --l2:        #199e70;
+    --l2-fill:   #199e7026;
+    --truefn:    #55534c;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 20px 72px;
+  }
+  h1,h2,h3{
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1{
+    font-family: "Concielian Classic Cond", "Source Serif 4", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    letter-spacing: 0.01em;
+    line-height: 1.18;
+  }
+  h2{ font-size: 1.35rem; margin-top: 0; }
+  .byline{
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  article{
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.68;
+    color: var(--ink-2);
+    margin-top: 28px;
+  }
+  article > p{ margin: 0 0 20px; }
+  article p:first-of-type::first-letter{
+    color: var(--ink);
+  }
+  article b, article strong{ color: var(--ink); font-weight: 600; }
+  article em{ font-style: italic; color: var(--ink); }
+
+  .callout{
+    margin: 32px 0;
+    padding: 18px 22px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .callout .q{
+    font-style: italic;
+    color: var(--ink);
+    display:block;
+    margin-bottom: 10px;
+  }
+
+  figure{
+    margin: 36px 0 8px;
+  }
+  figcaption{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .panels{
+    display:flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .panel{
+    flex: 1 1 200px;
+    min-width: 190px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+  }
+  .panel-title{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+  }
+  .swatch{ width:9px; height:9px; border-radius:3px; flex:none; }
+  .panel svg{ display:block; width:100%; height:auto; }
+  .readout{
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.78rem;
+    color: var(--ink-2);
+    display:flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 7px;
+  }
+  .readout b{ color: var(--ink); font-weight: 600; }
+  .zero-flag{ color: var(--l1); font-weight: 700; }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 15px;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .controls label{ color: var(--ink-2); flex: none; white-space: nowrap; }
+  .controls input[type=range]{ flex: 1 1 auto; accent-color: var(--accent); }
+  .controls .val{
+    flex: none; width: 4em; text-align: right;
+    font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600;
+  }
+
+  .bars{
+    margin-top: 9px;
+    display:flex;
+    align-items:flex-end;
+    gap: 3px;
+    height: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  .bars .bar{
+    flex:1;
+    background: var(--muted);
+    border-radius: 2px 2px 0 0;
+    min-height: 2px;
+    opacity: 0.85;
+  }
+
+  .legend{
+    display:flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend .dot{ width:8px; height:8px; border-radius:50%; background:currentColor; }
+  .legend .dash{ width:16px; height:0; border-top: 1.5px dashed currentColor; }
+  .legend .solid{ width:16px; height:0; border-top: 2px solid currentColor; }
+  .legend .cross{ position:relative; width:9px; height:9px; }
+  .legend .cross::before, .legend .cross::after{ content:''; position:absolute; background:currentColor; }
+  .legend .cross::before{ left:4px; top:0; width:1.5px; height:9px; }
+  .legend .cross::after{ left:0; top:4px; width:9px; height:1.5px; }
+
+  .closing{
+    margin-top: 40px;
+    padding: 22px 24px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .closing h3{ font-size: 1.1rem; margin-bottom: 12px; }
+  .closing p{ font-size: 1.02rem; line-height: 1.65; color: var(--ink-2); margin: 10px 0 0; font-family: "Source Serif 4", Georgia, serif; }
+  .closing p b{ color: var(--ink); }
+
+  .exercise{
+    margin-top: 28px;
+    padding-left: 16px;
+    border-left: 3px solid var(--accent);
+  }
+  .exercise b{ color: var(--ink); }
+
+  .opt-stage{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: crosshair;
+    background: var(--surface);
+  }
+  .opt-stage canvas, .opt-stage svg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .opt-hint{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.74rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+  }
+  .opt-toggles{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .opt-chip{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    padding: 5px 10px 5px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.76rem;
+    color: var(--ink-2);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+  }
+  .opt-chip .dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .opt-chip.off{ opacity: 0.35; }
+  .opt-credit{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-top: 12px;
+    text-align: left;
+  }
+  .opt-credit a{ color: var(--ink-2); }
+
+  footer{
+    margin-top: 44px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 600px){
+    .panels{ flex-direction: column; }
+    .panel{ min-width: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Optimizers and Their Differences: SGD, Momentum, Nesterov, RMSProp, Adam, Prodigy</h1>
+  <div class="byline">ML notes for admitted.dk</div>
+
+  <article>
+    <p>Six gradient-based optimizers show up in almost every training script: SGD, Momentum, Nesterov, RMSProp, Adam, and Prodigy. They all chase downhill on a loss surface, but they get there at different speeds and sometimes by different routes. The update rules themselves look almost like abstract math, so here is the concrete version: watch them actually run on real loss surfaces, right here in your browser.</p>
+    <p><b>SGD</b> (stochastic gradient descent) takes fixed steps straight down the steepest slope. <b>Momentum</b> learns to coast on that same slope, building up speed so it doesn't get stuck oscillating across narrow valleys. <b>Nesterov</b> is momentum with a lookahead, checking the slope a bit ahead before updating. <b>RMSProp</b> scales each step by the recent history of gradients in that direction, so parameters with larger gradients don't hog all the movement. <b>Adam</b> combines momentum with RMSProp's per-parameter scaling. <b>Prodigy</b> estimates its own step size as it goes, learning how big a step makes sense for the problem at hand, without needing a learning rate tuned in advance.</p>
+    <p>Below are two loss surfaces: first a simple bowl, then a rougher landscape with multiple wells. Click anywhere on either surface to watch all six optimizers race from that starting point. The differences you'll see are real, and they matter.</p>
+  </article>
+  <figure>
+    <div class="opt-stage" id="opt-stage">
+      <canvas id="opt-heatmap"></canvas>
+      <svg id="opt-overlay" viewBox="0 0 420 420"></svg>
+    </div>
+    <div class="opt-hint">click to drop all six optimizers from that point</div>
+
+    <div class="opt-toggles" id="opt-toggles"></div>
+
+    <p class="opt-credit">Fig. 3 &mdash; a simple tilted bowl, six optimizers racing to the bottom. Rebuilt from scratch for this page (this can't load D3), but the idea and the click-to-race format come straight from <a href="https://emiliendupont.github.io/2018/01/24/optimization-visualization/" target="_blank" rel="noopener">Emilien Dupont's 2018 optimizer visualization</a>. Go look at the original, it's terrific.</p>
+  </figure>
+
+  <article>
+    <p>Watch what happens to plain SGD (black) on this tilted bowl: it zigzags back and forth across the slope, never quite going straight down. That's because the bowl is stretched, much steeper in one direction than the other, and a fixed step size overshoots the narrow direction while the wide direction still wants more. The adaptive methods barely react to the shape at all. They watch the local gradient history and scale each step to each direction separately, so they straighten out the path almost immediately. The cost is that they need more steps to settle: you'll see SGD reach the bottom first, then Momentum and Nesterov about halfway through, then RMSProp and Adam take longer still.</p>
+
+    <p>Each optimizer gets a fixed budget: SGD and Prodigy take 400 steps, Momentum and Nesterov take 200, and RMSProp and Adam take 150. These rates are tuned so that faster optimizers (in terms of raw iteration count) finish sooner, the slower ones take longer, and you can see both effects at once. The races run at 9 milliseconds per step, so when you see a path freeze mid-slide, that optimizer has burned through its budget while others are still rolling.</p>
+
+    <p>Adam is worth watching closely, especially the moment where it suddenly shifts its approach. Adam combines momentum (building speed) with per-parameter scaling (speeding up in directions with consistent gradients, slowing down in noisy ones). That shift from zigzagging to straight acceleration is Adam noticing the shape and adapting to it.</p>
+
+    <p>Prodigy stands apart: it estimates its own step size from how far it has moved since the start, rather than taking a fixed learning rate. That's why it looks hesitant at first, creeping along while others are already sprinting. It's still working out the scale of the problem. Once it figures out what a reasonable step size is, though, it moves decisively.</p>
+  </article>
+
+  <article>
+    <h2>A rougher hill</h2>
+    <p>The tilted bowl is kind. Real loss surfaces aren't. This one has several wells of different depths, some with steep walls, others so shallow that a rolling ball barely notices them. Click anywhere and watch where each optimizer lands. Different starting points lead to different wells, and different optimizers from the same starting point can land in entirely different places. One of these wells is the deepest, the true minimum, but not all optimizers find it from every starting point.</p>
+
+    <p>A gradient only tells you which way is down from where you're standing, never whether the ground gets lower somewhere else. Momentum can carry an optimizer straight through a shallow pit that would otherwise stop it, which is one reason it's almost always left on in practice. Sometimes that's an advantage: you overshoot a bad local minimum and find something better. Sometimes it's a trap: you overshoot the real bottom and have to climb back out. The rough surface makes all of this visible.</p>
+  </article>
+
+  <figure>
+    <div class="opt-stage" id="wild-stage">
+      <canvas id="wild-heatmap"></canvas>
+      <svg id="wild-overlay" viewBox="0 0 420 420"></svg>
+    </div>
+    <div class="opt-hint">click to drop all six optimizers from that point</div>
+
+    <div class="opt-toggles" id="wild-toggles"></div>
+
+    <p class="opt-credit">Fig. 4 &mdash; same six optimizers as Fig. 3, on a deliberately rougher surface with several local wells. Same engine, same credit to <a href="https://emiliendupont.github.io/2018/01/24/optimization-visualization/" target="_blank" rel="noopener">Emilien Dupont's original</a>, whose landscape used exactly this trick (two wells of different depth) to make the same point.</p>
+  </figure>
+
+  <article>
+    <p>Watch where the deepest well actually is on this landscape, versus where most starting points end up. The true minimum isn't always the easiest one to reach. That deep well near the top right corner? From the bottom left, some optimizers miss it entirely and settle into a shallow pit instead, satisfied that they can't find a lower gradient direction from there.</p>
+
+    <p>The timing model here is different from Fig. 3. All six paths are drawn as a fraction of their own length over a shared 4-second window, so every optimizer finishes at exactly the same wall-clock moment. This reveals the real difference in work: Prodigy needs 6,000 steps to warm up its step size estimate on this flatter surface, compared to 400 for SGD, 200 for Momentum and Nesterov, and 150 each for RMSProp and Adam. That early stillness while others move is real, it's not a stall, it's Prodigy slowly building enough signal to trust its step-size estimate. Thousands of tiny exploratory moves, versus hundreds for the rest, all compressed into one animation window.</p>
+
+    <p>For more on what optimizers are and why they matter, see the <a href="/ml/regularization">regularization post</a>, which covers related territory from a different angle.</p>
+  </article>
+
+  <footer>Figs. 3 and 4's optimizer paths are real gradient descent, run in your browser.</footer>
+<script>
+(function(){
+
+  // ---------- shared math ----------
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+  function mapPt(x, y, dom, size, pad){
+    const scale = (size - 2*pad) / (dom.max - dom.min);
+    return [ pad + (x - dom.min)*scale, size - pad - (y - dom.min)*scale ];
+  }
+
+  function svgEl(tag, attrs){
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+
+  function eig2(a,b,c){
+    const tr = a+b, det = a*b - c*c;
+    const disc = Math.sqrt(Math.max(tr*tr/4 - det, 0));
+    return { e1: tr/2 + disc, e2: tr/2 - disc, theta: 0.5*Math.atan2(2*c, a-b) };
+  }
+
+
+  // ===================================================================
+  // Fig. 3: optimizer race on the same bowl, reusing A and w0 from Fig. 1
+  // ===================================================================
+  // Same bowl constants as the regularization post's Fig. 1: anisotropic
+  // quadratic loss with its unconstrained minimum at w0 (not the origin).
+  const A = { a: 0.6, b: 5, c: 0 };
+  const w0 = { x: 0.3, y: 1.6 };
+  const OPT_DOM = { min: -5.5, max: 5.5 };
+  const OPT_SIZE = 420;
+
+  function optGrad(x, y, lambda){
+    const dx = x - w0.x, dy = y - w0.y;
+    const gx = 2*A.a*dx + 2*A.c*dy;
+    const gy = 2*A.b*dy + 2*A.c*dx;
+    return [gx, gy];
+  }
+  function optLoss(x, y, lambda){
+    const dx = x - w0.x, dy = y - w0.y;
+    return A.a*dx*dx + 2*A.c*dx*dy + A.b*dy*dy;
+  }
+  function closedFormMinOpt(lambda){
+    return { x: w0.x, y: w0.y };
+  }
+
+  function mapOpt(x, y){ return mapPt(x, y, OPT_DOM, OPT_SIZE, 0); }
+  function invMapOpt(px, py){
+    const span = OPT_DOM.max - OPT_DOM.min;
+    return [ OPT_DOM.min + (px/OPT_SIZE)*span, OPT_DOM.max - (py/OPT_SIZE)*span ];
+  }
+
+  // ---- optimizers (hyperparameters tuned and verified against the
+  // closed-form regularized minimum before wiring up) ----
+  const OPTS = [
+    {
+      key:'sgd', label:'SGD', color:'var(--ink)',
+      gen(x0,y0,lambda){
+        const lr=0.06, steps=400; let x=x0,y=y0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){ const [gx,gy]=optGrad(x,y,lambda); x-=lr*gx; y-=lr*gy; h.push([x,y]); }
+        return h;
+      }
+    },
+    {
+      key:'momentum', label:'Momentum', color:'#4a3aa7',
+      gen(x0,y0,lambda){
+        const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){ const [gx,gy]=optGrad(x,y,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+        return h;
+      }
+    },
+    {
+      key:'nesterov', label:'Nesterov', color:'#d5518a',
+      gen(x0,y0,lambda){
+        const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){ const [gx,gy]=optGrad(x+mu*vx,y+mu*vy,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+        return h;
+      }
+    },
+    {
+      key:'rmsprop', label:'RMSProp', color:'#e34948',
+      gen(x0,y0,lambda){
+        const lr=0.08, steps=150, decay=0.9, eps=1e-8; let x=x0,y=y0,cx=0,cy=0; const h=[[x,y]];
+        for(let i=0;i<steps;i++){
+          const [gx,gy]=optGrad(x,y,lambda);
+          cx=decay*cx+(1-decay)*gx*gx; cy=decay*cy+(1-decay)*gy*gy;
+          x-=lr*gx/(Math.sqrt(cx)+eps); y-=lr*gy/(Math.sqrt(cy)+eps);
+          h.push([x,y]);
+        }
+        return h;
+      }
+    },
+    {
+      // Adam: standard Adam with bias-corrected first and second moment estimates,
+      // no weight decay.
+      key:'adam', label:'Adam', color:'#008300',
+      gen(x0,y0,lambda){
+        const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8;
+        let x=x0,y=y0,mx=0,my=0,vx=0,vy=0; const h=[[x,y]];
+        for(let i=1;i<=steps;i++){
+          const [gx,gy]=optGrad(x,y,0);
+          mx=b1*mx+(1-b1)*gx; my=b1*my+(1-b1)*gy;
+          vx=b2*vx+(1-b2)*gx*gx; vy=b2*vy+(1-b2)*gy*gy;
+          const mxh=mx/(1-b1**i), myh=my/(1-b1**i);
+          const vxh=vx/(1-b2**i), vyh=vy/(1-b2**i);
+          x-=lr*mxh/(Math.sqrt(vxh)+eps); y-=lr*myh/(Math.sqrt(vyh)+eps);
+          h.push([x,y]);
+        }
+        return h;
+      }
+    },
+    {
+      // Prodigy (Mishchenko & Defazio, 2023), Algorithm 3: estimates its own
+      // step scale d from how far it has moved from its starting point,
+      // instead of taking a learning rate. beta3 is tuned down from the
+      // paper's default sqrt(beta2) (~0.9995, meant for thousand-step deep
+      // learning runs) to something that warms up inside a few hundred
+      // steps, so it's legible in a short animation. The mechanism (m, v,
+      // r, s accumulators, L1 norm, monotonically non-decreasing d) is
+      // otherwise the real algorithm.
+      key:'prodigy', label:'Prodigy', color:'#c98500',
+      gen(x0,y0,lambda){
+        const steps=400, b1=0.9, b2=0.999, beta3=0.98, eps=1e-8, gamma=1;
+        let x=x0,y=y0; const ix=x0, iy=y0;
+        let mx=0,my=0,vx=0,vy=0,sx=0,sy=0,r=0,d=1e-6;
+        const h=[[x,y]];
+        for(let k=0;k<steps;k++){
+          const [gx,gy]=optGrad(x,y,lambda);
+          mx=b1*mx+(1-b1)*d*gx; my=b1*my+(1-b1)*d*gy;
+          vx=b2*vx+(1-b2)*(d*gx)*(d*gx); vy=b2*vy+(1-b2)*(d*gy)*(d*gy);
+          const innerProd = gx*(ix-x) + gy*(iy-y);
+          r = beta3*r + (1-beta3)*gamma*d*d*innerProd;
+          sx = beta3*sx + (1-beta3)*gamma*d*d*gx;
+          sy = beta3*sy + (1-beta3)*gamma*d*d*gy;
+          const dHat = r / (Math.abs(sx)+Math.abs(sy)+eps);
+          d = Math.max(d, dHat);
+          x -= gamma*d*mx/(Math.sqrt(vx)+d*eps);
+          y -= gamma*d*my/(Math.sqrt(vy)+d*eps);
+          h.push([x,y]);
+        }
+        return h;
+      }
+    },
+  ];
+
+  const optEnabled = {}; OPTS.forEach(o => optEnabled[o.key] = true);
+
+  // ---- heatmap ----
+  const LIGHT_STOPS = ['#fcfcfb','#cde2fb','#9ec5f4','#6da7ec','#3987e5','#1c5cab','#0d366b'];
+  const DARK_STOPS  = ['#1a1a19','#104281','#184f95','#256abf','#3987e5','#6da7ec','#9ec5f4'];
+  function isDarkMode(){
+    const t = document.documentElement.getAttribute('data-theme');
+    if (t === 'dark') return true;
+    if (t === 'light') return false;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function hexToRgb(hex){
+    const n = parseInt(hex.slice(1), 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+  function colorAt(stops, t){
+    t = clamp(t, 0, 1);
+    const n = stops.length - 1;
+    const seg = t*n, i = Math.min(Math.floor(seg), n-1), f = seg - i;
+    const c0 = hexToRgb(stops[i]), c1 = hexToRgb(stops[i+1]);
+    return [0,1,2].map(k => Math.round(c0[k] + (c1[k]-c0[k])*f));
+  }
+
+  const heatCanvas = document.getElementById('opt-heatmap');
+  const RES = 140;
+  heatCanvas.width = RES; heatCanvas.height = RES;
+  const heatCtx = heatCanvas.getContext('2d');
+
+  function renderHeatmap(lambda){
+    const stops = isDarkMode() ? DARK_STOPS : LIGHT_STOPS;
+    const img = heatCtx.createImageData(RES, RES);
+    const vals = new Float64Array(RES*RES);
+    let vmin = Infinity, vmax = -Infinity;
+    const span = OPT_DOM.max - OPT_DOM.min;
+    for (let j=0;j<RES;j++){
+      const y = OPT_DOM.max - (j+0.5)/RES*span;
+      for (let i=0;i<RES;i++){
+        const x = OPT_DOM.min + (i+0.5)/RES*span;
+        const v = optLoss(x, y, lambda);
+        vals[j*RES+i] = v;
+        if (v<vmin) vmin=v; if (v>vmax) vmax=v;
+      }
+    }
+    const range = (vmax-vmin) || 1;
+    for (let idx=0; idx<RES*RES; idx++){
+      const [r,g,b] = colorAt(stops, (vals[idx]-vmin)/range);
+      img.data[idx*4]=r; img.data[idx*4+1]=g; img.data[idx*4+2]=b; img.data[idx*4+3]=255;
+    }
+    heatCtx.putImageData(img, 0, 0);
+  }
+
+  // ---- overlay: rings around the regularized minimum + optimizer paths ----
+  const overlaySvg = document.getElementById('opt-overlay');
+
+  function ellipsePathGeneric(center, eig, k, size){
+    const r1 = Math.sqrt(k/eig.e1), r2 = Math.sqrt(k/eig.e2);
+    const ct = Math.cos(eig.theta), st = Math.sin(eig.theta);
+    let d = '';
+    const N = 64;
+    for (let i=0;i<=N;i++){
+      const phi = (i/N)*2*Math.PI;
+      const lx = r1*Math.cos(phi), ly = r2*Math.sin(phi);
+      const x = center.x + lx*ct - ly*st, y = center.y + lx*st + ly*ct;
+      const [px,py] = mapOpt(x,y);
+      d += (i===0?'M':'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+    }
+    return d + 'Z';
+  }
+
+  let optRaceId = 0;
+  let lastStart = null;
+
+  function renderOverlay(lambda){
+    overlaySvg.innerHTML = '';
+    const center = closedFormMinOpt(lambda);
+    const [cx,cy] = mapOpt(center.x, center.y);
+    overlaySvg.appendChild(svgEl('circle', { cx, cy, r:4, fill:'var(--ink)', stroke:'var(--bg)', 'stroke-width':1.5 }));
+
+    if (lastStart){
+      const [sx,sy] = mapOpt(lastStart.x, lastStart.y);
+      overlaySvg.appendChild(svgEl('circle', { cx:sx, cy:sy, r:4, fill:'var(--ink)', stroke:'var(--bg)', 'stroke-width':1 }));
+    }
+  }
+
+  function runRace(x0, y0, lambda){
+    lastStart = { x:x0, y:y0 };
+    const myId = ++optRaceId;
+    renderOverlay(lambda);
+
+    const active = OPTS.filter(o => optEnabled[o.key]);
+    const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
+    const maxLen = Math.max(...paths.map(p => p.hist.length), 1);
+
+
+    const pathEls = {};
+    paths.forEach(p => {
+      const el = svgEl('path', { d:'', fill:'none', stroke:p.o.color, 'stroke-width':2.2, 'stroke-opacity':0.9 });
+      overlaySvg.appendChild(el);
+      pathEls[p.o.key] = el;
+    });
+
+    const stepMs = 9;
+    const t0 = performance.now();
+    function frame(now){
+      if (myId !== optRaceId) return; // a newer race superseded this one
+      const step = Math.min(Math.floor((now-t0)/stepMs), maxLen-1);
+      paths.forEach(p => {
+        const n = Math.min(step+1, p.hist.length);
+        let d = '';
+        for (let i=0;i<n;i++){
+          const [px,py] = mapOpt(p.hist[i][0], p.hist[i][1]);
+          d += (i===0?'M':'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+        }
+        pathEls[p.o.key].setAttribute('d', d);
+      });
+      if (step < maxLen-1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  const toggleWrap = document.getElementById('opt-toggles');
+  OPTS.forEach(o => {
+    const chip = document.createElement('div');
+    chip.className = 'opt-chip';
+    chip.innerHTML = '<span class="dot" style="background:'+o.color+'"></span>'+o.label;
+    chip.addEventListener('click', () => {
+      optEnabled[o.key] = !optEnabled[o.key];
+      chip.classList.toggle('off', !optEnabled[o.key]);
+      if (lastStart) runRace(lastStart.x, lastStart.y, 0);
+    });
+    toggleWrap.appendChild(chip);
+  });
+
+  const optStage = document.getElementById('opt-stage');
+  optStage.addEventListener('click', (evt) => {
+    const rect = heatCanvas.getBoundingClientRect(); // canvas/svg sit inset by opt-stage's border, not its own box
+    const fx = (evt.clientX-rect.left)/rect.width, fy = (evt.clientY-rect.top)/rect.height;
+    const [x,y] = invMapOpt(fx*OPT_SIZE, fy*OPT_SIZE);
+    runRace(x, y, 0);
+  });
+
+
+  if (window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      renderHeatmap(0);
+    });
+  }
+
+  renderHeatmap(0);
+  renderOverlay(0);
+  runRace(-2.2, -2.0, 0);
+
+  // ===================================================================
+  // Fig. 4: optimizer race on a rougher, multi-well surface
+  // ===================================================================
+  (function(){
+    const WILD_DOM = { min: -3, max: 3 };
+    const WILD_SIZE = 420;
+
+    const WELLS = [
+      { cx:-2.0, cy: 1.5, A:-3.0, w:0.5 },
+      { cx: 1.8, cy: 1.8, A:-4.5, w:0.35 },
+      { cx: 2.0, cy:-1.5, A:-2.0, w:0.6 },
+      { cx:-1.5, cy:-2.0, A:-2.5, w:0.4 },
+      { cx: 0.0, cy: 2.3, A:-1.5, w:0.3 },
+      { cx:-2.3, cy:-0.3, A:-1.8, w:0.25 },
+      { cx: 0.5, cy:-0.3, A:-1.2, w:0.2 },
+    ];
+    const WILD_K = 0.12;
+
+    function wildLoss(x, y, lambda){
+      let s = WILD_K * (x*x + y*y);
+      for (const w of WELLS){
+        const dx = x - w.cx, dy = y - w.cy;
+        s += w.A * Math.exp(-(dx*dx+dy*dy)/w.w);
+      }
+      return s;
+    }
+    function wildGrad(x, y, lambda){
+      let gx = 2*WILD_K*x, gy = 2*WILD_K*y;
+      for (const w of WELLS){
+        const dx = x - w.cx, dy = y - w.cy;
+        const e = w.A * Math.exp(-(dx*dx+dy*dy)/w.w);
+        gx += e * (-2*dx/w.w);
+        gy += e * (-2*dy/w.w);
+      }
+      return [gx, gy];
+    }
+
+    function mapWild(x, y){ return mapPt(x, y, WILD_DOM, WILD_SIZE, 0); }
+    function invMapWild(px, py){
+      const span = WILD_DOM.max - WILD_DOM.min;
+      return [ WILD_DOM.min + (px/WILD_SIZE)*span, WILD_DOM.max - (py/WILD_SIZE)*span ];
+    }
+
+    // Same six optimizers as Fig. 3, verified stable (no blowup) across
+    // this landscape and the full lambda range in Node before wiring up.
+    // Hyperparameters match Fig. 3 except Prodigy's beta3/steps, tuned
+    // further for this rougher, flatter surface (see comment above it).
+    const WILD_OPTS = [
+      { key:'sgd', label:'SGD', color:'var(--ink)',
+        gen(x0,y0,lambda){
+          const lr=0.06, steps=400; let x=x0,y=y0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){ const [gx,gy]=wildGrad(x,y,lambda); x-=lr*gx; y-=lr*gy; h.push([x,y]); }
+          return h;
+        }
+      },
+      { key:'momentum', label:'Momentum', color:'#4a3aa7',
+        gen(x0,y0,lambda){
+          const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){ const [gx,gy]=wildGrad(x,y,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+          return h;
+        }
+      },
+      { key:'nesterov', label:'Nesterov', color:'#d5518a',
+        gen(x0,y0,lambda){
+          const lr=0.03, steps=200, mu=0.85; let x=x0,y=y0,vx=0,vy=0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){ const [gx,gy]=wildGrad(x+mu*vx,y+mu*vy,lambda); vx=mu*vx-lr*gx; vy=mu*vy-lr*gy; x+=vx; y+=vy; h.push([x,y]); }
+          return h;
+        }
+      },
+      { key:'rmsprop', label:'RMSProp', color:'#e34948',
+        gen(x0,y0,lambda){
+          const lr=0.08, steps=150, decay=0.9, eps=1e-8; let x=x0,y=y0,cx=0,cy=0; const h=[[x,y]];
+          for(let i=0;i<steps;i++){
+            const [gx,gy]=wildGrad(x,y,lambda);
+            cx=decay*cx+(1-decay)*gx*gx; cy=decay*cy+(1-decay)*gy*gy;
+            x-=lr*gx/(Math.sqrt(cx)+eps); y-=lr*gy/(Math.sqrt(cy)+eps);
+            h.push([x,y]);
+          }
+          return h;
+        }
+      },
+      // Adam: same optimizer as Fig. 3.
+      { key:'adam', label:'Adam', color:'#008300',
+        gen(x0,y0,lambda){
+          const lr=0.15, steps=150, b1=0.9, b2=0.999, eps=1e-8;
+          let x=x0,y=y0,mx=0,my=0,vx=0,vy=0; const h=[[x,y]];
+          for(let i=1;i<=steps;i++){
+            const [gx,gy]=wildGrad(x,y,0);
+            mx=b1*mx+(1-b1)*gx; my=b1*my+(1-b1)*gy;
+            vx=b2*vx+(1-b2)*gx*gx; vy=b2*vy+(1-b2)*gy*gy;
+            const mxh=mx/(1-b1**i), myh=my/(1-b1**i);
+            const vxh=vx/(1-b2**i), vyh=vy/(1-b2**i);
+            x-=lr*mxh/(Math.sqrt(vxh)+eps); y-=lr*myh/(Math.sqrt(vyh)+eps);
+            h.push([x,y]);
+          }
+          return h;
+        }
+      },
+      // Prodigy needs a longer leash here than in Fig. 3: this surface's
+      // gradients are much weaker almost everywhere (background pull is
+      // (WILD_K+lambda)*x with WILD_K=0.12, versus Fig. 3's much steeper
+      // bowl), so the r/s accumulators that estimate its step size take far
+      // longer to build up enough signal to grow d past its 1e-6 floor.
+      // beta3 is tuned down further than Fig. 3's already-adjusted value,
+      // and steps is raised substantially, purely so that warm-up finishes
+      // (and the resulting jump becomes visible) inside this landscape's
+      // click-to-race animation instead of leaving Prodigy looking frozen.
+      // Mechanism is unchanged from Fig. 3's verified-correct Prodigy.
+      { key:'prodigy', label:'Prodigy', color:'#c98500',
+        gen(x0,y0,lambda){
+          const steps=6000, b1=0.9, b2=0.999, beta3=0.3, eps=1e-8, gamma=1;
+          let x=x0,y=y0; const ix=x0, iy=y0;
+          let mx=0,my=0,vx=0,vy=0,sx=0,sy=0,r=0,d=1e-6;
+          const h=[[x,y]];
+          for(let k=0;k<steps;k++){
+            const [gx,gy]=wildGrad(x,y,lambda);
+            mx=b1*mx+(1-b1)*d*gx; my=b1*my+(1-b1)*d*gy;
+            vx=b2*vx+(1-b2)*(d*gx)*(d*gx); vy=b2*vy+(1-b2)*(d*gy)*(d*gy);
+            const innerProd = gx*(ix-x) + gy*(iy-y);
+            r = beta3*r + (1-beta3)*gamma*d*d*innerProd;
+            sx = beta3*sx + (1-beta3)*gamma*d*d*gx;
+            sy = beta3*sy + (1-beta3)*gamma*d*d*gy;
+            const dHat = r / (Math.abs(sx)+Math.abs(sy)+eps);
+            d = Math.max(d, dHat);
+            x -= gamma*d*mx/(Math.sqrt(vx)+d*eps);
+            y -= gamma*d*my/(Math.sqrt(vy)+d*eps);
+            h.push([x,y]);
+          }
+          return h;
+        }
+      },
+    ];
+
+    const wildEnabled = {}; WILD_OPTS.forEach(o => wildEnabled[o.key] = true);
+
+    // Diverging color scale: this landscape has real negative (well) and
+    // positive (background bowl) values, so a diverging blue<->red ramp
+    // centered on zero fits better than a one-hue sequential ramp.
+    const DIV_LIGHT = { neg:'#104281', mid:'#f0efec', pos:'#a83232' };
+    const DIV_DARK  = { neg:'#3987e5', mid:'#383835', pos:'#e66767' };
+    function isDarkModeWild(){
+      const dt = document.documentElement.getAttribute('data-theme');
+      if (dt === 'dark') return true;
+      if (dt === 'light') return false;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    function hexToRgbWild(hex){
+      const n = parseInt(hex.slice(1), 16);
+      return [(n>>16)&255, (n>>8)&255, n&255];
+    }
+    function lerpRgb(c0, c1, f){ return [0,1,2].map(k => Math.round(c0[k]+(c1[k]-c0[k])*f)); }
+    function divergingColor(v, vmin, vmax){
+      const pair = isDarkModeWild() ? DIV_DARK : DIV_LIGHT;
+      const neg = hexToRgbWild(pair.neg), mid = hexToRgbWild(pair.mid), pos = hexToRgbWild(pair.pos);
+      if (v < 0){
+        const f = clamp(v/vmin, 0, 1);
+        return lerpRgb(mid, neg, f);
+      } else {
+        const f = clamp(v/vmax, 0, 1);
+        return lerpRgb(mid, pos, f);
+      }
+    }
+
+    const wildCanvas = document.getElementById('wild-heatmap');
+    const WILD_RES = 140;
+    wildCanvas.width = WILD_RES; wildCanvas.height = WILD_RES;
+    const wildCtx = wildCanvas.getContext('2d');
+
+    function renderWildHeatmap(lambda){
+      const img = wildCtx.createImageData(WILD_RES, WILD_RES);
+      const vals = new Float64Array(WILD_RES*WILD_RES);
+      let vmin = Infinity, vmax = -Infinity;
+      const span = WILD_DOM.max - WILD_DOM.min;
+      for (let j=0;j<WILD_RES;j++){
+        const y = WILD_DOM.max - (j+0.5)/WILD_RES*span;
+        for (let i=0;i<WILD_RES;i++){
+          const x = WILD_DOM.min + (i+0.5)/WILD_RES*span;
+          const v = wildLoss(x, y, lambda);
+          vals[j*WILD_RES+i] = v;
+          if (v<vmin) vmin=v; if (v>vmax) vmax=v;
+        }
+      }
+      for (let idx=0; idx<WILD_RES*WILD_RES; idx++){
+        const [r,g,b] = divergingColor(vals[idx], vmin, vmax);
+        img.data[idx*4]=r; img.data[idx*4+1]=g; img.data[idx*4+2]=b; img.data[idx*4+3]=255;
+      }
+      wildCtx.putImageData(img, 0, 0);
+    }
+
+    const wildOverlaySvg = document.getElementById('wild-overlay');
+    let wildRaceId = 0;
+    let wildLastStart = null;
+
+    function renderWildOverlay(){
+      wildOverlaySvg.innerHTML = '';
+      if (wildLastStart){
+        const [sx,sy] = mapWild(wildLastStart.x, wildLastStart.y);
+        wildOverlaySvg.appendChild(svgEl('circle', { cx:sx, cy:sy, r:4, fill:'var(--ink)', stroke:'var(--bg)', 'stroke-width':1 }));
+      }
+    }
+
+    function runWildRace(x0, y0, lambda){
+      wildLastStart = { x:x0, y:y0 };
+      const myId = ++wildRaceId;
+      renderWildOverlay();
+
+      const active = WILD_OPTS.filter(o => wildEnabled[o.key]);
+      const paths = active.map(o => ({ o, hist: o.gen(x0, y0, lambda) }));
+
+      const pathEls = {};
+      paths.forEach(p => {
+        if (p.o.key === 'prodigy'){
+          // For Prodigy, create multiple path segments with graduated opacity
+          p.pathSegments = [];
+          // We'll create segments dynamically during animation
+        } else {
+          const el = svgEl('path', { d:'', fill:'none', stroke:p.o.color, 'stroke-width':2.2, 'stroke-opacity':0.9 });
+          wildOverlaySvg.appendChild(el);
+          pathEls[p.o.key] = el;
+        }
+      });
+
+      // Prodigy needs thousands of raw steps to warm up on this flatter
+      // surface (see the comment on its `gen` above), way more than the
+      // other five. Rather than stepping everyone at the same ms-per-step
+      // (which would stretch the whole race to Prodigy's pace, a 50+ second
+      // wait), every path is drawn as a fraction of its OWN length over one
+      // shared, fixed wall-clock duration. Fast optimizers still finish
+      // "faster" in the sense of needing fewer of their own steps to settle,
+      // Prodigy's early stillness then sudden movement is preserved, it's
+      // just all compressed into a normal-length animation.
+      const DURATION_MS = 4000;
+      const t0 = performance.now();
+      function frame(now){
+        if (myId !== wildRaceId) return;
+        const frac = Math.min((now-t0)/DURATION_MS, 1);
+        paths.forEach(p => {
+          const n = Math.max(1, Math.min(Math.round(frac*p.hist.length), p.hist.length));
+          if (p.o.key === 'prodigy'){
+            // Draw Prodigy with opacity gradient from 0.1 to 0.9
+            const minOpacity = 0.1, maxOpacity = 0.9;
+            const segmentSize = Math.max(1, Math.floor(n / 10));
+            while (p.pathSegments.length > 0) wildOverlaySvg.removeChild(p.pathSegments.pop());
+            for (let i = 0; i + segmentSize < n; i += segmentSize){
+              const opacity = minOpacity + (maxOpacity - minOpacity) * (i / n);
+              let d = '';
+              for (let j = i; j < i + segmentSize && j < n; j++){
+                const [px,py] = mapWild(p.hist[j][0], p.hist[j][1]);
+                d += (j === i ? 'M' : 'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+              }
+              const el = svgEl('path', { d:d, fill:'none', stroke:p.o.color, 'stroke-width':2.2, 'stroke-opacity':opacity });
+              wildOverlaySvg.appendChild(el);
+              p.pathSegments.push(el);
+            }
+          } else {
+            let d = '';
+            for (let i=0;i<n;i++){
+              const [px,py] = mapWild(p.hist[i][0], p.hist[i][1]);
+              d += (i===0?'M':'L') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+            }
+            pathEls[p.o.key].setAttribute('d', d);
+          }
+        });
+        if (frac < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    const wildToggleWrap = document.getElementById('wild-toggles');
+    WILD_OPTS.forEach(o => {
+      const chip = document.createElement('div');
+      chip.className = 'opt-chip';
+      chip.innerHTML = '<span class="dot" style="background:'+o.color+'"></span>'+o.label;
+      chip.addEventListener('click', () => {
+        wildEnabled[o.key] = !wildEnabled[o.key];
+        chip.classList.toggle('off', !wildEnabled[o.key]);
+        if (wildLastStart) runWildRace(wildLastStart.x, wildLastStart.y, 0);
+      });
+      wildToggleWrap.appendChild(chip);
+    });
+
+    const wildStage = document.getElementById('wild-stage');
+    wildStage.addEventListener('click', (evt) => {
+      const rect = wildCanvas.getBoundingClientRect();
+      const fx = (evt.clientX-rect.left)/rect.width, fy = (evt.clientY-rect.top)/rect.height;
+      const [x,y] = invMapWild(fx*WILD_SIZE, fy*WILD_SIZE);
+      runWildRace(x, y, 0);
+    });
+
+
+    if (window.matchMedia){
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        renderWildHeatmap(0);
+      });
+    }
+
+    renderWildHeatmap(0.15);
+    runWildRace(-2.5, 2.5, 0.15);
+  })();
+
+
+})();
+</script>
+
+</body>
+</html>

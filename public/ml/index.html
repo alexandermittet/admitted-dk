@@ -3,9 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ML Notes</title>
+<title>ML Notes - Interactive Machine Learning Visualizations</title>
+<meta name="description" content="Small, interactive write-ups on machine learning ideas, worked out with figures you can actually drag instead of just stare at.">
+<link rel="canonical" href="https://admitted.dk/ml/">
+<meta property="og:title" content="ML Notes - Interactive Machine Learning Visualizations">
+<meta property="og:description" content="Small, interactive write-ups on machine learning ideas, worked out with figures you can actually drag instead of just stare at.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://admitted.dk/ml/">
+<meta property="og:image" content="https://admitted.dk/favicon.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ML Notes - Interactive Machine Learning Visualizations">
+<meta name="twitter:description" content="Small, interactive write-ups on machine learning ideas, worked out with figures you can actually drag.">
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
 <style>
+  @font-face{
+    font-family: "Concielian Classic Cond";
+    src: url("/concclassiccond.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
   :root{
     color-scheme: light;
     --bg:        #f9f9f7;
@@ -45,21 +63,29 @@
     background: var(--bg);
     color: var(--ink);
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
   .wrap{
-    max-width: 900px;
+    max-width: 1080px;
+    width: 100%;
     margin: 0 auto;
     padding: 48px 20px 72px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   header{
     margin-bottom: 40px;
+    text-align: center;
   }
   h1{
-    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-    font-weight: 700;
-    font-size: clamp(1.6rem, 5vw, 2.1rem);
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    font-family: "Concielian Classic Cond", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 7vw, 3.4rem);
+    letter-spacing: 0.01em;
+    line-height: 1.15;
     margin: 0;
   }
   .subtitle{
@@ -68,32 +94,97 @@
     line-height: 1.55;
     color: var(--ink-2);
     max-width: 56ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .stage{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
   }
   .cards{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+  .cards > .card{
+    width: 280px;
+    flex: 0 0 auto;
+  }
+  /* 3 posts: apex card on its own row, two below it, side by side -> triangle */
+  .cards.count-3{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(2, 280px);
+    justify-content: center;
+    gap: 36px;
+  }
+  .cards.count-3 > .card:first-child{
+    grid-column: 1 / span 2;
+    justify-self: center;
+  }
+  /* 4 posts: 2x2 grid -> one at each corner of a square */
+  .cards.count-4{
+    display: grid;
+    grid-template-columns: repeat(2, 280px);
+    grid-template-rows: repeat(2, auto);
+    gap: 48px 64px;
+  }
+  @media (max-width: 680px){
+    .cards, .cards.count-3, .cards.count-4{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cards.count-3 > .card:first-child{
+      grid-column: auto;
+    }
   }
   a.card{
-    display: block;
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 20px 22px;
-    transition: border-color 0.15s ease;
+    padding: 18px 18px 20px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
   }
   a.card:hover{
     border-color: var(--accent);
+    transform: translateY(-2px);
   }
   a.card:hover .card-title{
     color: var(--accent);
   }
+  .card-teaser{
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    background: var(--bg);
+    aspect-ratio: 1 / 1;
+  }
+  .card-teaser svg{
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .card-teaser img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .card-title{
-    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-    font-weight: 700;
-    font-size: 1.2rem;
+    font-family: "Concielian Classic Cond", "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 1.4rem;
+    letter-spacing: 0.01em;
     line-height: 1.3;
     color: var(--ink);
     margin: 0 0 8px;
@@ -101,10 +192,11 @@
   }
   .card-desc{
     font-family: "Source Serif 4", Georgia, serif;
-    font-size: 0.98rem;
+    font-size: 0.95rem;
     line-height: 1.55;
     color: var(--ink-2);
     margin: 0;
+    flex: 1;
   }
   .card-tag{
     display: inline-block;
@@ -131,13 +223,23 @@
       <div class="subtitle">Small, interactive write-ups on machine learning ideas, worked out with figures you can actually drag instead of just stare at.</div>
     </header>
 
-    <div class="cards">
+    <main class="stage">
+    <div class="cards count-2">
       <a class="card" href="./regularization.html">
+        <div class="card-teaser"><img src="./thumb-regularization.png" alt="L2 (ridge) curve fit tracking a wiggly true function" loading="lazy"></div>
         <h2 class="card-title">A diamond has corners. A circle doesn't.</h2>
         <p class="card-desc">Why lasso (L1) can zero out a weight entirely while ridge (L2) never quite gets there, shown first as the geometry of the constraint region in weight space, then as a live curve fit on real, noisy data.</p>
         <span class="card-tag">Regularization</span>
       </a>
+
+      <a class="card" href="./optimizers.html">
+        <div class="card-teaser"><img src="./thumb-optimizers.png" alt="Optimizer race on a rough multi-well loss surface" loading="lazy"></div>
+        <h2 class="card-title">Six optimizers walk into a bowl</h2>
+        <p class="card-desc">SGD, Momentum, Nesterov, RMSProp, Adam and Prodigy, dropped from the same point on a real loss surface and raced to the bottom, live in your browser. First a clean bowl, then rougher terrain with false valleys.</p>
+        <span class="card-tag">Optimizers</span>
+      </a>
     </div>
+    </main>
 
     <footer>More notes will show up here over time. &middot; <a href="/">admitted.dk</a></footer>
   </div>
