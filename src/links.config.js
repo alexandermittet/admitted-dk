@@ -11,6 +11,8 @@
   },
   projects: {
     catscribe: "https://catscribe.admitted.dk",
+    spekseek: "https://spekseek.admitted.dk",
+    catlog: "https://catlog.admitted.dk",
     bachelorsThesis: "https://github.com/alexandermittet/bachelors-thesis",
   },
   external: {
