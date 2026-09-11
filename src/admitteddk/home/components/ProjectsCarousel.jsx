@@ -4,30 +4,16 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@relume_io/relume-ui";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { links } from "../../../links.config";
 
 const useCarousel = () => {
   const [api, setApi] = useState();
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-    setCurrentIndex(api.selectedScrollSnap());
-    api.on("select", () => {
-      setCurrentIndex(api.selectedScrollSnap());
-    });
-  }, [api]);
 
   return {
     api,
     setApi,
-    currentIndex,
   };
 };
 
@@ -44,7 +30,7 @@ const projects = [
     id: "specseek",
     name: "specseek",
     blurb: "Ranks items from a huge spreadsheet catalog against your exact criteria, built for teams like data centers matching thousands of parts to precise specs",
-    image: "/stock/hack-capital-uv5_bsypFUM-unsplash.avif",
+    image: "/specseek-thumb.png",
     link: links.projects.specseek,
     tags: ["Procurement", "Excel", "Ranking"],
   },
@@ -52,7 +38,7 @@ const projects = [
     id: "catlog",
     name: "catlog",
     blurb: "Records your meeting and takes care of the summary and notes automatically",
-    image: "/stock/fotis-fotopoulos-DuHKoV44prg-unsplash.avif",
+    image: "/catlog-thumb.png",
     link: links.projects.catlog,
     tags: ["Meetings", "Notes", "SaaS"],
   },
@@ -129,9 +115,6 @@ export function ProjectsCarousel() {
               </CarouselItem>
             ))}
           </CarouselContent>
-
-          <CarouselPrevious className="z-30 size-12" />
-          <CarouselNext className="z-30 size-12" />
         </Carousel>
       </div>
     </section>

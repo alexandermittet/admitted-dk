@@ -24,16 +24,19 @@ export function Layout4() {
                   Education
                 </h6>
                 <p>
-                  BSc Machine Learning & Data Science \n and \n MSc Computer Science from Copenhagen University
+                  BSc Machine Learning & Data Science and MSc Computer Science from Copenhagen University
                 </p>
               </div>
               <div>
                 <h6 className="mb-3 text-md font-bold leading-[1.4] md:mb-4 md:text-xl">
                   Community engagement
                 </h6>
-                <p>
-                  Volunteering at ITU Analog Coffee Bar, Save the Children Youth, doing development projects in Ukraine and Argentina with Radikal Ungdom, and in Georgia with European Youth Denmark.
-                </p>
+                <ul className="list-disc space-y-1 pl-5">
+                  <li>ITU Analog Coffee Bar</li>
+                  <li>Save the Children Youth</li>
+                  <li>Development projects in Ukraine and Argentina with Radikal Ungdom</li>
+                  <li>Development projects in Georgia with European Youth Denmark</li>
+                </ul>
               </div>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
