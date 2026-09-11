@@ -33,6 +33,8 @@ export function Header84() {
           <div className="flex items-center justify-center">
             <img
               src="/alex frb.avif"
+              width={448}
+              height={597}
               className="aspect-[3/4] w-auto max-w-md object-cover scale-[0.8]"
               alt="Medical imaging and machine learning"
             />

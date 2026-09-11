@@ -21,6 +21,8 @@ export function Testimonial22() {
                 <img
                   src="/digital headhunter.avif"
                   alt="Digital Headhunter logo"
+                  width={120}
+                  height={44}
                   className="max-h-[2.7rem]"
                 />
               </div>
@@ -32,6 +34,8 @@ export function Testimonial22() {
                   <img
                     src="/stock/fotis-fotopoulos-DuHKoV44prg-unsplash.avif"
                     alt="Testimonial avatar"
+                    width={48}
+                    height={48}
                     className="size-12 min-h-12 min-w-12 rounded-full object-cover"
                   />
                 </div>
@@ -48,6 +52,8 @@ export function Testimonial22() {
                 <img
                   src="/matter-no-bg.avif"
                   alt="Matter logo"
+                  width={110}
+                  height={40}
                   className="max-h-[2.2rem]"
                 />
               </div>
@@ -59,6 +65,8 @@ export function Testimonial22() {
                   <img
                     src="/stock/fotis-fotopoulos-DuHKoV44prg-unsplash.avif"
                     alt="Testimonial avatar"
+                    width={48}
+                    height={48}
                     className="size-12 min-h-12 min-w-12 rounded-full object-cover"
                   />
                 </div>
@@ -75,6 +83,8 @@ export function Testimonial22() {
                 <img
                   src="/ørsted.avif"
                   alt="Ørsted logo"
+                  width={100}
+                  height={36}
                   className="max-h-[2.0rem]"
                 />
               </div>
@@ -86,6 +96,8 @@ export function Testimonial22() {
                   <img
                     src="/stock/fotis-fotopoulos-DuHKoV44prg-unsplash.avif"
                     alt="Testimonial avatar"
+                    width={48}
+                    height={48}
                     className="size-12 min-h-12 min-w-12 rounded-full object-cover"
                   />
                 </div>
