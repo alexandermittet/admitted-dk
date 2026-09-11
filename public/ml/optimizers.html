@@ -320,10 +320,32 @@
     .panels{ flex-direction: column; }
     .panel{ min-width: 0; }
   }
+  .topnav{
+    display:flex;
+    gap: 18px;
+    margin-bottom: 28px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.82rem;
+  }
+  .topnav a{
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .topnav a:hover{
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
+
+  <nav class="topnav">
+    <a href="/">&larr; admitted.dk</a>
+    <a href="/ml">Machine Learning Notes</a>
+  </nav>
 
   <h1>Optimizers and Their Differences: SGD, Momentum, Nesterov, RMSProp, Adam, Prodigy</h1>
   <div class="byline">ML notes for admitted.dk</div>
