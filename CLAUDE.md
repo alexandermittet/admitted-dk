@@ -20,5 +20,11 @@ The post thumbnail cards are centered both horizontally and vertically on the pa
 
 When adding a new post: add its `<a class="card">` block to `public/ml/index.html` and bump the `.cards` div's class to match the new total count.
 
+## Home page projects (ProjectsCarousel)
+`src/admitteddk/home/components/ProjectsCarousel.jsx` lists three of Alexander's projects. Their blurbs there are accurate as of this writing; don't let an agent guess/invent new ones from the name alone. What they actually are:
+- **catscribe** (`https://catscribe.admitted.dk`) — transcribes audio to text with timestamps, in 72 languages.
+- **specseek** (`https://specseek.admitted.dk`) — ranks items from a spreadsheet (xlsx) catalog against a buyer's exact criteria. Built for companies with huge catalogs of possible purchases who need something matching specific specs, e.g. a data center that needs a given amount of SSD storage meeting particular spec constraints.
+- **catlog** (`https://catlog.admitted.dk`) — meeting summarizer and note-taker. Record a meeting and it handles the summary and notes automatically.
+
 ## GitHub issues workflow
 When fanning out GitHub issues to parallel subagents, group issues that touch the same file(s) into one agent/worktree (don't split them — they'll conflict on merge). Issues #7–#10 all touched `public/ml/optimizers.html` and were deliberately handled by a single agent in sequence for this reason.

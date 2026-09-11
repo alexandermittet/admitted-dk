@@ -41,20 +41,20 @@ const projects = [
     tags: ["Audio", "React", "Open Source"],
   },
   {
-    id: "spekseek",
-    name: "spekseek",
-    blurb: "A powerful platform for discovering and analyzing trending topics and conversations",
+    id: "specseek",
+    name: "specseek",
+    blurb: "Ranks items from a huge spreadsheet catalog against your exact criteria, built for teams like data centers matching thousands of parts to precise specs",
     image: "/stock/hack-capital-uv5_bsypFUM-unsplash.avif",
-    link: links.projects.spekseek,
-    tags: ["Analytics", "React", "Product"],
+    link: links.projects.specseek,
+    tags: ["Procurement", "Excel", "Ranking"],
   },
   {
     id: "catlog",
     name: "catlog",
-    blurb: "Beautifully simple logging and analytics tool for modern web applications",
+    blurb: "Records your meeting and takes care of the summary and notes automatically",
     image: "/stock/fotis-fotopoulos-DuHKoV44prg-unsplash.avif",
     link: links.projects.catlog,
-    tags: ["Logging", "Full Stack", "SaaS"],
+    tags: ["Meetings", "Notes", "SaaS"],
   },
 ];
 
