@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activation Functions: tanh, sigmoid, ReLU, SiLU - ML Notes on admitted.dk</title>
+<meta name="description" content="tanh, sigmoid, ReLU and SiLU plotted with their derivatives on one shared axis. Drag across x and watch three of the four gradients decay while one goes exactly, permanently, to zero.">
+<link rel="canonical" href="https://admitted.dk/ml/activation-functions">
+<meta property="og:title" content="Activation Functions: tanh, sigmoid, ReLU, SiLU - ML Notes">
+<meta property="og:description" content="tanh, sigmoid, ReLU and SiLU plotted with their derivatives on one shared axis. Drag across x and watch three of the four gradients decay while one goes exactly, permanently, to zero.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://admitted.dk/ml/activation-functions">
+<meta property="og:image" content="https://admitted.dk/favicon.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Activation Functions: tanh, sigmoid, ReLU, SiLU - ML Notes">
+<meta name="twitter:description" content="tanh, sigmoid, ReLU and SiLU plotted with their derivatives on one shared axis, so you can read what backprop actually multiplies.">
+<link rel="icon" type="image/png" href="https://admitted.dk/favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap">
+<style>
+  @font-face{
+    font-family: "Concielian Classic Cond";
+    src: url("/concclassiccond.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root{
+    color-scheme: light;
+    --bg:        #f9f9f7;
+    --surface:   #fcfcfb;
+    --ink:       #0b0b0b;
+    --ink-2:     #52514e;
+    --muted:     #898781;
+    --grid:      #e1e0d9;
+    --axis:      #c3c2b7;
+    --border:    rgba(11,11,11,0.10);
+    --accent:    #d9591f;
+    --tanh:       #2a78d6; --tanh-fill:    #2a78d61a;
+    --sigmoid:    #148a5f; --sigmoid-fill: #148a5f1a;
+    --relu:       #d9591f; --relu-fill:    #d9591f1a;
+    --silu:       #8a4fd0; --silu-fill:    #8a4fd01a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:        #0d0d0d;
+      --surface:   #1a1a19;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --muted:     #948f83;
+      --grid:      #2c2c2a;
+      --axis:      #3f3f3c;
+      --border:    rgba(255,255,255,0.12);
+      --accent:    #d95926;
+      --tanh:       #3987e5; --tanh-fill:    #3987e526;
+      --sigmoid:    #199e70; --sigmoid-fill: #199e7026;
+      --relu:       #d95926; --relu-fill:    #d9592626;
+      --silu:       #a273ea; --silu-fill:    #a273ea26;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:        #0d0d0d;
+    --surface:   #1a1a19;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #948f83;
+    --grid:      #2c2c2a;
+    --axis:      #3f3f3c;
+    --border:    rgba(255,255,255,0.12);
+    --accent:    #d95926;
+    --tanh:       #3987e5; --tanh-fill:    #3987e526;
+    --sigmoid:    #199e70; --sigmoid-fill: #199e7026;
+    --relu:       #d95926; --relu-fill:    #d9592626;
+    --silu:       #a273ea; --silu-fill:    #a273ea26;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 20px 72px;
+  }
+  h1,h2,h3{
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1{
+    font-family: "Concielian Classic Cond", "Source Serif 4", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
+    letter-spacing: 0.01em;
+    line-height: 1.18;
+  }
+  h2{ font-size: 1.3rem; margin: 36px 0 14px; }
+  .byline{
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  article{
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.68;
+    color: var(--ink-2);
+    margin-top: 28px;
+  }
+  article > p{ margin: 0 0 20px; }
+  article p:first-of-type::first-letter{ color: var(--ink); }
+  article b, article strong{ color: var(--ink); font-weight: 600; }
+  article em{ font-style: italic; color: var(--ink); }
+  article h2{ font-family: "Source Serif 4", Georgia, serif; color: var(--ink); }
+
+  figure{ margin: 36px 0 8px; }
+  figcaption{
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 15px;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .controls label{ color: var(--ink-2); flex: none; white-space: nowrap; }
+  .controls input[type=range]{ flex: 1 1 auto; accent-color: var(--accent); }
+  .controls .val{
+    flex: none; width: 4.5em; text-align: right;
+    font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600;
+  }
+
+  .act-stage{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 14px 10px;
+  }
+  .act-panel svg{ display:block; width:100%; height:auto; touch-action: none; }
+  .act-panel + .act-panel{ margin-top: 2px; }
+  .act-curve{ fill:none; stroke-width: 2.2px; }
+  .act-crossmark{ fill:none; stroke-width: 1.6px; }
+  .zero-flag{ color: var(--accent); font-weight: 700; }
+
+  .act-toggles{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .act-chip{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    padding: 5px 10px 5px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.76rem;
+    color: var(--ink-2);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .act-chip .dot{ width:8px; height:8px; border-radius:50%; flex:none; background: currentColor; }
+  .act-chip.off{ opacity: 0.35; }
+  .act-chip.act-log{ margin-left: auto; }
+  .act-chip.act-log.active{ border-color: var(--accent); color: var(--accent); }
+
+  .act-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.82rem;
+  }
+  .act-table th, .act-table td{
+    padding: 6px 8px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+  .act-table th{ color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.02em; }
+  .act-table th:first-child, .act-table td:first-child{ text-align: left; }
+  .act-table td:first-child{ display:flex; align-items:center; gap:7px; color: var(--ink); font-weight: 600; }
+  .act-table .swatch{ width:9px; height:9px; border-radius:3px; flex:none; }
+  .act-table tr.dim{ opacity: 0.35; }
+
+  .bars-wrap{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 0.82rem; }
+  .bar-row{ display:flex; align-items:center; gap:10px; margin: 10px 0; }
+  .bar-label{ width: 68px; flex: none; display:flex; align-items:center; gap:6px; color: var(--ink-2); }
+  .bar-label .dot{ width:8px; height:8px; border-radius:50%; flex:none; background: currentColor; }
+  .bar-track{ position:relative; flex:1; height: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; }
+  .bar-fill{ position:absolute; top:-1px; bottom:-1px; left:0; border-radius: 4px 0 0 4px; }
+  .bar-ref{ position:absolute; top:-5px; bottom:-5px; width:1px; background: var(--axis); }
+  .bar-val{ width: 118px; flex: none; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .bar-ref-label{ text-align:right; font-size: 0.72rem; color: var(--muted); margin: -2px 0 8px; }
+
+  .closing{
+    margin-top: 40px;
+    padding: 22px 24px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .closing h3{ font-size: 1.1rem; margin-bottom: 12px; }
+  .closing p{ font-size: 1.02rem; line-height: 1.65; color: var(--ink-2); margin: 10px 0 0; font-family: "Source Serif 4", Georgia, serif; }
+  .closing p b{ color: var(--ink); }
+
+  @media (max-width: 600px){
+    .act-table{ font-size: 0.74rem; }
+    .bar-label{ width: 54px; font-size: 0.76rem; }
+    .bar-val{ width: 92px; font-size: 0.74rem; }
+  }
+
+  .topnav{
+    display:flex;
+    gap: 18px;
+    margin-bottom: 28px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.82rem;
+  }
+  .topnav a{
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .topnav a:hover{
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  footer{
+    margin-top: 44px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topnav">
+    <a href="/">&larr; admitted.dk</a>
+    <a href="/ml">Machine Learning Notes</a>
+  </nav>
+
+  <h1>Nothing learns on a flat line.</h1>
+  <div class="byline">ML notes for admitted.dk</div>
+
+  <article>
+    <p>Every layer in a network picks its activation function from a short list: tanh, sigmoid, ReLU, SiLU. But the thing backpropagation actually consumes at each layer isn't the function itself &mdash; it's the function's derivative. So the two panels below plot value and slope on the same x axis, deliberately, because reading them apart is how this topic turns into a table of shapes instead of an explanation.</p>
+    <p>The chain rule multiplies exactly one f&prime;(x) into the gradient for every layer it passes through on the way back to layer 1. That reframes the question. It isn't "what shape is this activation" so much as "what does this activation do to a number that has to survive N multiplications."</p>
+    <p>The four, each in one sentence: <b>tanh</b>(x) = (e<sup>x</sup> &minus; e<sup>&minus;x</sup>)/(e<sup>x</sup> + e<sup>&minus;x</sup>), output (&minus;1, 1), zero-centered. <b>sigmoid</b> &sigma;(x) = 1/(1 + e<sup>&minus;x</sup>), output (0, 1), never negative. <b>ReLU</b>(x) = max(0, x), output [0, &infin;), a kink rather than a curve. <b>SiLU</b>(x) = x&middot;&sigma;(x), also called swish, output [&minus;0.2785, &infin;), the only one of the four that dips below zero before it rises.</p>
+    <p>Fig. 6's top panel is f(x), the bottom is f&prime;(x), and they share an x axis pixel-for-pixel. Drag across either one, or use the slider underneath, and watch both panels update together. It starts parked at x = &minus;3 &mdash; that's not an arbitrary default.</p>
+  </article>
+
+  <figure>
+    <div class="act-stage" id="act-stage">
+      <div class="act-panel">
+        <svg id="act-top" viewBox="0 0 720 260"></svg>
+      </div>
+      <div class="act-panel">
+        <svg id="act-bottom" viewBox="0 0 720 220"></svg>
+      </div>
+    </div>
+    <div class="controls">
+      <label for="act-range">x</label>
+      <input type="range" id="act-range" min="-6" max="6" step="0.01" value="-3">
+      <span class="val" id="act-range-val">&minus;3.00</span>
+    </div>
+    <div class="act-toggles" id="act-toggles"></div>
+    <table class="act-table" id="act-table">
+      <thead><tr><th>function</th><th>f(x)</th><th>f&prime;(x)</th></tr></thead>
+      <tbody id="act-table-body"></tbody>
+    </table>
+    <figcaption>Fig. 6 &mdash; value on top, slope below, same x axis. Drag across to read both at once; the bottom panel is the one backprop multiplies. "log scale" plots |f&prime;(x)| on a log axis, where the gap between these four stops being subtle.</figcaption>
+  </figure>
+
+  <article>
+    <p>The value panel is where each function's output range shows up as a cost, not just a shape. Sigmoid's outputs never go negative, which means every gradient flowing backward into a given weight vector from a sigmoid unit tends to share a sign &mdash; the weight updates end up correlated instead of independent, and descent zigzags more than it needs to. That's the smaller of sigmoid's two problems. ReLU and SiLU are both unbounded above, so activations can grow without limit as they pass through layers, which is the practical reason both are usually paired with normalization. SiLU's floor sits at &minus;0.2785, reached at x = &minus;1.2785, and nowhere lower.</p>
+    <p>The slope panel is where the real differences are. tanh peaks at exactly 1, at x = 0 &mdash; the best any of these four does at preserving a gradient unchanged. Sigmoid peaks at 0.25, also at x = 0, which means even at its single best input it throws away three quarters of whatever arrived. ReLU's slope is exactly 1 to the right of zero and exactly 0 to the left, with nothing in between. SiLU peaks above 1, near 1.0998 at x &asymp; 2.4, and dips to about &minus;0.0998 at x &asymp; &minus;2.4.</p>
+    <p>Now look at x = &minus;3, where the figure starts. The four slopes read 0.0099 (tanh), 0.0452 (sigmoid), exactly 0 (ReLU), and &minus;0.0881 (SiLU). Drag to x = &minus;6 and they read 0.0000246, 0.00247, exactly 0, and &minus;0.0123. Two different things are happening in that one comparison: tanh and sigmoid are decaying toward zero, while ReLU simply is zero &mdash; a flatter, more permanent kind of nothing. SiLU is the only one of the four still carrying a gradient large enough to matter, and its sign is negative, which turns out to matter later.</p>
+  </article>
+
+  <figure>
+    <div class="controls">
+      <label for="bar-x">x</label>
+      <input type="range" id="bar-x" min="-6" max="6" step="0.1" value="2">
+      <span class="val" id="bar-x-val">2.0</span>
+    </div>
+    <div class="controls">
+      <label for="bar-n">depth N</label>
+      <input type="range" id="bar-n" min="1" max="16" step="1" value="10">
+      <span class="val" id="bar-n-val">10</span>
+    </div>
+    <div class="act-stage bars-wrap" id="bars-stage">
+      <div class="bar-ref-label">reference: 1.0 = signal preserved unchanged</div>
+      <div id="bars-body"></div>
+    </div>
+    <figcaption>Fig. 7 &mdash; |f&prime;(x)|<sup>N</sup> on a log axis, one derivative multiplied N times. Set a pre-activation and a depth.</figcaption>
+  </figure>
+
+  <article>
+    <h2>Ten layers of multiplication</h2>
+    <p>Sigmoid's best case &mdash; 0.25, at x = 0 &mdash; raised to the tenth power is 9.54 &times; 10<sup>&minus;7</sup>. tanh does worse than its own best case would suggest: at a perfectly ordinary pre-activation of x = 2, its slope is 0.0707, and 0.0707<sup>10</sup> is 3.1 &times; 10<sup>&minus;12</sup>. That is not a pathological input. It's the arithmetic of stacking ten unremarkable layers, and it is closer to the real reason ReLU displaced sigmoid-family activations around 2011&ndash;2012 than any story about biological plausibility. Fig. 7 shows the other edge of that same arithmetic: SiLU's slope at x = 2 is 1.0908, so ten layers of it don't shrink the gradient at all &mdash; they multiply it by 2.38.</p>
+    <h2>The half that is exactly zero</h2>
+    <p>ReLU's left side isn't a small gradient, it's an exact one: 0. A unit whose pre-activation lands negative for every example in the training set receives precisely zero gradient on its incoming weights and its bias, on every step, forever &mdash; nothing in ordinary SGD can move it, because there's nothing there to follow. This is usually caused by an update large enough to push the bias well into negative territory, or a bias that drifts there gradually over training. Worth noting separately: ReLU also isn't differentiable at x = 0 itself, and frameworks simply pick a convention for what to return there (PyTorch returns 0, matching the left side).</p>
+    <p>SiLU's answer to the same problem is structural rather than incremental. It's smooth everywhere, and it's non-monotonic &mdash; it dips before it rises &mdash; which means its derivative is zero at exactly one point, x &asymp; &minus;1.2785, instead of across an entire half-line. A unit sitting at a negative pre-activation still gets a small, negative gradient there, and a negative gradient on a negative input pushes the unit's parameters back toward the region where it's active again. That's the dead-unit failure removed by construction, not just made less likely. The costs are real: an exponential per element instead of a single comparison, and a derivative that climbs past 1 over a band on the positive side, which means SiLU can amplify a gradient as readily as it preserves one.</p>
+    <p>None of this makes SiLU strictly better in practice. ReLU is still the cheap default, and it works fine at ordinary depths, because residual connections and normalization attack the vanishing-gradient problem from a completely different direction and mostly win regardless of which activation sits inside the block. The durable takeaway is narrower than "use this one": when you're comparing activation functions, the bottom panel is the one that tells you anything.</p>
+  </article>
+
+  <div class="closing">
+    <h3>Related notes</h3>
+    <p><b>/ml/regularization:</b> another place where the geometry of the weights explains more than the formula does &mdash; why L1's diamond-shaped constraint zeroes out weights that L2's circle never quite reaches.</p>
+    <p><b>/ml/optimizers:</b> what the gradient this post has been protecting actually gets used for, once it arrives at the optimizer.</p>
+    <p><b>/ml/neural-network:</b> why the nonlinearity has to be there at all. This post is about which one to pick once you already know that.</p>
+  </div>
+
+  <footer>Every curve, slope and bar above is computed live from the formulas in this page, not traced from a reference image.</footer>
+</div>
+<script>
+(function(){
+
+  // ---------- ACT_TANH ----------
+  const ACT_TANH = {
+    id: 'tanh',
+    name: 'tanh',
+    formulaHtml: 'tanh(<i>x</i>) = (e<sup>x</sup> &minus; e<sup>&minus;x</sup>) / (e<sup>x</sup> + e<sup>&minus;x</sup>)',
+    derivFormulaHtml: 'f\'(<i>x</i>) = 1 &minus; tanh<sup>2</sup>(<i>x</i>)',
+    colorVar: '--tanh',
+    fillVar: '--tanh-fill',
+    rangeHtml: '(&minus;1, 1)',
+    rangeLo: -1,
+    rangeHi: 1,
+    maxSlope: 1,
+    maxSlopeAt: 0,
+    minSlope: 0,
+    minSlopeAt: null,
+    forward: function(x) { return Math.tanh(x); },
+    derivative: function(x) { const t = Math.tanh(x); return 1 - t * t; },
+    derivDiscontinuities: [],
+    probes: {
+      '-6': { f: -0.999988, d: 0.000025 },
+      '-3': { f: -0.995055, d: 0.009866 },
+      '0': { f: 0.000000, d: 1.000000 },
+      '3': { f: 0.995055, d: 0.009866 },
+      '6': { f: 0.999988, d: 0.000025 }
+    }
+  };
+
+  // ---------- ACT_SIGMOID ----------
+  const ACT_SIGMOID = {
+    id: 'sigmoid',
+    name: 'sigmoid',
+    formulaHtml: '1 / (1 + e<sup>&minus;x</sup>)',
+    derivFormulaHtml: 'f(x) &times; (1 &minus; f(x))',
+    colorVar: '--sigmoid',
+    fillVar: '--sigmoid-fill',
+    rangeHtml: '(0, 1)',
+    rangeLo: 0,
+    rangeHi: 1,
+    maxSlope: 0.25,
+    maxSlopeAt: 0,
+    minSlope: 0,
+    minSlopeAt: null,
+    forward: function(x) {
+      const expNegX = Math.exp(-x);
+      if (!isFinite(expNegX)) return x > 0 ? 1 : 0;
+      return 1 / (1 + expNegX);
+    },
+    derivative: function(x) {
+      const expNegX = Math.exp(-x);
+      const f = isFinite(expNegX) ? 1 / (1 + expNegX) : (x > 0 ? 1 : 0);
+      return f * (1 - f);
+    },
+    derivDiscontinuities: [],
+    probes: {
+      '-6': { f: 0.002473, d: 0.002467 },
+      '-3': { f: 0.047426, d: 0.045177 },
+      '0': { f: 0.5, d: 0.25 },
+      '3': { f: 0.952574, d: 0.045177 },
+      '6': { f: 0.997527, d: 0.002467 }
+    }
+  };
+
+  // ---------- ACT_RELU ----------
+  const ACT_RELU = {
+    id: 'relu',
+    name: 'ReLU',
+    formulaHtml: '<i>f</i>(<i>x</i>) = max(0, <i>x</i>)',
+    derivFormulaHtml: '<i>f</i>\'(<i>x</i>) = 0 for <i>x</i> &le; 0, 1 for <i>x</i> &gt; 0',
+    colorVar: '--relu',
+    fillVar: '--relu-fill',
+    rangeHtml: '[0, &infin;)',
+    rangeLo: 0,
+    rangeHi: null,
+    maxSlope: 1,
+    maxSlopeAt: null,
+    minSlope: 0,
+    minSlopeAt: null,
+    forward: function(x) { return Math.max(0, x); },
+    // Subgradient at x = 0 is 0, matching PyTorch's convention.
+    derivative: function(x) { return x > 0 ? 1 : 0; },
+    derivDiscontinuities: [0],
+    probes: {
+      '-6': { f: 0.000000, d: 0.000000 },
+      '-3': { f: 0.000000, d: 0.000000 },
+      '0':  { f: 0.000000, d: 0.000000 },
+      '3':  { f: 3.000000, d: 1.000000 },
+      '6':  { f: 6.000000, d: 1.000000 }
+    }
+  };
+
+  // ---------- ACT_SILU ----------
+  const ACT_SILU = {
+    id: 'silu',
+    name: 'SiLU',
+    formulaHtml: 'f(x) = x &middot; &sigma;(x), where &sigma;(x) = 1 / (1 + e<sup>&minus;x</sup>)',
+    derivFormulaHtml: 'f&prime;(x) = &sigma;(x) &middot; (1 + x &middot; (1 &minus; &sigma;(x)))',
+    colorVar: '--silu',
+    fillVar: '--silu-fill',
+    rangeHtml: '[&minus;0.2785, &infin;)',
+    rangeLo: -0.278465,
+    rangeHi: null,
+    minValue: -0.278465,
+    minValueAt: -1.278465,
+    maxSlope: 1.099839,
+    maxSlopeAt: 2.399400,
+    minSlope: -0.099839,
+    minSlopeAt: -2.399400,
+    forward: function(x) {
+      x = Math.max(-40, Math.min(40, x));
+      const sig = 1 / (1 + Math.exp(-x));
+      return x * sig;
+    },
+    derivative: function(x) {
+      x = Math.max(-40, Math.min(40, x));
+      const sig = 1 / (1 + Math.exp(-x));
+      return sig * (1 + x * (1 - sig));
+    },
+    derivDiscontinuities: [],
+    probes: {
+      '-6': { f: -0.014836, d: -0.012326 },
+      '-3': { f: -0.142278, d: -0.088104 },
+      '0':  { f: 0.000000, d: 0.500000 },
+      '3':  { f: 2.857722, d: 1.088104 },
+      '6':  { f: 5.985164, d: 1.012326 }
+    }
+  };
+
+  const FUNCS = [ACT_TANH, ACT_SIGMOID, ACT_RELU, ACT_SILU];
+
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+  function svgEl(tag, attrs){
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  // ================================================================
+  // Fig. 6 — value + slope, shared x axis
+  // ================================================================
+  const XMIN = -6, XMAX = 6, VBW = 720, PADX = 46;
+  function mapX(x){ return PADX + (x - XMIN) / (XMAX - XMIN) * (VBW - 2 * PADX); }
+  function invMapX(px){ return XMIN + clamp((px - PADX) / (VBW - 2 * PADX), 0, 1) * (XMAX - XMIN); }
+
+  const TOP_H = 260, TOP_YMIN = -1.5, TOP_YMAX = 3.0, TOP_PADT = 16, TOP_PADB = 14;
+  function mapYTop(v){ return TOP_PADT + (TOP_YMAX - v) / (TOP_YMAX - TOP_YMIN) * (TOP_H - TOP_PADT - TOP_PADB); }
+
+  const BOT_H = 220, BOT_YMIN = -0.15, BOT_YMAX = 1.15, BOT_PADT = 12, BOT_PADB = 26;
+  function mapYBotLin(v){ return BOT_PADT + (BOT_YMAX - v) / (BOT_YMAX - BOT_YMIN) * (BOT_H - BOT_PADT - BOT_PADB); }
+
+  const LOG_YMIN = -5, LOG_YMAX = Math.log10(2);
+  function mapYBotLog(logv){ return BOT_PADT + (LOG_YMAX - logv) / (LOG_YMAX - LOG_YMIN) * (BOT_H - BOT_PADT - BOT_PADB); }
+
+  // Sample a function on [a,b], splitting at discontinuities (sampled from
+  // one-sided limits so a jump doesn't get smeared into a slope).
+  function sampleSegments(valueFn, discontinuities, step){
+    const breaks = [XMIN].concat(discontinuities.slice().sort((a,b)=>a-b)).concat([XMAX]);
+    const segs = [];
+    for (let i=0;i<breaks.length-1;i++){
+      const isLeftBreak = i>0, isRightBreak = i<breaks.length-2;
+      const eps = 1e-4;
+      const a = isLeftBreak ? breaks[i]+eps : breaks[i];
+      const b = isRightBreak ? breaks[i+1]-eps : breaks[i+1];
+      const n = Math.max(2, Math.round((b-a)/step));
+      const pts = [];
+      for (let k=0;k<=n;k++){ const x = a + (b-a)*k/n; pts.push([x, valueFn(x)]); }
+      segs.push(pts);
+    }
+    return segs;
+  }
+
+  // Clip a polyline to [ymin,ymax], returning path strings and boundary crossings.
+  function clipToPath(pts, ymin, ymax, mapYFn){
+    let d = '', open = false, prevIn = null, prevPt = null;
+    const paths = [], crossings = [];
+    for (const [x,v] of pts){
+      const inB = v >= ymin && v <= ymax;
+      if (inB){
+        const px = mapX(x), py = mapYFn(v);
+        d += (open?'L':'M') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+        if (prevIn === false) crossings.push({ x, side: prevPt[1] > ymax ? 'top' : 'bottom' });
+        open = true;
+      } else {
+        if (open) paths.push(d);
+        if (prevIn === true) crossings.push({ x, side: v > ymax ? 'top' : 'bottom' });
+        d = ''; open = false;
+      }
+      prevPt = [x,v]; prevIn = inB;
+    }
+    if (open) paths.push(d);
+    return { paths, crossings };
+  }
+
+  const topSvg = document.getElementById('act-top');
+  const botSvg = document.getElementById('act-bottom');
+
+  function drawGrid(svg, h, padT, padB, yTicks, yToPx, xLabels){
+    const g = svgEl('g', {});
+    yTicks.forEach(v => {
+      const py = yToPx(v);
+      g.appendChild(svgEl('line', { x1: PADX, x2: VBW-PADX, y1: py.toFixed(1), y2: py.toFixed(1),
+        stroke: Math.abs(v) < 1e-9 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }));
+    });
+    [-6,-3,0,3,6].forEach(x => {
+      const px = mapX(x);
+      g.appendChild(svgEl('line', { x1: px.toFixed(1), x2: px.toFixed(1), y1: padT, y2: h-padB,
+        stroke: x===0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }));
+      if (xLabels){
+        const t = svgEl('text', { x: px.toFixed(1), y: h-6, 'text-anchor':'middle', fill:'var(--muted)', 'font-size':'11' });
+        t.textContent = x;
+        g.appendChild(t);
+      }
+    });
+    svg.appendChild(g);
+  }
+
+  drawGrid(topSvg, TOP_H, TOP_PADT, TOP_PADB, [-1,0,1,2,3], mapYTop, false);
+  const botLinGroup = svgEl('g', { id: 'bot-linear' });
+  const botLogGroup = svgEl('g', { id: 'bot-log', style: 'display:none' });
+  botSvg.appendChild(botLinGroup);
+  botSvg.appendChild(botLogGroup);
+
+  (function(){
+    const g = svgEl('g', {});
+    [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+      const py = mapYBotLin(v);
+      g.appendChild(svgEl('line', { x1: PADX, x2: VBW-PADX, y1: py.toFixed(1), y2: py.toFixed(1),
+        stroke: v===0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }));
+      const t = svgEl('text', { x: PADX-8, y: (py+3).toFixed(1), 'text-anchor':'end', fill:'var(--muted)', 'font-size':'10' });
+      t.textContent = v; g.appendChild(t);
+    });
+    [-6,-3,0,3,6].forEach(x => {
+      const px = mapX(x);
+      g.appendChild(svgEl('line', { x1: px.toFixed(1), x2: px.toFixed(1), y1: BOT_PADT, y2: BOT_H-BOT_PADB,
+        stroke: x===0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }));
+      const t = svgEl('text', { x: px.toFixed(1), y: BOT_H-8, 'text-anchor':'middle', fill:'var(--muted)', 'font-size':'11' });
+      t.textContent = x; g.appendChild(t);
+    });
+    botLinGroup.appendChild(g);
+  })();
+
+  (function(){
+    const g = svgEl('g', {});
+    const logTicks = [-5,-3,-1,LOG_YMAX];
+    const logLabels = { '-5':'1e-5', '-3':'1e-3', '-1':'0.1' };
+    logTicks.forEach(v => {
+      const py = mapYBotLog(v);
+      g.appendChild(svgEl('line', { x1: PADX, x2: VBW-PADX, y1: py.toFixed(1), y2: py.toFixed(1),
+        stroke: 'var(--grid)', 'stroke-width': 1 }));
+      const t = svgEl('text', { x: PADX-8, y: (py+3).toFixed(1), 'text-anchor':'end', fill:'var(--muted)', 'font-size':'10' });
+      t.textContent = logLabels[v] !== undefined ? logLabels[v] : (v===LOG_YMAX ? '2' : v);
+      g.appendChild(t);
+    });
+    [-6,-3,0,3,6].forEach(x => {
+      const px = mapX(x);
+      g.appendChild(svgEl('line', { x1: px.toFixed(1), x2: px.toFixed(1), y1: BOT_PADT, y2: BOT_H-BOT_PADB,
+        stroke: x===0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }));
+      const t = svgEl('text', { x: px.toFixed(1), y: BOT_H-8, 'text-anchor':'middle', fill:'var(--muted)', 'font-size':'11' });
+      t.textContent = x; g.appendChild(t);
+    });
+    botLogGroup.appendChild(g);
+  })();
+
+  function addCrossMarks(svg, crossings, mapYFn, color, id){
+    crossings.forEach(c => {
+      const py = c.side === 'top' ? mapYFn(TOP_YMAX) : mapYFn(TOP_YMIN);
+      const px = mapX(c.x);
+      const d = c.side === 'top'
+        ? 'M '+(px-5)+' '+(py+6)+' L '+px+' '+(py-2)+' L '+(px+5)+' '+(py+6)
+        : 'M '+(px-5)+' '+(py-6)+' L '+px+' '+(py+2)+' L '+(px+5)+' '+(py-6);
+      const el = svgEl('path', { d, class: 'act-crossmark', stroke: color, 'data-curve': id });
+      svg.appendChild(el);
+    });
+  }
+
+  FUNCS.forEach(fn => {
+    const color = 'var(' + fn.colorVar + ')';
+    // top panel: value
+    const segsTop = sampleSegments(fn.forward, [], 0.03);
+    segsTop.forEach(seg => {
+      const { paths, crossings } = clipToPath(seg, TOP_YMIN, TOP_YMAX, mapYTop);
+      paths.forEach(d => topSvg.appendChild(svgEl('path', { d, class:'act-curve', stroke: color, 'data-curve': fn.id })));
+      addCrossMarks(topSvg, crossings, mapYTop, color, fn.id);
+    });
+
+    // bottom panel: derivative, linear mode
+    const segsBotLin = sampleSegments(fn.derivative, fn.derivDiscontinuities, 0.03);
+    segsBotLin.forEach(seg => {
+      const { paths } = clipToPath(seg, BOT_YMIN, BOT_YMAX, mapYBotLin);
+      paths.forEach(d => botLinGroup.appendChild(svgEl('path', { d, class:'act-curve', stroke: color, 'data-curve': fn.id })));
+    });
+    fn.derivDiscontinuities.forEach(xd => {
+      const left = fn.derivative(xd - 1e-4), right = fn.derivative(xd + 1e-4);
+      if (left >= BOT_YMIN && left <= BOT_YMAX)
+        botLinGroup.appendChild(svgEl('circle', { cx: mapX(xd), cy: mapYBotLin(left), r: 4, fill: 'var(--bg)', stroke: color, 'stroke-width': 2, 'data-curve': fn.id }));
+      if (right >= BOT_YMIN && right <= BOT_YMAX)
+        botLinGroup.appendChild(svgEl('circle', { cx: mapX(xd), cy: mapYBotLin(right), r: 4, fill: color, 'data-curve': fn.id }));
+    });
+
+    // bottom panel: derivative, log mode
+    if (fn.id === 'relu'){
+      const yFloor = mapYBotLog(LOG_YMIN);
+      botLogGroup.appendChild(svgEl('line', { x1: mapX(XMIN), x2: mapX(0), y1: yFloor, y2: yFloor,
+        stroke: color, 'stroke-width': 2.2, 'stroke-dasharray': '3 3', 'data-curve': fn.id }));
+      botLogGroup.appendChild(svgEl('line', { x1: mapX(0), x2: mapX(XMAX), y1: mapYBotLog(0), y2: mapYBotLog(0),
+        stroke: color, 'stroke-width': 2.2, 'data-curve': fn.id }));
+      const t = svgEl('text', { x: mapX(-3), y: yFloor - 6, 'text-anchor':'middle', fill: color, 'font-size':'11', 'font-weight':'600', 'data-curve': fn.id });
+      t.textContent = '= 0 exactly';
+      botLogGroup.appendChild(t);
+    } else {
+      const segsLog = sampleSegments(x => Math.log10(Math.max(Math.abs(fn.derivative(x)), 1e-6)), fn.derivDiscontinuities, 0.03);
+      segsLog.forEach(seg => {
+        const { paths } = clipToPath(seg, LOG_YMIN, LOG_YMAX, mapYBotLog);
+        paths.forEach(d => botLogGroup.appendChild(svgEl('path', { d, class:'act-curve', stroke: color, 'data-curve': fn.id })));
+      });
+    }
+  });
+
+  // ---- scrub line + range slider ----
+  let scrubX = -3;
+  const stage = document.getElementById('act-stage');
+  const rangeInput = document.getElementById('act-range');
+  const rangeVal = document.getElementById('act-range-val');
+  const scrubTop = svgEl('line', { x1:0, x2:0, y1:0, y2:TOP_H, stroke:'var(--ink-2)', 'stroke-width':1, 'stroke-dasharray':'3 3' });
+  const scrubBot = svgEl('line', { x1:0, x2:0, y1:0, y2:BOT_H, stroke:'var(--ink-2)', 'stroke-width':1, 'stroke-dasharray':'3 3' });
+  topSvg.appendChild(scrubTop);
+  botSvg.appendChild(scrubBot);
+
+  // ---- readout table ----
+  const tbody = document.getElementById('act-table-body');
+  const tableRows = {};
+  FUNCS.forEach(fn => {
+    const tr = document.createElement('tr');
+    tr.id = 'row-' + fn.id;
+    const tdName = document.createElement('td');
+    tdName.innerHTML = '<span class="swatch" style="background:var(' + fn.colorVar + ')"></span>' + fn.name;
+    const tdF = document.createElement('td');
+    const tdD = document.createElement('td');
+    tr.appendChild(tdName); tr.appendChild(tdF); tr.appendChild(tdD);
+    tbody.appendChild(tr);
+    tableRows[fn.id] = { f: tdF, d: tdD };
+  });
+
+  function updateReadout(){
+    FUNCS.forEach(fn => {
+      const f = fn.forward(scrubX), d = fn.derivative(scrubX);
+      const row = tableRows[fn.id];
+      row.f.textContent = f.toFixed(4);
+      row.d.textContent = d.toFixed(4);
+      row.d.classList.toggle('zero-flag', Math.abs(d) < 0.01);
+    });
+  }
+
+  function setScrub(x, fromSlider){
+    scrubX = clamp(x, XMIN, XMAX);
+    const px = mapX(scrubX).toFixed(1);
+    scrubTop.setAttribute('x1', px); scrubTop.setAttribute('x2', px);
+    scrubBot.setAttribute('x1', px); scrubBot.setAttribute('x2', px);
+    if (!fromSlider) rangeInput.value = scrubX.toFixed(2);
+    rangeVal.textContent = (scrubX < 0 ? '−' : '') + Math.abs(scrubX).toFixed(2);
+    updateReadout();
+  }
+
+  stage.addEventListener('pointermove', e => {
+    const rect = topSvg.getBoundingClientRect();
+    const frac = clamp((e.clientX - rect.left) / rect.width, 0, 1);
+    setScrub(invMapX(frac * VBW));
+  });
+  stage.addEventListener('pointerleave', () => setScrub(-3));
+  rangeInput.addEventListener('input', e => setScrub(parseFloat(e.target.value), true));
+
+  // ---- toggle chips + log-scale chip ----
+  const toggles = document.getElementById('act-toggles');
+  const visible = {};
+  FUNCS.forEach(fn => {
+    visible[fn.id] = true;
+    const chip = document.createElement('div');
+    chip.className = 'act-chip';
+    chip.innerHTML = '<span class="dot" style="color:var(' + fn.colorVar + ')"></span>' + fn.name;
+    chip.addEventListener('click', () => {
+      visible[fn.id] = !visible[fn.id];
+      chip.classList.toggle('off', !visible[fn.id]);
+      document.querySelectorAll('[data-curve="' + fn.id + '"]').forEach(el => {
+        el.style.display = visible[fn.id] ? '' : 'none';
+      });
+      document.getElementById('row-' + fn.id).classList.toggle('dim', !visible[fn.id]);
+    });
+    toggles.appendChild(chip);
+  });
+  let logMode = false;
+  const logChip = document.createElement('div');
+  logChip.className = 'act-chip act-log';
+  logChip.textContent = 'log scale';
+  logChip.addEventListener('click', () => {
+    logMode = !logMode;
+    logChip.classList.toggle('active', logMode);
+    botLinGroup.setAttribute('style', logMode ? 'display:none' : '');
+    botLogGroup.setAttribute('style', logMode ? '' : 'display:none');
+  });
+  toggles.appendChild(logChip);
+
+  setScrub(-3);
+
+  // ================================================================
+  // Fig. 7 — |f'(x)|^N bars, log scale
+  // ================================================================
+  const barX = document.getElementById('bar-x');
+  const barXVal = document.getElementById('bar-x-val');
+  const barN = document.getElementById('bar-n');
+  const barNVal = document.getElementById('bar-n-val');
+  const barsBody = document.getElementById('bars-body');
+
+  const BAR_LOG_MIN = -12, BAR_LOG_MAX = 1;
+  function valueToFrac(v){
+    const lv = Math.log10(Math.max(v, 1e-12));
+    return clamp((lv - BAR_LOG_MIN) / (BAR_LOG_MAX - BAR_LOG_MIN), 0, 1);
+  }
+  const refFrac = valueToFrac(1);
+
+  const barRows = {};
+  FUNCS.forEach(fn => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML =
+      '<div class="bar-label"><span class="dot" style="color:var(' + fn.colorVar + ')"></span>' + fn.name + '</div>' +
+      '<div class="bar-track"><div class="bar-fill" style="background:var(' + fn.colorVar + ')"></div>' +
+      '<div class="bar-ref" style="left:' + (refFrac*100).toFixed(1) + '%"></div></div>' +
+      '<div class="bar-val"></div>';
+    barsBody.appendChild(row);
+    barRows[fn.id] = { fill: row.querySelector('.bar-fill'), val: row.querySelector('.bar-val') };
+  });
+
+  function updateBars(){
+    const x = parseFloat(barX.value), n = parseInt(barN.value, 10);
+    barXVal.textContent = x.toFixed(1);
+    barNVal.textContent = n;
+    FUNCS.forEach(fn => {
+      const row = barRows[fn.id];
+      if (fn.id === 'relu' && x <= 0){
+        row.fill.style.width = '0%';
+        row.val.textContent = '0 — never comes back';
+        return;
+      }
+      const v = Math.pow(Math.abs(fn.derivative(x)), n);
+      row.fill.style.width = (valueToFrac(v) * 100).toFixed(1) + '%';
+      row.val.textContent = v.toExponential(2);
+    });
+  }
+  barX.addEventListener('input', updateBars);
+  barN.addEventListener('input', updateBars);
+  updateBars();
+
+  if (window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {});
+  }
+
+})();
+</script>
+</body>
+</html>
