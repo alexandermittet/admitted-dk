@@ -224,7 +224,7 @@
     </header>
 
     <main class="stage">
-    <div class="cards count-2">
+    <div class="cards count-3">
       <a class="card" href="/ml/regularization">
         <div class="card-teaser"><img src="/ml/thumb-regularization.png" alt="L2 (ridge) curve fit tracking a wiggly true function" loading="lazy"></div>
         <h2 class="card-title">A diamond has corners. A circle doesn't.</h2>
@@ -237,6 +237,35 @@
         <h2 class="card-title">Six optimizers walk into a bowl</h2>
         <p class="card-desc">SGD, Momentum, Nesterov, RMSProp, Adam and Prodigy, dropped from the same point on a real loss surface and raced to the bottom, live in your browser. First a clean bowl, then rougher terrain with false valleys.</p>
         <span class="card-tag">Optimizers</span>
+      </a>
+
+      <a class="card" href="/ml/neural-network">
+        <div class="card-teaser">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <g stroke="var(--border)" stroke-width="1.5">
+              <line x1="20" y1="30" x2="50" y2="20"/>
+              <line x1="20" y1="30" x2="50" y2="50"/>
+              <line x1="20" y1="30" x2="50" y2="80"/>
+              <line x1="20" y1="70" x2="50" y2="20"/>
+              <line x1="20" y1="70" x2="50" y2="50"/>
+              <line x1="20" y1="70" x2="50" y2="80"/>
+              <line x1="50" y1="20" x2="80" y2="50"/>
+              <line x1="50" y1="50" x2="80" y2="50"/>
+              <line x1="50" y1="80" x2="80" y2="50"/>
+            </g>
+            <g fill="var(--surface)" stroke="var(--ink-2)" stroke-width="1.5">
+              <circle cx="20" cy="30" r="7"/>
+              <circle cx="20" cy="70" r="7"/>
+              <circle cx="50" cy="20" r="6"/>
+              <circle cx="50" cy="50" r="6"/>
+              <circle cx="50" cy="80" r="6"/>
+            </g>
+            <circle cx="80" cy="50" r="8" fill="var(--accent)"/>
+          </svg>
+        </div>
+        <h2 class="card-title">A layer without a bend does nothing. One bend changes everything.</h2>
+        <p class="card-desc">Stack as many purely linear layers as you like and you still only get a straight decision boundary &mdash; the algebra collapses them into one. Watch a tiny network train live on a dataset only a nonlinearity can solve, architecture switchable mid-training.</p>
+        <span class="card-tag">Neural networks</span>
       </a>
     </div>
     </main>
