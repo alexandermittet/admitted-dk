@@ -33,6 +33,10 @@
     --muted:     #898781;
     --border:    rgba(11,11,11,0.10);
     --accent:    #d9591f;
+    --tanh:      #2a78d6;
+    --sigmoid:   #148a5f;
+    --relu:      #d9591f;
+    --silu:      #8a4fd0;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -44,6 +48,10 @@
       --muted:     #948f83;
       --border:    rgba(255,255,255,0.12);
       --accent:    #d95926;
+      --tanh:      #3987e5;
+      --sigmoid:   #199e70;
+      --relu:      #d95926;
+      --silu:      #a273ea;
     }
   }
   :root[data-theme="dark"]{
@@ -55,6 +63,10 @@
     --muted:     #948f83;
     --border:    rgba(255,255,255,0.12);
     --accent:    #d95926;
+    --tanh:      #3987e5;
+    --sigmoid:   #199e70;
+    --relu:      #d95926;
+    --silu:      #a273ea;
   }
 
   *{ box-sizing: border-box; }
@@ -224,7 +236,7 @@
     </header>
 
     <main class="stage">
-    <div class="cards count-3">
+    <div class="cards count-4">
       <a class="card" href="/ml/regularization">
         <div class="card-teaser"><img src="/ml/thumb-regularization.png" alt="L2 (ridge) curve fit tracking a wiggly true function" loading="lazy"></div>
         <h2 class="card-title">A diamond has corners. A circle doesn't.</h2>
@@ -266,6 +278,21 @@
         <h2 class="card-title">A layer without a bend does nothing. One bend changes everything.</h2>
         <p class="card-desc">Stack as many purely linear layers as you like and you still only get a straight decision boundary &mdash; the algebra collapses them into one. Watch a tiny network train live on a dataset only a nonlinearity can solve, architecture switchable mid-training.</p>
         <span class="card-tag">Neural networks</span>
+      </a>
+
+      <a class="card" href="/ml/activation-functions">
+        <div class="card-teaser">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" role="img" aria-label="tanh, sigmoid, ReLU and SiLU plotted on one axis">
+            <line x1="6" y1="65.5" x2="94" y2="65.5" stroke="var(--border)" stroke-width="1"/>
+            <path d="M6.0 66.3 L7.5 66.4 L8.9 66.5 L10.4 66.6 L11.9 66.8 L13.3 67.0 L14.8 67.2 L16.3 67.4 L17.7 67.6 L19.2 67.9 L20.7 68.2 L22.1 68.5 L23.6 68.8 L25.1 69.2 L26.5 69.6 L28.0 70.0 L29.5 70.4 L30.9 70.8 L32.4 71.1 L33.9 71.5 L35.3 71.8 L36.8 72.0 L38.3 72.1 L39.7 72.0 L41.2 71.9 L42.7 71.5 L44.1 70.8 L45.6 69.9 L47.1 68.8 L48.5 67.3 L50.0 65.5 L51.5 63.3 L52.9 60.8 L54.4 58.1 L55.9 55.0 L57.3 51.6 L58.8 48.1 L60.3 44.3 L61.7 40.4 L63.2 36.3 L64.7 32.1 L66.1 27.9 L67.6 23.6 L69.1 19.2 L70.5 14.9 L72.0 10.5 L73.5 6.2 L74.9 6.0 L76.4 6.0 L77.9 6.0 L79.3 6.0 L80.8 6.0 L82.3 6.0 L83.7 6.0 L85.2 6.0 L86.7 6.0 L88.1 6.0 L89.6 6.0 L91.1 6.0 L92.5 6.0 L94.0 6.0" fill="none" stroke="var(--silu)" stroke-width="1.5"/>
+            <path d="M6.0 65.5 L7.5 65.5 L8.9 65.5 L10.4 65.5 L11.9 65.5 L13.3 65.5 L14.8 65.5 L16.3 65.5 L17.7 65.5 L19.2 65.5 L20.7 65.5 L22.1 65.5 L23.6 65.5 L25.1 65.5 L26.5 65.5 L28.0 65.5 L29.5 65.5 L30.9 65.5 L32.4 65.5 L33.9 65.5 L35.3 65.5 L36.8 65.5 L38.3 65.5 L39.7 65.5 L41.2 65.5 L42.7 65.5 L44.1 65.5 L45.6 65.5 L47.1 65.5 L48.5 65.5 L50.0 65.5 L51.5 61.5 L52.9 57.5 L54.4 53.6 L55.9 49.6 L57.3 45.6 L58.8 41.7 L60.3 37.7 L61.7 33.7 L63.2 29.8 L64.7 25.8 L66.1 21.9 L67.6 17.9 L69.1 13.9 L70.5 10.0 L72.0 6.0 L73.5 6.0 L74.9 6.0 L76.4 6.0 L77.9 6.0 L79.3 6.0 L80.8 6.0 L82.3 6.0 L83.7 6.0 L85.2 6.0 L86.7 6.0 L88.1 6.0 L89.6 6.0 L91.1 6.0 L92.5 6.0 L94.0 6.0" fill="none" stroke="var(--relu)" stroke-width="1.5"/>
+            <path d="M6.0 65.3 L7.5 65.3 L8.9 65.2 L10.4 65.2 L11.9 65.2 L13.3 65.1 L14.8 65.0 L16.3 65.0 L17.7 64.9 L19.2 64.8 L20.7 64.6 L22.1 64.5 L23.6 64.3 L25.1 64.1 L26.5 63.9 L28.0 63.7 L29.5 63.4 L30.9 63.0 L32.4 62.6 L33.9 62.2 L35.3 61.7 L36.8 61.1 L38.3 60.5 L39.7 59.8 L41.2 59.1 L42.7 58.3 L44.1 57.4 L45.6 56.5 L47.1 55.5 L48.5 54.6 L50.0 53.6 L51.5 52.6 L52.9 51.6 L54.4 50.7 L55.9 49.7 L57.3 48.9 L58.8 48.1 L60.3 47.3 L61.7 46.6 L63.2 46.0 L64.7 45.5 L66.1 45.0 L67.6 44.5 L69.1 44.1 L70.5 43.8 L72.0 43.5 L73.5 43.2 L74.9 43.0 L76.4 42.8 L77.9 42.6 L79.3 42.5 L80.8 42.4 L82.3 42.3 L83.7 42.2 L85.2 42.1 L86.7 42.0 L88.1 42.0 L89.6 41.9 L91.1 41.9 L92.5 41.9 L94.0 41.8" fill="none" stroke="var(--sigmoid)" stroke-width="1.5"/>
+            <path d="M6.0 89.2 L7.5 89.2 L8.9 89.2 L10.4 89.2 L11.9 89.2 L13.3 89.2 L14.8 89.2 L16.3 89.2 L17.7 89.2 L19.2 89.2 L20.7 89.2 L22.1 89.2 L23.6 89.1 L25.1 89.1 L26.5 89.0 L28.0 88.9 L29.5 88.8 L30.9 88.6 L32.4 88.4 L33.9 88.1 L35.3 87.6 L36.8 87.0 L38.3 86.2 L39.7 85.0 L41.2 83.6 L42.7 81.7 L44.1 79.3 L45.6 76.5 L47.1 73.1 L48.5 69.4 L50.0 65.5 L51.5 61.5 L52.9 57.8 L54.4 54.5 L55.9 51.6 L57.3 49.2 L58.8 47.3 L60.3 45.9 L61.7 44.8 L63.2 43.9 L64.7 43.3 L66.1 42.9 L67.6 42.5 L69.1 42.3 L70.5 42.1 L72.0 42.0 L73.5 41.9 L74.9 41.8 L76.4 41.8 L77.9 41.8 L79.3 41.7 L80.8 41.7 L82.3 41.7 L83.7 41.7 L85.2 41.7 L86.7 41.7 L88.1 41.7 L89.6 41.7 L91.1 41.7 L92.5 41.7 L94.0 41.7" fill="none" stroke="var(--tanh)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h2 class="card-title">Nothing learns on a flat line.</h2>
+        <p class="card-desc">tanh, sigmoid, ReLU and SiLU on one axis, with their slopes underneath. Drag across and watch three of the four gradients fade toward nothing on the left &mdash; and see which one goes to zero permanently rather than just quietly.</p>
+        <span class="card-tag">Activation functions</span>
       </a>
     </div>
     </main>
