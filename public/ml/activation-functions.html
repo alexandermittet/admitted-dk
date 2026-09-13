@@ -225,6 +225,8 @@
   .closing h3{ font-size: 1.1rem; margin-bottom: 12px; }
   .closing p{ font-size: 1.02rem; line-height: 1.65; color: var(--ink-2); margin: 10px 0 0; font-family: "Source Serif 4", Georgia, serif; }
   .closing p b{ color: var(--ink); }
+  .closing a{ color: inherit; text-decoration: none; border-bottom: 1px solid var(--border); }
+  .closing a:hover{ border-bottom-color: var(--accent); color: var(--accent); }
 
   @media (max-width: 600px){
     .act-table{ font-size: 0.74rem; }
@@ -333,9 +335,9 @@
 
   <div class="closing">
     <h3>Related notes</h3>
-    <p><b>/ml/regularization:</b> another place where the geometry of the weights explains more than the formula does &mdash; why L1's diamond-shaped constraint zeroes out weights that L2's circle never quite reaches.</p>
-    <p><b>/ml/optimizers:</b> what the gradient this post has been protecting actually gets used for, once it arrives at the optimizer.</p>
-    <p><b>/ml/neural-network:</b> why the nonlinearity has to be there at all. This post is about which one to pick once you already know that.</p>
+    <p><a href="/ml/regularization"><b>/ml/regularization</b></a>: another place where the geometry of the weights explains more than the formula does &mdash; why L1's diamond-shaped constraint zeroes out weights that L2's circle never quite reaches.</p>
+    <p><a href="/ml/optimizers"><b>/ml/optimizers</b></a>: what the gradient this post has been protecting actually gets used for, once it arrives at the optimizer.</p>
+    <p><a href="/ml/neural-network"><b>/ml/neural-network</b></a>: why the nonlinearity has to be there at all. This post is about which one to pick once you already know that.</p>
   </div>
 
   <footer>Every curve, slope and bar above is computed live from the formulas in this page, not traced from a reference image.</footer>
