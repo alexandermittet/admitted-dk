@@ -330,7 +330,7 @@
     <p>A single neuron with no hidden layer computes one thing: a weighted sum of its inputs, plus a bias, squashed through a nonlinearity into a single number. Read as a decision, that number crosses zero exactly where the weighted sum crosses zero &mdash; and the set of points where a weighted sum of two inputs equals zero is a straight line. However you tune the weights, that neuron's decision boundary is always some straight line through the input space. Nothing you feed it changes that.</p>
     <p>The obvious fix looks like adding depth: put a hidden layer of units between the inputs and the output. But if those hidden units are themselves just weighted sums with no squashing function of their own, depth buys nothing. A weighted sum of weighted sums is still just a weighted sum &mdash; two matrix multiplications in a row collapse algebraically into one. A network with a hundred such "linear" hidden layers computes exactly the same family of functions as a network with none, and lands on exactly the same boundary.</p>
     <p>What actually changes the picture is putting a nonlinearity &mdash; tanh, ReLU, a sigmoid, anything with a bend in it &mdash; inside that hidden layer, squashing each hidden unit's sum before it's combined into the next one. That single nonlinear step is what stops the composition from collapsing back into an affine map, and it's what lets the same architecture bend its boundary into a curve, then another curve, until it can wrap around a shape as convoluted as the data demands.</p>
-    <p>The figure below trains a real network &mdash; live, by actual backpropagation and gradient descent, right here in your browser &mdash; and borrows its controls from <a href="https://playground.tensorflow.org">TensorFlow Playground</a>, the tool this series of posts originally set out to mimic. Pick a problem type and a dataset, shape the network, and press Play to watch training unfold on the network diagram (edge thickness is |weight|, blue is positive, orange is negative) and on the output panel next to it.</p>
+    <p>The figure below trains a real network &mdash; live, by actual backpropagation and gradient descent, right here in your browser &mdash; and borrows its controls from <a href="https://playground.tensorflow.org">TensorFlow Playground</a>, the tool this series of posts originally set out to mimic. Pick a problem type and a dataset, choose which input features feed the network, shape it (hidden layers, neurons per layer), and press Play to watch training unfold on the network diagram (edge thickness is |weight|, blue is positive, orange is negative) and on the output panel next to it.</p>
   </article>
 
   <figure>
@@ -390,6 +390,18 @@
           <button class="btn" data-value="regression">Regression</button>
         </div>
       </div>
+      <div class="field">
+        <span class="field-label">Input features</span>
+        <div class="btn-group" id="features-group">
+          <button class="btn active" data-value="x1">X&#8321;</button>
+          <button class="btn active" data-value="x2">X&#8322;</button>
+          <button class="btn" data-value="x1sq">X&#8321;&sup2;</button>
+          <button class="btn" data-value="x2sq">X&#8322;&sup2;</button>
+          <button class="btn" data-value="x1x2">X&#8321;X&#8322;</button>
+          <button class="btn" data-value="sinx1">sin(X&#8321;)</button>
+          <button class="btn" data-value="sinx2">sin(X&#8322;)</button>
+        </div>
+      </div>
     </div>
 
     <div class="controls run-controls">
@@ -430,6 +442,14 @@
             <button class="btn" id="layers-minus">&minus;</button>
             <b id="layers-val">1</b>
             <button class="btn" id="layers-plus">+</button>
+          </div>
+        </div>
+        <div class="stepper-field">
+          <span>Neurons per layer</span>
+          <div class="stepper">
+            <button class="btn" id="width-minus">&minus;</button>
+            <b id="width-val">8</b>
+            <button class="btn" id="width-plus">+</button>
           </div>
         </div>
       </div>
@@ -640,6 +660,17 @@
     L1: { der: w => w<0 ? -1 : (w>0 ? 1 : 0) },
     L2: { der: w => w }
   };
+  const FEATURE_DEFS = [
+    { key: 'x1',    f: (x,y) => x },
+    { key: 'x2',    f: (x,y) => y },
+    { key: 'x1sq',  f: (x,y) => x*x },
+    { key: 'x2sq',  f: (x,y) => y*y },
+    { key: 'x1x2',  f: (x,y) => x*y },
+    { key: 'sinx1', f: (x,y) => Math.sin(x) },
+    { key: 'sinx2', f: (x,y) => Math.sin(y) }
+  ];
+  const FEATURE_MAP = {};
+  FEATURE_DEFS.forEach(d => { FEATURE_MAP[d.key] = d.f; });
 
   function buildNetwork(shape, hiddenAct, outputAct, rng){
     const net = [];
@@ -668,8 +699,9 @@
   }
 
   function forwardProp(net, x, y){
-    net[0][0].output = x;
-    net[0][1].output = y;
+    for (let i=0;i<selectedFeatures.length;i++){
+      net[0][i].output = FEATURE_MAP[selectedFeatures[i]](x, y);
+    }
     for (let l=1;l<net.length;l++){
       for (const node of net[l]){
         let total = node.bias;
@@ -945,7 +977,7 @@
   }
 
   // ---- state + controls ----
-  const DATA_SEED = 42, INIT_SEED = 7, HIDDEN_WIDTH = 8, EPOCH_CAP = 5000;
+  const DATA_SEED = 42, INIT_SEED = 7, EPOCH_CAP = 5000;
 
   let problem = 'classification';
   let clsDataset = 'circle';
@@ -958,6 +990,8 @@
   let noise = 0;
   let batchSize = 10;
   let hiddenLayers = 1;
+  let hiddenWidth = 8;
+  let selectedFeatures = ['x1', 'x2'];
   let showTestData = false;
 
   let trainData = [], testData = [];
@@ -980,8 +1014,8 @@
   }
 
   function currentShape(){
-    const shape = [2];
-    for (let i=0;i<hiddenLayers;i++) shape.push(HIDDEN_WIDTH);
+    const shape = [selectedFeatures.length];
+    for (let i=0;i<hiddenLayers;i++) shape.push(hiddenWidth);
     shape.push(1);
     return shape;
   }
@@ -1050,6 +1084,10 @@
   const layersVal = document.getElementById('layers-val');
   const layersMinus = document.getElementById('layers-minus');
   const layersPlus = document.getElementById('layers-plus');
+  const widthVal = document.getElementById('width-val');
+  const widthMinus = document.getElementById('width-minus');
+  const widthPlus = document.getElementById('width-plus');
+  const featuresGroup = document.getElementById('features-group');
   const testDataToggle = document.getElementById('test-data-toggle');
 
   function setActiveButton(group, value){
@@ -1125,6 +1163,27 @@
     layersVal.textContent = hiddenLayers;
     reset(false);
   });
+
+  widthMinus.addEventListener('click', () => {
+    hiddenWidth = clamp(hiddenWidth-1, 1, 8);
+    widthVal.textContent = hiddenWidth;
+    reset(false);
+  });
+  widthPlus.addEventListener('click', () => {
+    hiddenWidth = clamp(hiddenWidth+1, 1, 8);
+    widthVal.textContent = hiddenWidth;
+    reset(false);
+  });
+
+  Array.from(featuresGroup.children).forEach(b => b.addEventListener('click', () => {
+    const wasActive = b.classList.contains('active');
+    if (wasActive && selectedFeatures.length === 1) return; // at least one feature must stay selected
+    b.classList.toggle('active');
+    selectedFeatures = FEATURE_DEFS
+      .map(d => d.key)
+      .filter(key => Array.from(featuresGroup.children).some(bb => bb.dataset.value === key && bb.classList.contains('active')));
+    reset(false);
+  }));
 
   testDataToggle.addEventListener('change', () => {
     showTestData = testDataToggle.checked;
