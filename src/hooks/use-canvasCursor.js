@@ -167,9 +167,9 @@ const useCanvasCursor = () => {
       ctx.frame = 1;
       f = new Wave({
         phase: Math.random() * 2 * Math.PI,
-        amplitude: 85,
+        amplitude: 10,
         frequency: 0.0015,
-        offset: 285,
+        offset: 193,
       });
       document.addEventListener('mousemove', onMousemove);
       document.addEventListener('touchstart', onMousemove);
