@@ -125,9 +125,9 @@
 
   .controls{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     flex-wrap: wrap;
-    gap: 8px 10px;
+    gap: 14px 22px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -136,12 +136,19 @@
     font-size: 0.82rem;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-  .controls .arch-group{
+  .controls.run-controls{ align-items:center; }
+  .field{
     display:flex;
-    flex-wrap: wrap;
+    flex-direction:column;
     gap: 6px;
-    margin-right: auto;
   }
+  .field-label{
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .btn-group{ display:flex; flex-wrap: wrap; gap: 5px; }
   .btn{
     display:inline-flex;
     align-items:center;
@@ -161,6 +168,50 @@
   .btn.active{ background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.active:hover{ color: #fff; opacity: 0.9; }
   .btn.wide{ font-weight: 600; }
+  .pf-select{
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-2);
+    font: inherit;
+    font-size: 0.8rem;
+  }
+  .check{
+    display:inline-flex;
+    align-items:center;
+    gap: 7px;
+    font-size: 0.8rem;
+    color: var(--ink-2);
+    cursor: pointer;
+    margin-left: auto;
+  }
+  .check input{ accent-color: var(--accent); }
+
+  .slider-field{
+    display:flex;
+    flex-direction:column;
+    gap: 4px;
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--ink-2);
+  }
+  .slider-field:first-of-type{ margin-top: 2px; }
+  .slider-field .row{ display:flex; justify-content:space-between; }
+  .slider-field b{ color: var(--ink); font-weight: 600; }
+  .slider-field input[type="range"]{ width: 100%; accent-color: var(--accent); }
+
+  .stepper-field{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top: 14px;
+    font-size: 0.78rem;
+    color: var(--ink-2);
+  }
+  .stepper{ display:flex; align-items:center; gap: 8px; }
+  .stepper .btn{ padding: 3px 11px; font-size: 0.9rem; line-height:1; }
+  .stepper b{ color: var(--ink); min-width: 1em; text-align:center; }
 
   .readout{
     display:flex;
@@ -224,10 +275,12 @@
   }
   .legend span{ display:inline-flex; align-items:center; gap:6px; }
   .legend .dot{ width:8px; height:8px; border-radius:50%; background:currentColor; flex: none; }
+  .legend .ring{ width:8px; height:8px; border-radius:50%; border: 1.6px solid currentColor; flex: none; }
 
   @media (max-width: 600px){
     .panels{ flex-direction: column; }
     .panel{ min-width: 0; width: 100%; flex: none; }
+    .check{ margin-left: 0; }
   }
 
   .topnav{
@@ -254,6 +307,7 @@
     font-size: 0.75rem;
     color: var(--muted);
   }
+  footer a{ color: inherit; }
 </style>
 </head>
 <body>
@@ -268,29 +322,112 @@
   <div class="byline">ML notes for admitted.dk</div>
 
   <article>
-    <p>A single neuron with no hidden layer computes one thing: a weighted sum of its inputs, plus a bias, squashed through a sigmoid into a number between 0 and 1. Read as a probability, that number crosses 0.5 exactly where the weighted sum crosses zero &mdash; and the set of points where a weighted sum of two inputs equals zero is a straight line. However you tune the weights, that neuron's decision boundary is always some straight line through the input space. Nothing you feed it changes that.</p>
+    <p>A single neuron with no hidden layer computes one thing: a weighted sum of its inputs, plus a bias, squashed through a nonlinearity into a single number. Read as a decision, that number crosses zero exactly where the weighted sum crosses zero &mdash; and the set of points where a weighted sum of two inputs equals zero is a straight line. However you tune the weights, that neuron's decision boundary is always some straight line through the input space. Nothing you feed it changes that.</p>
     <p>The obvious fix looks like adding depth: put a hidden layer of units between the inputs and the output. But if those hidden units are themselves just weighted sums with no squashing function of their own, depth buys nothing. A weighted sum of weighted sums is still just a weighted sum &mdash; two matrix multiplications in a row collapse algebraically into one. A network with a hundred such "linear" hidden layers computes exactly the same family of functions as a network with none, and lands on exactly the same boundary.</p>
-    <p>What actually changes the picture is putting a nonlinearity &mdash; here, tanh &mdash; inside that hidden layer, squashing each hidden unit's sum before it's combined into the next one. That single nonlinear step is what stops the composition from collapsing back into an affine map, and it's what lets the same architecture bend its boundary into a curve, then another curve, until it can wrap around a shape as convoluted as the data demands.</p>
-    <p>The figure below trains a real network &mdash; 2 inputs, 8 hidden units, 1 output &mdash; live, by actual gradient descent, on a dataset a straight line cannot solve: points scattered inside a small disk against points scattered in a ring around it. Switch the architecture and press Play to watch training unfold on the network diagram (edge thickness is |weight|, blue is positive, orange is negative) and on the decision boundary next to it.</p>
+    <p>What actually changes the picture is putting a nonlinearity &mdash; tanh, ReLU, a sigmoid, anything with a bend in it &mdash; inside that hidden layer, squashing each hidden unit's sum before it's combined into the next one. That single nonlinear step is what stops the composition from collapsing back into an affine map, and it's what lets the same architecture bend its boundary into a curve, then another curve, until it can wrap around a shape as convoluted as the data demands.</p>
+    <p>The figure below trains a real network &mdash; live, by actual backpropagation and gradient descent, right here in your browser &mdash; and borrows its controls from <a href="https://playground.tensorflow.org">TensorFlow Playground</a>, the tool this series of posts originally set out to mimic. Pick a problem type and a dataset, shape the network, and press Play to watch training unfold on the network diagram (edge thickness is |weight|, blue is positive, orange is negative) and on the output panel next to it.</p>
   </article>
 
   <figure>
-    <div class="controls">
-      <div class="arch-group" id="arch-group">
-        <button class="btn" data-mode="none">No hidden layer</button>
-        <button class="btn active" data-mode="identity">Hidden layer, linear</button>
-        <button class="btn" data-mode="tanh">Hidden layer, tanh</button>
+    <div class="controls" id="model-controls">
+      <div class="field">
+        <span class="field-label">Learning rate</span>
+        <select class="pf-select" id="lr-select">
+          <option value="0.00001">0.00001</option>
+          <option value="0.0001">0.0001</option>
+          <option value="0.001">0.001</option>
+          <option value="0.003">0.003</option>
+          <option value="0.01">0.01</option>
+          <option value="0.03" selected>0.03</option>
+          <option value="0.1">0.1</option>
+          <option value="0.3">0.3</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="10">10</option>
+        </select>
       </div>
+      <div class="field">
+        <span class="field-label">Activation</span>
+        <div class="btn-group" id="activation-group">
+          <button class="btn" data-value="relu">ReLU</button>
+          <button class="btn active" data-value="tanh">Tanh</button>
+          <button class="btn" data-value="sigmoid">Sigmoid</button>
+          <button class="btn" data-value="linear">Linear</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Regularization</span>
+        <div class="btn-group" id="reg-group">
+          <button class="btn active" data-value="none">None</button>
+          <button class="btn" data-value="L1">L1</button>
+          <button class="btn" data-value="L2">L2</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">Regularization rate</span>
+        <select class="pf-select" id="regrate-select">
+          <option value="0" selected>0</option>
+          <option value="0.001">0.001</option>
+          <option value="0.003">0.003</option>
+          <option value="0.01">0.01</option>
+          <option value="0.03">0.03</option>
+          <option value="0.1">0.1</option>
+          <option value="0.3">0.3</option>
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+      <div class="field">
+        <span class="field-label">Problem type</span>
+        <div class="btn-group" id="problem-group">
+          <button class="btn active" data-value="classification">Classification</button>
+          <button class="btn" data-value="regression">Regression</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls run-controls">
       <button class="btn wide" id="step-btn">Step</button>
       <button class="btn wide" id="play-btn">Play</button>
       <button class="btn" id="reset-btn">Reset</button>
+      <label class="check"><input type="checkbox" id="test-data-toggle"> Show test data</label>
     </div>
+
     <div class="readout">
       <span>epoch <b id="ro-epoch">0</b></span>
-      <span>loss <b id="ro-loss">&mdash;</b></span>
-      <span>accuracy <b id="ro-acc">&mdash;</b></span>
+      <span>training loss <b id="ro-loss-train">&mdash;</b></span>
+      <span>test loss <b id="ro-loss-test">&mdash;</b></span>
     </div>
+
     <div class="panels">
+      <div class="panel">
+        <div class="panel-title">Data</div>
+        <div class="field">
+          <span class="field-label">Which dataset</span>
+          <div class="btn-group" id="dataset-group"></div>
+        </div>
+        <div class="slider-field">
+          <div class="row"><span>Ratio train data</span><b id="ratio-val">50%</b></div>
+          <input type="range" id="ratio-slider" min="10" max="90" step="10" value="50">
+        </div>
+        <div class="slider-field">
+          <div class="row"><span>Noise level</span><b id="noise-val">0</b></div>
+          <input type="range" id="noise-slider" min="0" max="50" step="5" value="0">
+        </div>
+        <div class="slider-field">
+          <div class="row"><span>Batch size</span><b id="batch-val">10</b></div>
+          <input type="range" id="batch-slider" min="1" max="30" step="1" value="10">
+        </div>
+        <div class="stepper-field">
+          <span># of hidden layers</span>
+          <div class="stepper">
+            <button class="btn" id="layers-minus">&minus;</button>
+            <b id="layers-val">1</b>
+            <button class="btn" id="layers-plus">+</button>
+          </div>
+        </div>
+      </div>
       <div class="panel">
         <div class="panel-title">Network</div>
         <div class="nn-stage">
@@ -298,7 +435,7 @@
         </div>
       </div>
       <div class="panel">
-        <div class="panel-title">Decision boundary</div>
+        <div class="panel-title">Output</div>
         <div class="nn-stage">
           <canvas id="nn-boundary"></canvas>
           <svg id="nn-points" viewBox="0 0 380 380"></svg>
@@ -308,22 +445,23 @@
     <div class="legend">
       <span><span class="dot" style="color:var(--wpos)"></span>positive weight</span>
       <span><span class="dot" style="color:var(--wneg)"></span>negative weight</span>
-      <span><span class="dot" style="color:var(--wpos)"></span>inner disk, label 0</span>
-      <span><span class="dot" style="color:var(--wneg)"></span>outer ring, label 1</span>
+      <span><span class="dot" style="color:var(--wpos)"></span>label &minus;1 / low value</span>
+      <span><span class="dot" style="color:var(--wneg)"></span>label +1 / high value</span>
+      <span><span class="ring" style="color:var(--ink-2)"></span>test point (with "Show test data")</span>
     </div>
-    <figcaption>Fig. 5 &mdash; a tiny network training live, right here, on a ring dataset. Same seed and weight initialization every time you reset, so the story is reproducible.</figcaption>
+    <figcaption>Fig. 5 &mdash; a tiny network training live, right here, modeled on TensorFlow Playground. Data and weight initialization are seeded, so resetting any configuration reproduces the exact same run.</figcaption>
   </figure>
 
   <div class="callout">
-    <span class="q">Try it: switch to "Hidden layer, linear" and press Play.</span>
-    It converges in well under a hundred epochs to a loss of 0.6888 and 57.9% accuracy &mdash; and switching to "No hidden layer" and pressing Play lands on that exact same loss, to four decimal places. Eight extra hidden units, zero extra expressive power.
+    <span class="q">Try it: with the default circle dataset, switch Activation to Linear (or drag "# of hidden layers" down to 0) and press Play.</span>
+    Both settle at essentially the same loss &mdash; about 0.50 on train and test, no better than a coin flip &mdash; because stacking purely linear layers is still just one linear map in disguise, no matter how many units sit in between. Switch Activation back to Tanh on that same architecture and, left running, the loss pushes well under 0.01 long before the epoch cap.
   </div>
 
   <article>
-    <p>For related territory &mdash; why some optimizers reach a minimum faster than others, and why L1 regularization can zero out a weight that L2 never quite can &mdash; see the <a href="/ml/optimizers">optimizers post</a> and the <a href="/ml/regularization">regularization post</a>.</p>
+    <p>For related territory &mdash; why some optimizers reach a minimum faster than others, and why L1 regularization can zero out a weight that L2 never quite can (switch Regularization to L1 above and watch the faintest edges in the network diagram disappear as training proceeds) &mdash; see the <a href="/ml/optimizers">optimizers post</a> and the <a href="/ml/regularization">regularization post</a>.</p>
   </article>
 
-  <footer>The network above is trained by real backpropagation and gradient descent, computed live in your browser.</footer>
+  <footer>The network above is trained by real backpropagation and gradient descent, computed live in your browser. Its controls and datasets are modeled on Google's <a href="https://github.com/tensorflow/playground">TensorFlow Playground</a> (Apache License 2.0).</footer>
 </div>
 <script>
 (function(){
@@ -352,118 +490,257 @@
     };
   }
 
-  // ---- dataset: a small disk (label 0) inside a ring (label 1), seeded so
-  // it's identical on every load and every reset ----
-  const DATA_SEED = 42, INIT_SEED = 7, H = 8, LR = 1.5, EPOCH_CAP = 1500;
-  const DOM = { min: -1.3, max: 1.3 };
-  const SIZE = 380, RES = 120;
-
-  function makeDataset(seed){
-    const rng = mulberry32(seed);
-    const pts = [];
-    const N = 70;
-    for (let i=0;i<N;i++){
-      const a = rng()*2*Math.PI, r = rng()*0.45;
-      pts.push({ x: r*Math.cos(a), y: r*Math.sin(a), label: 0 });
-    }
-    for (let i=0;i<N;i++){
-      const a = rng()*2*Math.PI, r = 0.75 + rng()*0.35;
-      pts.push({ x: r*Math.cos(a), y: r*Math.sin(a), label: 1 });
-    }
-    return pts;
+  // ---------- dataset generators, ported from tensorflow/playground's
+  // src/dataset.ts (Apache-2.0), with Math.random() replaced by a seeded
+  // RNG so every reset reproduces the same run. ----------
+  function randUniform(rng, a, b){ return rng()*(b-a)+a; }
+  function normalRandom(rng, mean, variance){
+    let v1, v2, s;
+    do { v1 = 2*rng()-1; v2 = 2*rng()-1; s = v1*v1 + v2*v2; } while (s > 1 || s === 0);
+    const result = Math.sqrt(-2*Math.log(s)/s) * v1;
+    return mean + Math.sqrt(variance)*result;
   }
-  const data = makeDataset(DATA_SEED);
-
-  function sigmoid(z){ return 1/(1+Math.exp(-z)); }
-
-  function makeNet(mode, seed){
-    const rng = mulberry32(seed);
-    const g = () => (rng()*2 - 1) * 0.7;
-    if (mode === 'none') return { mode, w: [g(), g()], b: g() };
-    const W1 = Array.from({length:H}, () => [g(), g()]);
-    const b1 = Array.from({length:H}, () => g());
-    const W2 = Array.from({length:H}, () => g());
-    const b2 = g();
-    return { mode, W1, b1, W2, b2 };
+  function dist(ax, ay, bx, by){ const dx = ax-bx, dy = ay-by; return Math.sqrt(dx*dx + dy*dy); }
+  function lerp(domain, range, v){
+    const t = (v - domain[0]) / (domain[1] - domain[0]);
+    return range[0] + t*(range[1]-range[0]);
+  }
+  function lerpClamped(domain, range, v){
+    let t = (v - domain[0]) / (domain[1] - domain[0]);
+    t = clamp(t, 0, 1);
+    return range[0] + t*(range[1]-range[0]);
+  }
+  function shuffle(rng, arr){
+    let counter = arr.length;
+    while (counter > 0){
+      const index = Math.floor(rng()*counter);
+      counter--;
+      const tmp = arr[counter];
+      arr[counter] = arr[index];
+      arr[index] = tmp;
+    }
   }
 
-  function forward(net, x, y){
-    if (net.mode === 'none'){
-      const z = net.w[0]*x + net.w[1]*y + net.b;
-      return { out: sigmoid(z) };
-    }
-    const h = new Array(H);
-    for (let i=0;i<H;i++){
-      const zi = net.W1[i][0]*x + net.W1[i][1]*y + net.b1[i];
-      h[i] = net.mode === 'tanh' ? Math.tanh(zi) : zi;
-    }
-    let z2 = net.b2;
-    for (let i=0;i<H;i++) z2 += net.W2[i]*h[i];
-    return { out: sigmoid(z2), h };
-  }
+  const N_SAMPLES = 300;
 
-  function trainEpoch(net, lr){
-    if (net.mode === 'none'){
-      let gw0=0, gw1=0, gb=0, loss=0;
-      for (const p of data){
-        const { out } = forward(net, p.x, p.y);
-        const err = out - p.label;
-        gw0 += err*p.x; gw1 += err*p.y; gb += err;
-        loss += -(p.label*Math.log(out+1e-9) + (1-p.label)*Math.log(1-out+1e-9));
+  const CLS_DATASETS = {
+    circle(rng, n, noise){
+      const pts = [], radius = 5;
+      const label = (x,y) => dist(x,y,0,0) < radius*0.5 ? 1 : -1;
+      for (let i=0;i<n/2;i++){
+        const r = randUniform(rng,0,radius*0.5), a = randUniform(rng,0,2*Math.PI);
+        const x = r*Math.sin(a), y = r*Math.cos(a);
+        const nx = randUniform(rng,-radius,radius)*noise, ny = randUniform(rng,-radius,radius)*noise;
+        pts.push({x, y, label: label(x+nx, y+ny)});
       }
-      const n = data.length;
-      net.w[0] -= lr*gw0/n; net.w[1] -= lr*gw1/n; net.b -= lr*gb/n;
-      return loss/n;
-    }
-    const gW1 = Array.from({length:H}, () => [0,0]);
-    const gb1 = new Array(H).fill(0);
-    const gW2 = new Array(H).fill(0);
-    let gb2 = 0, loss = 0;
-    for (const p of data){
-      const { out, h } = forward(net, p.x, p.y);
-      const err = out - p.label;
-      for (let i=0;i<H;i++) gW2[i] += err*h[i];
-      gb2 += err;
-      for (let i=0;i<H;i++){
-        const dAct = net.mode === 'tanh' ? (1 - h[i]*h[i]) : 1;
-        const dz1 = err*net.W2[i]*dAct;
-        gW1[i][0] += dz1*p.x; gW1[i][1] += dz1*p.y; gb1[i] += dz1;
+      for (let i=0;i<n/2;i++){
+        const r = randUniform(rng,radius*0.7,radius), a = randUniform(rng,0,2*Math.PI);
+        const x = r*Math.sin(a), y = r*Math.cos(a);
+        const nx = randUniform(rng,-radius,radius)*noise, ny = randUniform(rng,-radius,radius)*noise;
+        pts.push({x, y, label: label(x+nx, y+ny)});
       }
-      loss += -(p.label*Math.log(out+1e-9) + (1-p.label)*Math.log(1-out+1e-9));
+      return pts;
+    },
+    xor(rng, n, noise){
+      const pts = [];
+      for (let i=0;i<n;i++){
+        let x = randUniform(rng,-5,5); const pad = 0.3; x += x>0 ? pad : -pad;
+        let y = randUniform(rng,-5,5); y += y>0 ? pad : -pad;
+        const nx = randUniform(rng,-5,5)*noise, ny = randUniform(rng,-5,5)*noise;
+        pts.push({x, y, label: (x+nx)*(y+ny) >= 0 ? 1 : -1});
+      }
+      return pts;
+    },
+    gauss(rng, n, noise){
+      const pts = [];
+      const variance = lerpClamped([0,0.5],[0.5,4], noise);
+      const genGauss = (cx,cy,label) => {
+        for (let i=0;i<n/2;i++) pts.push({x: normalRandom(rng,cx,variance), y: normalRandom(rng,cy,variance), label});
+      };
+      genGauss(2,2,1);
+      genGauss(-2,-2,-1);
+      return pts;
+    },
+    spiral(rng, n, noise){
+      const pts = [], half = n/2;
+      const genSpiral = (deltaT,label) => {
+        for (let i=0;i<half;i++){
+          const r = i/half*5, t = 1.75*i/half*2*Math.PI + deltaT;
+          const x = r*Math.sin(t) + randUniform(rng,-1,1)*noise;
+          const y = r*Math.cos(t) + randUniform(rng,-1,1)*noise;
+          pts.push({x, y, label});
+        }
+      };
+      genSpiral(0,1);
+      genSpiral(Math.PI,-1);
+      return pts;
     }
-    const n = data.length;
-    for (let i=0;i<H;i++){
-      net.W1[i][0] -= lr*gW1[i][0]/n; net.W1[i][1] -= lr*gW1[i][1]/n; net.b1[i] -= lr*gb1[i]/n;
-      net.W2[i] -= lr*gW2[i]/n;
+  };
+
+  const REG_DATASETS = {
+    plane(rng, n, noise){
+      const pts = [], radius = 6;
+      const getLabel = (x,y) => lerp([-10,10],[-1,1], x+y);
+      for (let i=0;i<n;i++){
+        const x = randUniform(rng,-radius,radius), y = randUniform(rng,-radius,radius);
+        const nx = randUniform(rng,-radius,radius)*noise, ny = randUniform(rng,-radius,radius)*noise;
+        pts.push({x, y, label: getLabel(x+nx, y+ny)});
+      }
+      return pts;
+    },
+    regGauss(rng, n, noise){
+      const pts = [], radius = 6;
+      const gaussians = [[-4,2.5,1],[0,2.5,-1],[4,2.5,1],[-4,-2.5,-1],[0,-2.5,1],[4,-2.5,-1]];
+      const getLabel = (x,y) => {
+        let label = 0;
+        for (const [cx,cy,sign] of gaussians){
+          const v = sign * lerpClamped([0,2],[1,0], dist(x,y,cx,cy));
+          if (Math.abs(v) > Math.abs(label)) label = v;
+        }
+        return label;
+      };
+      for (let i=0;i<n;i++){
+        const x = randUniform(rng,-radius,radius), y = randUniform(rng,-radius,radius);
+        const nx = randUniform(rng,-radius,radius)*noise, ny = randUniform(rng,-radius,radius)*noise;
+        pts.push({x, y, label: getLabel(x+nx, y+ny)});
+      }
+      return pts;
     }
-    net.b2 -= lr*gb2/n;
-    return loss/n;
+  };
+
+  const DATASET_LABELS = {
+    circle: 'Circle', xor: 'XOR', gauss: 'Gaussian', spiral: 'Spiral',
+    plane: 'Plane', regGauss: 'Gaussian clusters'
+  };
+
+  // ---------- network: nodes/links, ported from tensorflow/playground's
+  // src/nn.ts (Apache-2.0) as a plain object graph so architecture (layer
+  // count and width) can change freely at runtime. ----------
+  const ACTIVATIONS = {
+    relu:    { output: x => Math.max(0,x), der: x => x<=0 ? 0 : 1 },
+    tanh:    { output: x => Math.tanh(x), der: x => { const o = Math.tanh(x); return 1-o*o; } },
+    sigmoid: { output: x => 1/(1+Math.exp(-x)), der: x => { const o = 1/(1+Math.exp(-x)); return o*(1-o); } },
+    linear:  { output: x => x, der: () => 1 }
+  };
+  const REGULARIZATIONS = {
+    none: null,
+    L1: { der: w => w<0 ? -1 : (w>0 ? 1 : 0) },
+    L2: { der: w => w }
+  };
+
+  function buildNetwork(shape, hiddenAct, outputAct, rng){
+    const net = [];
+    for (let l=0;l<shape.length;l++){
+      const layer = [];
+      for (let i=0;i<shape[l];i++){
+        layer.push({
+          idx: i, bias: 0.1, output: 0, totalInput: 0,
+          outputDer: 0, inputDer: 0, accInputDer: 0, numAccumulatedDers: 0,
+          activation: l === shape.length-1 ? outputAct : hiddenAct,
+          inputLinks: [], outputs: []
+        });
+      }
+      net.push(layer);
+    }
+    for (let l=1;l<net.length;l++){
+      for (const node of net[l]){
+        for (const prev of net[l-1]){
+          const link = { source: prev, dest: node, weight: (rng()*2-1)*0.5, isDead: false, errorDer: 0, accErrorDer: 0, numAccumulatedDers: 0, el: null };
+          prev.outputs.push(link);
+          node.inputLinks.push(link);
+        }
+      }
+    }
+    return net;
   }
 
-  function computeLoss(net){
+  function forwardProp(net, x, y){
+    net[0][0].output = x;
+    net[0][1].output = y;
+    for (let l=1;l<net.length;l++){
+      for (const node of net[l]){
+        let total = node.bias;
+        for (const link of node.inputLinks) total += link.weight*link.source.output;
+        node.totalInput = total;
+        node.output = node.activation.output(total);
+      }
+    }
+    return net[net.length-1][0].output;
+  }
+
+  function backProp(net, target){
+    const outNode = net[net.length-1][0];
+    outNode.outputDer = outNode.output - target; // d(0.5*(out-target)^2)/d(out)
+    for (let l=net.length-1; l>=1; l--){
+      const layer = net[l];
+      for (const node of layer){
+        node.inputDer = node.outputDer * node.activation.der(node.totalInput);
+        node.accInputDer += node.inputDer;
+        node.numAccumulatedDers++;
+      }
+      for (const node of layer){
+        for (const link of node.inputLinks){
+          if (link.isDead) continue;
+          link.errorDer = node.inputDer * link.source.output;
+          link.accErrorDer += link.errorDer;
+          link.numAccumulatedDers++;
+        }
+      }
+      if (l === 1) continue;
+      for (const node of net[l-1]){
+        node.outputDer = 0;
+        for (const link of node.outputs) node.outputDer += link.weight*link.dest.inputDer;
+      }
+    }
+  }
+
+  function updateWeights(net, lr, regRate, regFn){
+    for (let l=1;l<net.length;l++){
+      for (const node of net[l]){
+        if (node.numAccumulatedDers > 0){
+          node.bias -= lr*node.accInputDer/node.numAccumulatedDers;
+          node.accInputDer = 0; node.numAccumulatedDers = 0;
+        }
+        for (const link of node.inputLinks){
+          if (link.isDead) continue;
+          const regulDer = regFn ? regFn.der(link.weight) : 0;
+          if (link.numAccumulatedDers > 0){
+            link.weight -= (lr/link.numAccumulatedDers)*link.accErrorDer;
+            const newWeight = link.weight - lr*regRate*regulDer;
+            if (regFn === REGULARIZATIONS.L1 && link.weight*newWeight < 0){
+              link.weight = 0; link.isDead = true;
+            } else {
+              link.weight = newWeight;
+            }
+            link.accErrorDer = 0; link.numAccumulatedDers = 0;
+          }
+        }
+      }
+    }
+  }
+
+  function squareError(output, target){ return 0.5*(output-target)*(output-target); }
+
+  function getLoss(net, data){
     let loss = 0;
-    for (const p of data){
-      const { out } = forward(net, p.x, p.y);
-      loss += -(p.label*Math.log(out+1e-9) + (1-p.label)*Math.log(1-out+1e-9));
-    }
+    for (const p of data) loss += squareError(forwardProp(net, p.x, p.y), p.label);
     return loss/data.length;
   }
 
-  function accuracy(net){
-    let correct = 0;
-    for (const p of data){
-      const { out } = forward(net, p.x, p.y);
-      if ((out >= 0.5 ? 1 : 0) === p.label) correct++;
-    }
-    return correct/data.length;
+  function oneEpoch(net, trainData, lr, regRate, regFn, batchSize){
+    trainData.forEach((p, i) => {
+      forwardProp(net, p.x, p.y);
+      backProp(net, p.label);
+      if ((i+1) % batchSize === 0) updateWeights(net, lr, regRate, regFn);
+    });
   }
 
-  // ---- decision-boundary heatmap: low-res canvas bitmap, stretched via CSS ----
+  // ---- decision/value heatmap: low-res canvas bitmap, stretched via CSS.
   // 3-stop diverging ramps, endpoints -> midpoint -> endpoint, kept
   // strictly monotonic in lightness on each half. An extra pair of
   // intermediate stops (tried first) made dark mode's ramp dip-then-rise
-  // in lightness, which shows up as a hard double ring around the 0.5
-  // boundary instead of one smooth gradient.
+  // in lightness, which shows up as a hard double ring around the
+  // zero-crossing instead of one smooth gradient. ----
   const LIGHT_STOPS = ['#2a78d6', '#fcfcfb', '#d9591f'];
   const DARK_STOPS  = ['#3987e5', '#4a4944', '#d95926'];
   function isDarkMode(){
@@ -483,6 +760,12 @@
     const c0 = hexToRgb(stops[i]), c1 = hexToRgb(stops[i+1]);
     return [0,1,2].map(k => Math.round(c0[k] + (c1[k]-c0[k])*f));
   }
+  // outputs / labels live on [-1, 1] (tanh classification output, or a
+  // regression target/prediction); map that onto the [0,1] color ramp.
+  function normOut(v){ return clamp((v+1)/2, 0, 1); }
+
+  const DOM = { min: -6, max: 6 };
+  const SIZE = 380, RES = 120;
 
   const boundaryCanvas = document.getElementById('nn-boundary');
   boundaryCanvas.width = RES; boundaryCanvas.height = RES;
@@ -496,8 +779,8 @@
       const y = DOM.max - (j+0.5)/RES*span;
       for (let i=0;i<RES;i++){
         const x = DOM.min + (i+0.5)/RES*span;
-        const { out } = forward(net, x, y);
-        const [r,g,b] = colorAt(stops, out);
+        const out = forwardProp(net, x, y);
+        const [r,g,b] = colorAt(stops, normOut(out));
         const idx = (j*RES+i)*4;
         img.data[idx]=r; img.data[idx+1]=g; img.data[idx+2]=b; img.data[idx+3]=255;
       }
@@ -505,98 +788,140 @@
     bctx.putImageData(img, 0, 0);
   }
 
-  // ---- data-point overlay, built once, positions never change ----
+  // ---- data-point overlay: rebuilt whenever the dataset regenerates ----
   const pointsSvg = document.getElementById('nn-points');
-  data.forEach(p => {
-    const [px,py] = mapPt(p.x, p.y, DOM, SIZE, 8);
-    pointsSvg.appendChild(svgEl('circle', {
-      cx: px.toFixed(1), cy: py.toFixed(1), r: 4,
-      fill: p.label === 0 ? 'var(--wpos)' : 'var(--wneg)',
-      stroke: 'var(--bg)', 'stroke-width': 1.2
-    }));
-  });
+  let testGroupEl = null;
+
+  function buildPointsSvg(){
+    pointsSvg.innerHTML = '';
+    const stops = isDarkMode() ? DARK_STOPS : LIGHT_STOPS;
+    const trainG = svgEl('g', { id: 'train-pts' });
+    const testG = svgEl('g', { id: 'test-pts' });
+    testG.style.display = showTestData ? '' : 'none';
+    function addPoint(g, p, isTest){
+      const [px,py] = mapPt(p.x, p.y, DOM, SIZE, 8);
+      const [r,gg,b] = colorAt(stops, normOut(p.label));
+      const fill = `rgb(${r},${gg},${b})`;
+      g.appendChild(svgEl('circle', {
+        cx: px.toFixed(1), cy: py.toFixed(1),
+        r: isTest ? 4.4 : 3.6,
+        fill,
+        stroke: isTest ? 'var(--ink-2)' : 'var(--bg)',
+        'stroke-width': isTest ? 1.6 : 1
+      }));
+    }
+    trainData.forEach(p => addPoint(trainG, p, false));
+    testData.forEach(p => addPoint(testG, p, true));
+    pointsSvg.appendChild(trainG);
+    pointsSvg.appendChild(testG);
+    testGroupEl = testG;
+  }
 
   // ---- network diagram: nodes/edges rebuilt on architecture change,
   // mutated in place every training step ----
   const networkSvg = document.getElementById('nn-svg');
-  let edgesDirect = [], edgesW1 = [], edgesW2 = [];
 
-  function setEdgeStyle(el, w){
-    el.setAttribute('stroke-width', clamp(1 + 4*Math.abs(w), 1, 7).toFixed(2));
+  function setEdgeStyle(el, link){
+    const w = link.weight;
+    if (link.isDead){
+      el.setAttribute('stroke-width', 1);
+      el.setAttribute('stroke-opacity', 0.08);
+    } else {
+      el.setAttribute('stroke-width', clamp(1 + 4*Math.abs(w), 1, 7).toFixed(2));
+      el.setAttribute('stroke-opacity', clamp(0.35 + 0.5*Math.abs(w), 0.35, 0.95).toFixed(2));
+    }
     el.setAttribute('stroke', w >= 0 ? 'var(--wpos)' : 'var(--wneg)');
-    el.setAttribute('stroke-opacity', clamp(0.35 + 0.5*Math.abs(w), 0.35, 0.95).toFixed(2));
   }
 
-  function node(cx, cy, r){
+  function nodeCircle(cx, cy, r){
     return svgEl('circle', { cx, cy, r, fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1.5 });
   }
 
-  function buildNetworkSvg(mode){
+  function buildNetworkSvg(net){
     networkSvg.innerHTML = '';
-    edgesDirect = []; edgesW1 = []; edgesW2 = [];
-    const inX = 55, outX = 325;
-    const inYs = [140, 240];
-
-    if (mode === 'none'){
-      const outY = 190;
-      inYs.forEach((y, i) => {
-        const el = svgEl('line', { x1: inX, y1: y, x2: outX, y2: outY });
-        networkSvg.appendChild(el);
-        edgesDirect.push({ el, i });
+    const L = net.length;
+    const colX = net.map((_, l) => L === 1 ? 190 : 55 + l*(270/(L-1)));
+    const rowY = net.map(layer => {
+      const n = layer.length;
+      if (n === 1) return [190];
+      const top = 30, bot = 350;
+      return Array.from({length:n}, (_, i) => top + i*(bot-top)/(n-1));
+    });
+    for (let l=1;l<L;l++){
+      net[l].forEach((node, i) => {
+        node.inputLinks.forEach(link => {
+          const el = svgEl('line', { x1: colX[l-1], y1: rowY[l-1][link.source.idx], x2: colX[l], y2: rowY[l][i] });
+          networkSvg.appendChild(el);
+          link.el = el;
+        });
       });
-      inYs.forEach(y => networkSvg.appendChild(node(inX, y, 13)));
-      networkSvg.appendChild(node(outX, outY, 13));
-      return;
     }
-
-    const hidX = 190, outY = 190;
-    const hidYs = Array.from({length:H}, (_,i) => 30 + i*((350-30)/(H-1)));
-    inYs.forEach((y, i) => {
-      hidYs.forEach((hy, j) => {
-        const el = svgEl('line', { x1: inX, y1: y, x2: hidX, y2: hy });
-        networkSvg.appendChild(el);
-        edgesW1.push({ el, i, j });
+    for (let l=0;l<L;l++){
+      net[l].forEach((node, i) => {
+        const r = (l === 0 || l === L-1) ? 13 : 9;
+        networkSvg.appendChild(nodeCircle(colX[l], rowY[l][i], r));
       });
-    });
-    hidYs.forEach((hy, j) => {
-      const el = svgEl('line', { x1: hidX, y1: hy, x2: outX, y2: outY });
-      networkSvg.appendChild(el);
-      edgesW2.push({ el, j });
-    });
-    inYs.forEach(y => networkSvg.appendChild(node(inX, y, 13)));
-    hidYs.forEach(hy => networkSvg.appendChild(node(hidX, hy, 9)));
-    networkSvg.appendChild(node(outX, outY, 13));
+    }
   }
 
   function updateNetworkVisual(net){
-    if (net.mode === 'none'){
-      edgesDirect.forEach(e => setEdgeStyle(e.el, net.w[e.i]));
-    } else {
-      edgesW1.forEach(e => setEdgeStyle(e.el, net.W1[e.j][e.i]));
-      edgesW2.forEach(e => setEdgeStyle(e.el, net.W2[e.j]));
+    for (let l=1;l<net.length;l++){
+      for (const node of net[l]){
+        for (const link of node.inputLinks) setEdgeStyle(link.el, link);
+      }
     }
   }
 
   // ---- state + controls ----
-  let mode = 'identity';
-  let net = makeNet(mode, INIT_SEED);
-  let epoch = 0;
-  let lastLoss = computeLoss(net);
-  let training = false;
-  let frameCount = 0;
+  const DATA_SEED = 42, INIT_SEED = 7, HIDDEN_WIDTH = 8, EPOCH_CAP = 5000;
 
-  const stepBtn = document.getElementById('step-btn');
-  const playBtn = document.getElementById('play-btn');
-  const resetBtn = document.getElementById('reset-btn');
-  const archBtns = Array.from(document.querySelectorAll('#arch-group .btn'));
-  const roEpoch = document.getElementById('ro-epoch');
-  const roLoss = document.getElementById('ro-loss');
-  const roAcc = document.getElementById('ro-acc');
+  let problem = 'classification';
+  let clsDataset = 'circle';
+  let regDataset = 'plane';
+  let learningRate = 0.03;
+  let activation = 'tanh';
+  let regularization = 'none';
+  let regularizationRate = 0;
+  let trainRatio = 50;
+  let noise = 0;
+  let batchSize = 10;
+  let hiddenLayers = 1;
+  let showTestData = false;
+
+  let trainData = [], testData = [];
+  let net, epoch = 0, lossTrain = 0, lossTest = 0, training = false, frameCount = 0;
+
+  function currentDatasetKey(){ return problem === 'regression' ? regDataset : clsDataset; }
+  function currentGenerator(){
+    return problem === 'regression' ? REG_DATASETS[regDataset] : CLS_DATASETS[clsDataset];
+  }
+
+  function generateData(){
+    const rng = mulberry32(DATA_SEED);
+    const raw = currentGenerator()(rng, N_SAMPLES, noise/100);
+    shuffle(rng, raw);
+    const splitIdx = Math.floor(raw.length * trainRatio/100);
+    trainData = raw.slice(0, splitIdx);
+    testData = raw.slice(splitIdx);
+    buildPointsSvg();
+  }
+
+  function currentShape(){
+    const shape = [2];
+    for (let i=0;i<hiddenLayers;i++) shape.push(HIDDEN_WIDTH);
+    shape.push(1);
+    return shape;
+  }
+
+  function stopTraining(){
+    training = false;
+    playBtn.textContent = 'Play';
+  }
 
   function updateReadout(){
     roEpoch.textContent = epoch;
-    roLoss.textContent = lastLoss.toFixed(4);
-    roAcc.textContent = Math.round(accuracy(net)*100) + '%';
+    roLossTrain.textContent = lossTrain.toFixed(4);
+    roLossTest.textContent = lossTest.toFixed(4);
   }
 
   function renderAll(){
@@ -605,30 +930,130 @@
     updateReadout();
   }
 
-  function stepEpochs(n){
-    for (let k=0; k<n && epoch<EPOCH_CAP; k++){
-      lastLoss = trainEpoch(net, LR);
-      epoch++;
-    }
-  }
-
-  function stopTraining(){
-    training = false;
-    playBtn.textContent = 'Play';
-  }
-
-  function switchMode(newMode){
+  function reset(regenerateData){
     stopTraining();
-    mode = newMode;
-    archBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === newMode));
-    net = makeNet(mode, INIT_SEED);
     epoch = 0;
-    lastLoss = computeLoss(net);
-    buildNetworkSvg(mode);
+    if (regenerateData) generateData();
+    const outputAct = problem === 'regression' ? ACTIVATIONS.linear : ACTIVATIONS.tanh;
+    net = buildNetwork(currentShape(), ACTIVATIONS[activation], outputAct, mulberry32(INIT_SEED));
+    buildNetworkSvg(net);
+    lossTrain = getLoss(net, trainData);
+    lossTest = getLoss(net, testData);
     renderAll();
   }
 
-  archBtns.forEach(b => b.addEventListener('click', () => switchMode(b.dataset.mode)));
+  function stepEpochs(n){
+    const regFn = REGULARIZATIONS[regularization];
+    for (let k=0; k<n && epoch<EPOCH_CAP; k++){
+      oneEpoch(net, trainData, learningRate, regularizationRate, regFn, batchSize);
+      epoch++;
+    }
+    lossTrain = getLoss(net, trainData);
+    lossTest = getLoss(net, testData);
+  }
+
+  // ---- wiring ----
+  const stepBtn = document.getElementById('step-btn');
+  const playBtn = document.getElementById('play-btn');
+  const resetBtn = document.getElementById('reset-btn');
+  const roEpoch = document.getElementById('ro-epoch');
+  const roLossTrain = document.getElementById('ro-loss-train');
+  const roLossTest = document.getElementById('ro-loss-test');
+  const lrSelect = document.getElementById('lr-select');
+  const regrateSelect = document.getElementById('regrate-select');
+  const activationGroup = document.getElementById('activation-group');
+  const regGroup = document.getElementById('reg-group');
+  const problemGroup = document.getElementById('problem-group');
+  const datasetGroup = document.getElementById('dataset-group');
+  const ratioSlider = document.getElementById('ratio-slider');
+  const noiseSlider = document.getElementById('noise-slider');
+  const batchSlider = document.getElementById('batch-slider');
+  const ratioVal = document.getElementById('ratio-val');
+  const noiseVal = document.getElementById('noise-val');
+  const batchVal = document.getElementById('batch-val');
+  const layersVal = document.getElementById('layers-val');
+  const layersMinus = document.getElementById('layers-minus');
+  const layersPlus = document.getElementById('layers-plus');
+  const testDataToggle = document.getElementById('test-data-toggle');
+
+  function setActiveButton(group, value){
+    Array.from(group.children).forEach(b => b.classList.toggle('active', b.dataset.value === value));
+  }
+
+  function buildDatasetButtons(){
+    datasetGroup.innerHTML = '';
+    const keys = problem === 'regression' ? ['plane', 'regGauss'] : ['circle', 'xor', 'gauss', 'spiral'];
+    keys.forEach(key => {
+      const b = document.createElement('button');
+      b.className = 'btn' + (key === currentDatasetKey() ? ' active' : '');
+      b.dataset.value = key;
+      b.textContent = DATASET_LABELS[key];
+      b.addEventListener('click', () => {
+        if (problem === 'regression') regDataset = key; else clsDataset = key;
+        setActiveButton(datasetGroup, key);
+        reset(true);
+      });
+      datasetGroup.appendChild(b);
+    });
+  }
+
+  lrSelect.addEventListener('change', () => { learningRate = parseFloat(lrSelect.value); });
+
+  regrateSelect.addEventListener('change', () => {
+    regularizationRate = parseFloat(regrateSelect.value);
+    reset(false);
+  });
+
+  Array.from(activationGroup.children).forEach(b => b.addEventListener('click', () => {
+    activation = b.dataset.value;
+    setActiveButton(activationGroup, activation);
+    reset(false);
+  }));
+
+  Array.from(regGroup.children).forEach(b => b.addEventListener('click', () => {
+    regularization = b.dataset.value;
+    setActiveButton(regGroup, regularization);
+    reset(false);
+  }));
+
+  Array.from(problemGroup.children).forEach(b => b.addEventListener('click', () => {
+    problem = b.dataset.value;
+    setActiveButton(problemGroup, problem);
+    buildDatasetButtons();
+    reset(true);
+  }));
+
+  ratioSlider.addEventListener('input', () => {
+    trainRatio = +ratioSlider.value;
+    ratioVal.textContent = trainRatio + '%';
+    reset(true);
+  });
+  noiseSlider.addEventListener('input', () => {
+    noise = +noiseSlider.value;
+    noiseVal.textContent = noise;
+    reset(true);
+  });
+  batchSlider.addEventListener('input', () => {
+    batchSize = +batchSlider.value;
+    batchVal.textContent = batchSize;
+    reset(false);
+  });
+
+  layersMinus.addEventListener('click', () => {
+    hiddenLayers = clamp(hiddenLayers-1, 0, 4);
+    layersVal.textContent = hiddenLayers;
+    reset(false);
+  });
+  layersPlus.addEventListener('click', () => {
+    hiddenLayers = clamp(hiddenLayers+1, 0, 4);
+    layersVal.textContent = hiddenLayers;
+    reset(false);
+  });
+
+  testDataToggle.addEventListener('change', () => {
+    showTestData = testDataToggle.checked;
+    if (testGroupEl) testGroupEl.style.display = showTestData ? '' : 'none';
+  });
 
   stepBtn.addEventListener('click', () => {
     stopTraining();
@@ -653,20 +1078,17 @@
     if (training){ frameCount = 0; requestAnimationFrame(frame); }
   });
 
-  resetBtn.addEventListener('click', () => {
-    stopTraining();
-    net = makeNet(mode, INIT_SEED);
-    epoch = 0;
-    lastLoss = computeLoss(net);
-    renderAll();
-  });
+  resetBtn.addEventListener('click', () => reset(false));
 
   if (window.matchMedia){
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => renderBoundary(net));
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      buildPointsSvg();
+      renderBoundary(net);
+    });
   }
 
-  buildNetworkSvg(mode);
-  renderAll();
+  buildDatasetButtons();
+  reset(true);
 
 })();
 </script>
