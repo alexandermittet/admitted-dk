@@ -277,6 +277,11 @@
   .legend .dot{ width:8px; height:8px; border-radius:50%; background:currentColor; flex: none; }
   .legend .ring{ width:8px; height:8px; border-radius:50%; border: 1.6px solid currentColor; flex: none; }
 
+  .loss-panel{ flex: 1 1 100%; }
+  .loss-chart-wrap{ width:100%; height:150px; }
+  .loss-chart-wrap svg{ width:100%; height:100%; display:block; }
+  .loss-axis-label{ font: 9px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--muted); }
+
   @media (max-width: 600px){
     .panels{ flex-direction: column; }
     .panel{ min-width: 0; width: 100%; flex: none; }
@@ -442,14 +447,22 @@
         </div>
       </div>
     </div>
+    <div class="panel loss-panel">
+      <div class="panel-title">Loss over time</div>
+      <div class="loss-chart-wrap">
+        <svg id="loss-svg" viewBox="0 0 700 160" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
     <div class="legend">
       <span><span class="dot" style="color:var(--wpos)"></span>positive weight</span>
       <span><span class="dot" style="color:var(--wneg)"></span>negative weight</span>
       <span><span class="dot" style="color:var(--wpos)"></span>label &minus;1 / low value</span>
       <span><span class="dot" style="color:var(--wneg)"></span>label +1 / high value</span>
       <span><span class="ring" style="color:var(--ink-2)"></span>test point (with "Show test data")</span>
+      <span><span class="dot" style="color:var(--accent)"></span>training loss</span>
+      <span><span class="dot" style="color:var(--muted)"></span>test loss (dashed)</span>
     </div>
-    <figcaption>Fig. 5 &mdash; a tiny network training live, right here, modeled on TensorFlow Playground. Data and weight initialization are seeded, so resetting any configuration reproduces the exact same run.</figcaption>
+    <figcaption>Fig. 5 &mdash; a tiny network training live, right here, modeled on TensorFlow Playground. Data and weight initialization are seeded, so resetting any configuration reproduces the exact same run. The loss chart below plots training and test loss (log scale) so you can watch for overfitting: test loss rising while training loss keeps falling.</figcaption>
   </figure>
 
   <div class="callout">
@@ -872,6 +885,65 @@
     }
   }
 
+  // ---- loss chart: log-scale line chart of train/test loss vs. epoch,
+  // rebuilt from lossHistory on every render ----
+  const lossSvg = document.getElementById('loss-svg');
+  const LOSS_W = 700, LOSS_H = 160;
+  const LOSS_PAD = { l: 40, r: 10, t: 10, b: 20 };
+  const LOSS_FLOOR = 1e-4;
+
+  function formatLossTick(d){
+    const v = Math.pow(10, d);
+    return d < 0 ? v.toFixed(-d) : v.toFixed(0);
+  }
+
+  function renderLossChart(){
+    lossSvg.innerHTML = '';
+    const innerW = LOSS_W - LOSS_PAD.l - LOSS_PAD.r;
+    const innerH = LOSS_H - LOSS_PAD.t - LOSS_PAD.b;
+
+    let maxEpoch = 1, maxLoss = 0.01;
+    for (const p of lossHistory){
+      maxEpoch = Math.max(maxEpoch, p.epoch);
+      maxLoss = Math.max(maxLoss, p.train, p.test);
+    }
+    const logLo = Math.log10(LOSS_FLOOR);
+    const logHi = Math.log10(Math.max(maxLoss, LOSS_FLOOR*10));
+
+    function xPos(epoch){ return LOSS_PAD.l + (epoch/maxEpoch)*innerW; }
+    function yPos(loss){
+      const t = (Math.log10(Math.max(loss, LOSS_FLOOR)) - logLo) / (logHi - logLo);
+      return LOSS_PAD.t + (1 - clamp(t, 0, 1))*innerH;
+    }
+
+    for (let d = Math.ceil(logLo); d <= Math.floor(logHi); d++){
+      const y = yPos(Math.pow(10, d));
+      lossSvg.appendChild(svgEl('line', {
+        x1: LOSS_PAD.l, x2: LOSS_W-LOSS_PAD.r, y1: y.toFixed(1), y2: y.toFixed(1),
+        stroke: 'var(--border)', 'stroke-width': 1
+      }));
+      const label = svgEl('text', { x: LOSS_PAD.l-6, y: (y+3).toFixed(1), 'text-anchor':'end', class:'loss-axis-label' });
+      label.textContent = formatLossTick(d);
+      lossSvg.appendChild(label);
+    }
+
+    function buildLine(key, color, dashed){
+      if (lossHistory.length < 2) return null;
+      const pts = lossHistory.map(p => `${xPos(p.epoch).toFixed(1)},${yPos(p[key]).toFixed(1)}`).join(' ');
+      const el = svgEl('polyline', { points: pts, fill: 'none', stroke: color, 'stroke-width': 1.8 });
+      if (dashed) el.setAttribute('stroke-dasharray', '4 3');
+      return el;
+    }
+    const trainLine = buildLine('train', 'var(--accent)', false);
+    const testLine = buildLine('test', 'var(--muted)', true);
+    if (trainLine) lossSvg.appendChild(trainLine);
+    if (testLine) lossSvg.appendChild(testLine);
+
+    const xLabel = svgEl('text', { x: LOSS_W-LOSS_PAD.r, y: LOSS_H-4, 'text-anchor':'end', class:'loss-axis-label' });
+    xLabel.textContent = 'epoch ' + maxEpoch;
+    lossSvg.appendChild(xLabel);
+  }
+
   // ---- state + controls ----
   const DATA_SEED = 42, INIT_SEED = 7, HIDDEN_WIDTH = 8, EPOCH_CAP = 5000;
 
@@ -890,6 +962,7 @@
 
   let trainData = [], testData = [];
   let net, epoch = 0, lossTrain = 0, lossTest = 0, training = false, frameCount = 0;
+  let lossHistory = [];
 
   function currentDatasetKey(){ return problem === 'regression' ? regDataset : clsDataset; }
   function currentGenerator(){
@@ -928,6 +1001,7 @@
     updateNetworkVisual(net);
     renderBoundary(net);
     updateReadout();
+    renderLossChart();
   }
 
   function reset(regenerateData){
@@ -939,6 +1013,7 @@
     buildNetworkSvg(net);
     lossTrain = getLoss(net, trainData);
     lossTest = getLoss(net, testData);
+    lossHistory = [{ epoch: 0, train: lossTrain, test: lossTest }];
     renderAll();
   }
 
@@ -950,6 +1025,7 @@
     }
     lossTrain = getLoss(net, trainData);
     lossTest = getLoss(net, testData);
+    lossHistory.push({ epoch, train: lossTrain, test: lossTest });
   }
 
   // ---- wiring ----
@@ -1068,6 +1144,7 @@
     updateNetworkVisual(net);
     if (frameCount % 2 === 0) renderBoundary(net);
     updateReadout();
+    renderLossChart();
     if (epoch >= EPOCH_CAP){ stopTraining(); return; }
     requestAnimationFrame(frame);
   }
