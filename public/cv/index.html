@@ -80,7 +80,7 @@ p{margin:0 0 9px;color:var(--ink);}
 <style>@media (max-width:680px){.page{margin:0;border-left:none;border-right:none;} .hero{padding:28px 16px 20px;} .content{padding:22px 16px 30px;} .glitch-name{font-size:24pt !important;} .skills-grid,.two-col{grid-template-columns:1fr;} .exp-head{flex-wrap:wrap;} .chip{white-space:normal;}}</style>
 <style>
 html[lang="en"] .lang-da,html[lang="da"] .lang-en{display:none !important;}
-.lang-switch{position:fixed;top:14px;right:14px;z-index:5;display:flex;align-items:center;gap:8px;
+.lang-switch{position:absolute;top:14px;right:14px;z-index:5;display:flex;align-items:center;gap:8px;
   padding:0;border:none;background:none;cursor:pointer;font-family:'Share Tech Mono',monospace;}
 .lang-switch .track{position:relative;width:66px;height:32px;border-radius:16px;
   border:1px solid var(--green);background:rgba(4,9,16,0.92);
@@ -114,10 +114,10 @@ html[lang="en"] .lang-da,html[lang="da"] .lang-en{display:none !important;}
 <body>
 <canvas id="matrix"></canvas>
 <div class="scanlines"></div>
+<div class="page">
 <button type="button" class="lang-switch" id="lang-switch" role="switch" aria-checked="false" aria-label="Dansk / English">
   <span class="track"><span class="end en" aria-hidden="true">🇬🇧</span><span class="end da" aria-hidden="true">🇩🇰</span><span class="knob" aria-hidden="true">🇬🇧</span></span>
 </button>
-<div class="page">
 <div class="lang-en" lang="en">
   <header class="hero">
     <h1 class="glitch-name">alexander mittet</h1>
