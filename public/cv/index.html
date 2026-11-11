@@ -110,6 +110,20 @@ html[lang="en"] .lang-da,html[lang="da"] .lang-en{display:none !important;}
   document.title = lang === 'da' ? 'Alexander Mittet — CV (dansk)' : 'Alexander Mittet — CV';
 })();
 </script>
+<style>
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px;}
+.product-card{display:block;border:1px solid var(--border);background:rgba(0,255,156,0.03);text-decoration:none !important;
+  color:var(--ink) !important;transition:border-color .2s,box-shadow .2s,transform .2s;}
+.product-card:hover,.product-card:focus-visible{border-color:var(--green);box-shadow:0 0 16px rgba(0,255,156,0.35);transform:translateY(-2px);}
+.product-card img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top;border-bottom:1px solid var(--border);}
+.product-card .pc-body{padding:8px 10px 10px;}
+.product-card .pc-name{font-family:'Share Tech Mono',monospace;color:var(--green);font-size:10pt;letter-spacing:0.5px;}
+.product-card .pc-desc{font-size:8.6pt;color:var(--muted);line-height:1.4;margin:3px 0 5px;}
+.product-card .pc-url{font-family:'Share Tech Mono',monospace;font-size:8pt;color:var(--cyan);}
+@media (max-width:680px){.products{grid-template-columns:1fr;}}
+@media (prefers-reduced-motion:reduce){.product-card{transition:none;} .product-card:hover{transform:none;}}
+@media print{.product-card img{display:none;} .products{gap:6px;} .product-card{border:none;background:none;} .product-card .pc-body{padding:0;}}
+</style>
 </head>
 <body>
 <canvas id="matrix"></canvas>
@@ -203,6 +217,20 @@ html[lang="en"] .lang-da,html[lang="da"] .lang-en{display:none !important;}
         <h3>Own products <span class="role-tag">ADMITTED.DK</span></h3>
         <p>I have built and run <a href="https://specseek.admitted.dk/">SpecSeek</a> (semantic search with hybrid retrieval and reranking), <a href="https://catscribe.admitted.dk/">Catscribe</a>
         and <a href="https://catlog.admitted.dk/">Catlog</a> (transcription and AI summarisation) — from idea to users.</p>
+        <div class="products">
+          <a class="product-card" href="https://specseek.admitted.dk/" target="_blank" rel="noopener">
+            <img src="/cv/img/specseek.jpg" alt="Screenshot of SpecSeek" width="640" height="400" loading="lazy">
+            <div class="pc-body"><div class="pc-name">SpecSeek &#8599;</div><div class="pc-desc">Semantic search over hardware catalogues: hard spec filters, hybrid retrieval and cross-encoder reranking.</div><div class="pc-url">specseek.admitted.dk</div></div>
+          </a>
+          <a class="product-card" href="https://catscribe.admitted.dk/" target="_blank" rel="noopener">
+            <img src="/cv/img/catscribe.jpg" alt="Screenshot of Catscribe" width="640" height="400" loading="lazy">
+            <div class="pc-body"><div class="pc-name">Catscribe &#8599;</div><div class="pc-desc">Audio-to-text transcription with timestamps. Audio is deleted straight after processing.</div><div class="pc-url">catscribe.admitted.dk</div></div>
+          </a>
+          <a class="product-card" href="https://catlog.admitted.dk/" target="_blank" rel="noopener">
+            <img src="/cv/img/catlog.jpg" alt="Screenshot of Catlog" width="640" height="400" loading="lazy">
+            <div class="pc-body"><div class="pc-name">Catlog &#8599;</div><div class="pc-desc">Record a meeting, watch the live transcript and get an AI summary.</div><div class="pc-url">catlog.admitted.dk</div></div>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -343,6 +371,20 @@ html[lang="en"] .lang-da,html[lang="da"] .lang-en{display:none !important;}
         <h3>Egne produkter <span class="role-tag">ADMITTED.DK</span></h3>
         <p>Jeg har bygget og drifter <a href="https://specseek.admitted.dk/">SpecSeek</a> (semantisk søgning med hybrid retrieval og reranking), <a href="https://catscribe.admitted.dk/">Catscribe</a>
         og <a href="https://catlog.admitted.dk/">Catlog</a> (transskription og AI-opsummering) — fra idé til brugere.</p>
+        <div class="products">
+          <a class="product-card" href="https://specseek.admitted.dk/" target="_blank" rel="noopener">
+            <img src="/cv/img/specseek.jpg" alt="Skærmbillede af SpecSeek" width="640" height="400" loading="lazy">
+            <div class="pc-body"><div class="pc-name">SpecSeek &#8599;</div><div class="pc-desc">Semantisk søgning i hardwarekataloger: hårde spec-filtre, hybrid retrieval og cross-encoder reranking.</div><div class="pc-url">specseek.admitted.dk</div></div>
+          </a>
+          <a class="product-card" href="https://catscribe.admitted.dk/" target="_blank" rel="noopener">
+            <img src="/cv/img/catscribe.jpg" alt="Skærmbillede af Catscribe" width="640" height="400" loading="lazy">
+            <div class="pc-body"><div class="pc-name">Catscribe &#8599;</div><div class="pc-desc">Transskription af lyd til tekst med tidsstempler. Lyden slettes straks efter behandling.</div><div class="pc-url">catscribe.admitted.dk</div></div>
+          </a>
+          <a class="product-card" href="https://catlog.admitted.dk/" target="_blank" rel="noopener">
+            <img src="/cv/img/catlog.jpg" alt="Skærmbillede af Catlog" width="640" height="400" loading="lazy">
+            <div class="pc-body"><div class="pc-name">Catlog &#8599;</div><div class="pc-desc">Optag et møde, følg transskriptionen live og få et AI-resumé.</div><div class="pc-url">catlog.admitted.dk</div></div>
+          </a>
+        </div>
       </div>
     </section>
 
